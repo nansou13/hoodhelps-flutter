@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../constants.dart';
+
 class Step1Widget extends StatefulWidget {
   final Function nextStepCallback; // Ajoutez ce paramètre
 
@@ -93,7 +95,7 @@ class _Step1WidgetState extends State<Step1Widget> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:5100/api/users/register'),
+        Uri.parse('$routeAPI/api/users/register'),
         body: {
           'username': username,
           'email': email,

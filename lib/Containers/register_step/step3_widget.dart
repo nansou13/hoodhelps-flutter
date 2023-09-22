@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'dart:convert'; // Pour la manipulation JSON
 import 'package:http/http.dart' as http; // Pour les requêtes HTTP
 
+import '../../constants.dart';
+
 class Step3Widget extends StatefulWidget {
   final Function nextStepCallback; // Ajoutez ce paramètre
 
@@ -27,7 +29,7 @@ class _Step3WidgetState extends State<Step3Widget> {
   }
 
   Future<void> loadCategories() async {
-    final response = await http.get(Uri.parse('http://localhost:5100/api/categories/'));
+    final response = await http.get(Uri.parse('$routeAPI/api/categories/'));
     if (response.statusCode == 200) {
       final List<dynamic> categoryData = json.decode(response.body)['categories'];
       final List<Category> loadedCategories = categoryData

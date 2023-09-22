@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../constants.dart';
+
 class Step2Widget extends StatefulWidget {
   final Function nextStepCallback; // Ajoutez ce paramètre
 
@@ -121,7 +123,7 @@ class _Step2WidgetState extends State<Step2Widget> {
 
     try {
       final response = await http
-          .put(Uri.parse('http://localhost:5100/api/users/me'), body: {
+          .put(Uri.parse('$routeAPI/api/users/me'), body: {
         'first_name': firstname,
         'last_name': lastname,
         'date_of_birth': formatDate(dateofbirth),

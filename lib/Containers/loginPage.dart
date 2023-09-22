@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../constants.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
   
@@ -30,7 +32,7 @@ class LoginPage extends StatefulWidget {
       String? userToken = prefs.getString('user_token');
       if (userToken != null) {
         final response = await http.get(
-          Uri.parse('http://localhost:5100/api/users/me'),
+          Uri.parse('$routeAPI/api/users/me'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $userToken'
@@ -50,7 +52,7 @@ class LoginPage extends StatefulWidget {
 
       try {
         final response = await http.post(
-          Uri.parse('http://localhost:5100/api/users/login'),
+          Uri.parse('$routeAPI/api/users/login'),
           body: {
             'username': username,
             'password': password,

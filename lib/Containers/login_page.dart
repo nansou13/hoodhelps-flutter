@@ -106,7 +106,7 @@ class LoginPage extends StatefulWidget {
             ),
             // Contenu en haut (titre et phrase)
             Container(
-              padding: const EdgeInsets.fromLTRB(20.0, 50.0, 20.0, 0.0),
+              padding: const EdgeInsets.fromLTRB(20.0, 50.0, 20.0, 20.0),
               width: double.infinity,
               child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

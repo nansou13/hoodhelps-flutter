@@ -63,7 +63,7 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
 
       Container(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.fromLTRB(20.0, 50.0, 20.0, 20.0),
         color: Colors.white.withOpacity(0.9),
         width: double.infinity,
         height: double.infinity,
@@ -92,7 +92,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ? Step2Widget(nextStepCallback: _nextStep,)
                     : _currentStep == 3
                         ? Step3Widget(nextStepCallback: _nextStep,)
-                        : Step4Widget(),
+                        : const Step4Widget(),
 
             // Boutons de navigation
             Row(

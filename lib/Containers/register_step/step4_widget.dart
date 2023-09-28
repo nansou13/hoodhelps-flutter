@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class Step4Widget extends StatelessWidget {
+  const Step4Widget({Key? key}) : super(key: key);
+
   // final TextEditingController firstNameController;
   // final TextEditingController lastNameController;
   // final TextEditingController dateOfBirthController;
@@ -20,7 +21,7 @@ class Step4Widget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(

@@ -22,20 +22,20 @@ class _LobbyPage extends State<LobbyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Nouvelle Page'),
+        title: const Text('Nouvelle Page'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               'Bienvenue sur la nouvelle page !',
               style: TextStyle(fontSize: 20),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _disconnectFunction,
-              child: Text('Appuyez ici'),
+              child: const Text('Appuyez ici'),
             ),
           ],
         ),

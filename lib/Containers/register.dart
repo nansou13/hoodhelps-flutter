@@ -17,16 +17,6 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   int _currentStep = 1; // Étape actuelle du registre
-
-  String selectedCategory = ''; // Catégorie sélectionnée
-  String selectedJob = ''; // Job sélectionné
-  List<String> selectedJobsList = []; // Liste des jobs sélectionnés
-  List<Category> categories = []; // Liste de catégories (à récupérer depuis l'API)
-  List<String> jobsForCategory = [
-    'toto',
-    'titi',
-  ]; // Liste des jobs pour la catégorie sélectionnée (à récupérer depuis l'API)
-
   //bool _isLoading = false;
 
   @override
@@ -67,8 +57,10 @@ class _RegisterPageState extends State<RegisterPage> {
         color: Colors.white.withOpacity(0.9),
         width: double.infinity,
         height: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: SingleChildScrollView( // Ajoutez le SingleChildScrollView ici
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+          // crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Indicateurs d'étape
             Row(
@@ -92,7 +84,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ? Step2Widget(nextStepCallback: _nextStep,)
                     : _currentStep == 3
                         ? Step3Widget(nextStepCallback: _nextStep,)
-                        : const Step4Widget(),
+                        : Step4Widget(nextStepCallback: _nextStep,),
 
             // Boutons de navigation
             Row(
@@ -111,6 +103,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ],
             ),
           ],
+        ),
         ),
       ),
     ]));

@@ -33,7 +33,7 @@ class _Step1WidgetState extends State<Step1Widget> {
           ),
         ),
         const SizedBox(height: 10.0),
-        const Text('Saisissez votre username, email et mot de passe'),
+        const Text('Pour commencer, veuillez saisir votre adresse e-mail, un nom d\'utilisateur et un mot de passe'),
         const SizedBox(height: 20.0),
         TextField(
           controller: _usernameController,
@@ -107,6 +107,7 @@ class _Step1WidgetState extends State<Step1Widget> {
         final data = jsonDecode(response.body);
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('user_token', data['accessToken']);
+        prefs.setString('user_id', data['user']['id']);
 
         widget.nextStepCallback();
 

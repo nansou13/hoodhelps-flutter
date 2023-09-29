@@ -18,7 +18,6 @@ class Step2Widget extends StatefulWidget {
 class _Step2WidgetState extends State<Step2Widget> {
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
-  final TextEditingController dateOfBirthController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
 
   String _errorMessage = ''; // Message d'erreur local
@@ -36,7 +35,7 @@ class _Step2WidgetState extends State<Step2Widget> {
           ),
         ),
         const SizedBox(height: 10.0),
-        const Text('Saisissez votre prénom et nom'),
+        const Text('Veuillez fournir vos informations personnelles pour créer votre compte.'),
         const SizedBox(height: 20.0),
         TextField(
           controller: firstNameController,
@@ -46,30 +45,6 @@ class _Step2WidgetState extends State<Step2Widget> {
         TextField(
           controller: lastNameController,
           decoration: const InputDecoration(labelText: 'Nom'),
-        ),
-        const SizedBox(height: 10.0),
-        TextFormField(
-          controller: dateOfBirthController,
-          decoration: InputDecoration(
-            labelText: 'Date de naissance',
-            suffixIcon: IconButton(
-              icon: const Icon(Icons.calendar_today),
-              onPressed: () async {
-                final DateTime? selectedDate = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(1900),
-                  lastDate: DateTime.now(),
-                );
-
-                if (selectedDate != null) {
-                  dateOfBirthController.text =
-                      DateFormat('dd/MM/yyyy').format(selectedDate);
-                }
-              },
-            ),
-          ),
-          readOnly: true,
         ),
         const SizedBox(height: 10.0),
         TextField(
@@ -115,7 +90,6 @@ class _Step2WidgetState extends State<Step2Widget> {
   Future<void> saveUserInfoData() async {
     final firstname = firstNameController.text;
     final lastname = lastNameController.text;
-    final dateofbirth = dateOfBirthController.text;
     final phone = phoneController.text;
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -126,7 +100,6 @@ class _Step2WidgetState extends State<Step2Widget> {
           .put(Uri.parse('$routeAPI/api/users/me'), body: {
         'first_name': firstname,
         'last_name': lastname,
-        'date_of_birth': formatDate(dateofbirth),
         'phone_number': phone,
       }, headers: {
         'Authorization': 'Bearer $userToken'

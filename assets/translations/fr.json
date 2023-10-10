@@ -57,5 +57,12 @@
     "TAXI_DRIVER": "Chauffeur de taxi",
     "MOVER": "Déménageur",
     "REAL_ESTATE_AGENT": "Agent immobilier",
-    "PROPERTY_MANAGER": "Gestionnaire de biens immobiliers"
+    "PROPERTY_MANAGER": "Gestionnaire de biens immobiliers",
+    "FORM_USERNAME" : "Nom d'utilisateur",
+    "FORM_PASSWORD" : "Mot de passe",
+    "FORM_CONNECT_BUTTON": "Se connecter",
+    "FORM_CREATE_ACCOUNT_LINK": "Créer un compte",
+    "FORM_LOGIN_ACCOUNT_LINK": "Se connecter",
+    "APP_TITLE": "HoodHelps",
+    "APP_TITLE_DESC": "Des voisins qui s'entraident."
 }

@@ -57,6 +57,13 @@
     "TAXI_DRIVER": "Taxi Driver",
     "MOVER": "Mover",
     "REAL_ESTATE_AGENT": "Real Estate Agent",
-    "PROPERTY_MANAGER": "Property Manager"
+    "PROPERTY_MANAGER": "Property Manager",
+    "FORM_USERNAME" : "Username",
+    "FORM_PASSWORD" : "Password",
+    "FORM_CONNECT_BUTTON": "Login",
+    "FORM_CREATE_ACCOUNT_LINK": "Create an account",
+    "FORM_LOGIN_ACCOUNT_LINK": "Login",
+    "APP_TITLE": "HoodHelps",
+    "APP_TITLE_DESC": "Neighborhood helping neighbors"
 }
   

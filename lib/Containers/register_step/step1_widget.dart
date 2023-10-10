@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'dart:core';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -8,7 +9,8 @@ import '../../constants.dart';
 class Step1Widget extends StatefulWidget {
   final Function nextStepCallback; // Ajoutez ce paramètre
 
-  const Step1Widget({Key? key, required this.nextStepCallback}) : super(key: key);
+  const Step1Widget({Key? key, required this.nextStepCallback})
+      : super(key: key);
 
   @override
   _Step1WidgetState createState() => _Step1WidgetState();
@@ -19,6 +21,37 @@ class _Step1WidgetState extends State<Step1Widget> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String _errorMessage = ''; // Message d'erreur local
+  bool _isButtonDisabled =
+      true; // Variable pour contrôler la disponibilité du bouton
+
+  @override
+  void initState() {
+    super.initState();
+    // Écoutez les modifications dans les champs de texte pour mettre à jour l'état du bouton
+    _usernameController.addListener(_updateButtonState);
+    _emailController.addListener(_updateButtonState);
+    _passwordController.addListener(_updateButtonState);
+  }
+
+  @override
+  void dispose() {
+    // Assurez-vous de supprimer les écouteurs lors de la suppression du widget
+    _usernameController.removeListener(_updateButtonState);
+    _emailController.removeListener(_updateButtonState);
+    _passwordController.removeListener(_updateButtonState);
+    super.dispose();
+  }
+
+  void _updateButtonState() {
+    // Vérifiez si tous les champs sont remplis
+    final username = _usernameController.text;
+    final password = _passwordController.text;
+    final email = _emailController.text;
+
+    setState(() {
+      _isButtonDisabled = username.isEmpty || password.isEmpty || email.isEmpty;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +66,8 @@ class _Step1WidgetState extends State<Step1Widget> {
           ),
         ),
         const SizedBox(height: 10.0),
-        const Text('Pour commencer, veuillez saisir votre adresse e-mail, un nom d\'utilisateur et un mot de passe'),
+        const Text(
+            'Pour commencer, veuillez saisir votre adresse e-mail, un nom d\'utilisateur et un mot de passe'),
         const SizedBox(height: 20.0),
         TextField(
           controller: _usernameController,
@@ -61,8 +95,9 @@ class _Step1WidgetState extends State<Step1Widget> {
         ),
         const SizedBox(height: 20.0),
         MaterialButton(
-          onPressed: registerData,
+          onPressed: _isButtonDisabled ? null : registerData,
           color: Colors.blue,
+          disabledColor: Colors.grey,
           textColor: Colors.white,
           elevation: 0,
           shape: RoundedRectangleBorder(
@@ -93,6 +128,13 @@ class _Step1WidgetState extends State<Step1Widget> {
       _errorMessage = '';
     });
 
+    if (!isEmailValid(email)) {
+      setState(() {
+        _errorMessage = 'Adresse e-mail invalide';
+      });
+      return;
+    }
+
     try {
       final response = await http.post(
         Uri.parse('$routeAPI/api/users/register'),
@@ -110,7 +152,6 @@ class _Step1WidgetState extends State<Step1Widget> {
         prefs.setString('user_id', data['user']['id']);
 
         widget.nextStepCallback();
-
       } else {
         final errorData = jsonDecode(response.body);
         setState(() {
@@ -123,4 +164,10 @@ class _Step1WidgetState extends State<Step1Widget> {
       });
     }
   }
+}
+
+bool isEmailValid(String email) {
+  // Expression régulière pour valider l'adresse e-mail
+  final emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
+  return emailRegex.hasMatch(email);
 }

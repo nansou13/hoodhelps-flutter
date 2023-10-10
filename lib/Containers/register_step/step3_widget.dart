@@ -19,7 +19,6 @@ class Step3Widget extends StatefulWidget {
 }
 
 class _Step3WidgetState extends State<Step3Widget> {
-  
   String? selectedCategoryId;
   Job? selectedJob;
   String? selectedJobId;
@@ -31,6 +30,7 @@ class _Step3WidgetState extends State<Step3Widget> {
   List<Job> jobs = [];
   bool isJobTextFieldEnabled =
       false; // Nouvelle variable pour gérer l'état d'activation du champ de texte des emplois
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -46,13 +46,13 @@ class _Step3WidgetState extends State<Step3Widget> {
         categories =
             jsonData.map((category) => Category.fromJson(category)).toList();
       });
+      isLoading = false;
     } else {
       throw Exception('Failed to load categories');
     }
   }
 
   Future<void> loadJobsForCategory(String categoryId) async {
-
     final response =
         await http.get(Uri.parse('$routeAPI/api/categories/$categoryId'));
     if (response.statusCode == 200) {
@@ -67,19 +67,18 @@ class _Step3WidgetState extends State<Step3Widget> {
   }
 
   Future<void> saveUserJobData() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? userToken = prefs.getString('user_token');
-  
-  try {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userToken = prefs.getString('user_token');
 
-      final response = await http
-          .post(Uri.parse('$routeAPI/api/users/me/job'), body: {
-            "profession_id": selectedJobId,
-            "description": description,
-            "experience_years": experienceYears.toString(),
-          }, headers: {
-            'Authorization': 'Bearer $userToken'
-          });
+    try {
+      final response =
+          await http.post(Uri.parse('$routeAPI/api/users/me/job'), body: {
+        "profession_id": selectedJobId,
+        "description": description,
+        "experience_years": experienceYears.toString(),
+      }, headers: {
+        'Authorization': 'Bearer $userToken'
+      });
       final data = jsonDecode(response.body);
       if (response.statusCode == 201) {
         // Si la requête réussit (statut 200), analyser la réponse JSON
@@ -100,9 +99,7 @@ class _Step3WidgetState extends State<Step3Widget> {
         _errorMessage = 'Erreur: $e';
       });
     }
-}
-
-  
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +107,7 @@ class _Step3WidgetState extends State<Step3Widget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-         const Text(
+        const Text(
           'Étape 3',
           style: TextStyle(
             fontSize: 18.0,
@@ -118,9 +115,11 @@ class _Step3WidgetState extends State<Step3Widget> {
           ),
         ),
         const SizedBox(height: 10.0),
-        const Text('Sélectionnez votre métier dans la liste, indiquez le nombre d\'années d\'expérience que vous avez dans ce domaine (de 1 à 10+ ans), et ajoutez une description de vos compétences et de votre expérience professionnelle.'),
+        const Text(
+            'Sélectionnez votre métier dans la liste, indiquez le nombre d\'années d\'expérience que vous avez dans ce domaine (de 1 à 10+ ans), et ajoutez une description de vos compétences et de votre expérience professionnelle.'),
         const SizedBox(height: 20.0),
         TextField(
+          enabled: !isLoading,
           onTap: () {
             _showCategoryPicker(context);
           },
@@ -139,7 +138,6 @@ class _Step3WidgetState extends State<Step3Widget> {
         ),
         const SizedBox(height: 20), // Ajoute un espacement
         TextField(
-          
           onTap: () {
             // Utilisez onTap pour ouvrir la liste des emplois lorsqu'il est cliqué
             if (isJobTextFieldEnabled) {
@@ -173,26 +171,25 @@ class _Step3WidgetState extends State<Step3Widget> {
           enabled: selectedJobId != null,
         ),
         const SizedBox(height: 20),
-        Row(
-          children: <Widget>[
-            Text('Expérience: ${experienceYears == 10 ? '10+' : experienceYears.toString()} ans'),
-            Expanded(
-              child: Slider(
-                value: experienceYears.toDouble(),
-                onChanged: (value) {
-                  if (selectedJobId != null) {
-                    setState(() {
-                      experienceYears = value.toInt();
-                    });
-                  }
-                },
-                min: 0,
-                max: 10,
-                divisions: 10,
-              ),
+        Row(children: <Widget>[
+          Text(
+              'Expérience: ${experienceYears == 10 ? '10+' : experienceYears.toString()} ans'),
+          Expanded(
+            child: Slider(
+              value: experienceYears.toDouble(),
+              onChanged: (value) {
+                if (selectedJobId != null) {
+                  setState(() {
+                    experienceYears = value.toInt();
+                  });
+                }
+              },
+              min: 0,
+              max: 10,
+              divisions: 10,
             ),
-          ]
-        ),
+          ),
+        ]),
         const SizedBox(height: 20.0),
         Text(
           _errorMessage, // Utilisation de errorMessage
@@ -208,7 +205,6 @@ class _Step3WidgetState extends State<Step3Widget> {
             if (selectedJobId != null) {
               saveUserJobData();
             }
-            
           },
           color: selectedJobId != null ? Colors.blue : Colors.grey,
           textColor: Colors.white,
@@ -271,12 +267,17 @@ class _Step3WidgetState extends State<Step3Widget> {
                     return ListTile(
                       title: Row(
                         children: [
-                          Icon(IconsExtension.getIconData(categories[index].name)), // Affichez l'icône ici à gauche
-                          const SizedBox(width: 10), // Ajoutez un espace entre l'icône et le texte
+                          Icon(IconsExtension.getIconData(categories[index]
+                              .name)), // Affichez l'icône ici à gauche
+                          const SizedBox(
+                              width:
+                                  10), // Ajoutez un espace entre l'icône et le texte
                           Expanded(
                             child: Text(
-                              translationService.translate(categories[index].name),
-                              softWrap: true, // Permet au texte de passer à la ligne si nécessaire
+                              translationService
+                                  .translate(categories[index].name),
+                              softWrap:
+                                  true, // Permet au texte de passer à la ligne si nécessaire
                             ),
                           ),
                         ],
@@ -292,7 +293,6 @@ class _Step3WidgetState extends State<Step3Widget> {
                   },
                 ),
               ),
-            
             ],
           ),
         );
@@ -325,12 +325,16 @@ class _Step3WidgetState extends State<Step3Widget> {
                     return ListTile(
                       title: Row(
                         children: [
-                          Icon(IconsExtension.getIconData(jobs[index].name)), // Affichez l'icône ici à gauche
-                          const SizedBox(width: 10), // Ajoutez un espace entre l'icône et le texte
+                          Icon(IconsExtension.getIconData(jobs[index]
+                              .name)), // Affichez l'icône ici à gauche
+                          const SizedBox(
+                              width:
+                                  10), // Ajoutez un espace entre l'icône et le texte
                           Expanded(
                             child: Text(
                               translationService.translate(jobs[index].name),
-                              softWrap: true, // Permet au texte de passer à la ligne si nécessaire
+                              softWrap:
+                                  true, // Permet au texte de passer à la ligne si nécessaire
                             ),
                           ),
                         ],

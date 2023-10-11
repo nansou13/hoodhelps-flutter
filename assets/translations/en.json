@@ -64,6 +64,7 @@
     "FORM_CREATE_ACCOUNT_LINK": "Create an account",
     "FORM_LOGIN_ACCOUNT_LINK": "Login",
     "APP_TITLE": "HoodHelps",
-    "APP_TITLE_DESC": "Neighborhood helping neighbors"
+    "APP_TITLE_DESC": "Neighborhood helping neighbors",
+    "DISCONNECT_BUTTON": "Logout"
 }
   

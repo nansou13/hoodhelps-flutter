@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:hoodhelps/utils.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -88,8 +89,8 @@ class _Step2WidgetState extends State<Step2Widget> {
   }
 
   Future<void> saveUserInfoData() async {
-    final firstname = firstNameController.text;
-    final lastname = lastNameController.text;
+    final firstname = FunctionUtils.capitalizeFirstLetter(firstNameController.text);
+    final lastname = FunctionUtils.capitalizeFirstLetter(lastNameController.text);
     final phone = phoneController.text;
 
     SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hoodhelps/services/translation_service.dart';
+import 'package:hoodhelps/utils.dart';
+
+import 'package:hoodhelps/Containers/menu_widget.dart';
+import 'package:provider/provider.dart';
 
 class LobbyPage extends StatefulWidget {
   const LobbyPage({Key? key}) : super(key: key);
@@ -18,33 +22,26 @@ class _LobbyPage extends State<LobbyPage> {
     // _loadUserData();
   }
 
-  Future<void> _disconnectFunction() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('user_token', '');
-
-    Navigator.of(context).pushReplacementNamed('/login');
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Nouvelle Page'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Bienvenue sur la nouvelle page !',
-              style: TextStyle(fontSize: 20),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _disconnectFunction,
-              child: const Text('Appuyez ici'),
+    final translationService = context.read<TranslationService>();
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Mon Lobby'),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.logout_rounded),
+              tooltip: translationService.translate('DISCONNECT_BUTTON'),
+              onPressed: () {
+                FunctionUtils.disconnectUser(context);
+              },
             ),
           ],
+        ),
+        drawer: const MenuWidget(),
+        body: const Center(
+          child: Text('Contenu de l\'application'),
         ),
       ),
     );

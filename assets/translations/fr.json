@@ -64,5 +64,6 @@
     "FORM_CREATE_ACCOUNT_LINK": "Créer un compte",
     "FORM_LOGIN_ACCOUNT_LINK": "Se connecter",
     "APP_TITLE": "HoodHelps",
-    "APP_TITLE_DESC": "Des voisins qui s'entraident."
+    "APP_TITLE_DESC": "Des voisins qui s'entraident.",
+    "DISCONNECT_BUTTON": "Déconnexion"
 }

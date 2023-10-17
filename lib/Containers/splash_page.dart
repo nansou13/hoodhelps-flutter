@@ -15,7 +15,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -37,8 +36,25 @@ class _SplashScreenState extends State<SplashScreen> {
       // Mettez à jour _user avec les données récupérées
       final userService = Provider.of<UserService>(context, listen: false);
       userService.updateUser(userData);
+
+      // Appel API des groupes
+      var userGroupData = [];
+      final responseGroups = await http.get(
+          Uri.parse('$routeAPI/api/users/groups'),
+          headers: {'Authorization': 'Bearer $userToken'});
+      if (responseGroups.statusCode == 200) {
+        userGroupData = jsonDecode(responseGroups.body);
+        userService.addUserGroups(userGroupData);
+      }
+      if (userGroupData.isNotEmpty) {
+        Navigator.of(context, rootNavigator: true).pushNamed(
+          '/lobby',
+          arguments: userGroupData[0]['id'],
+        );
+      } else {
+        Navigator.of(context).pushReplacementNamed('/lobby');
+      }
       // isLoading = false;
-      Navigator.of(context).pushReplacementNamed('/lobby');
     } else {
       Navigator.of(context).pushReplacementNamed('/login');
     }
@@ -57,13 +73,15 @@ class _SplashScreenState extends State<SplashScreen> {
       ),
 
       Container(
-          padding: const EdgeInsets.fromLTRB(20.0, 50.0, 20.0, 20.0),
-          color: Colors.white.withOpacity(0.9),
-          width: double.infinity,
-          height: double.infinity,
-          child: const Center(
-            child: CircularProgressIndicator(), // Ou un autre widget de chargement
-          ),),
+        padding: const EdgeInsets.fromLTRB(20.0, 50.0, 20.0, 20.0),
+        color: Colors.white.withOpacity(0.9),
+        width: double.infinity,
+        height: double.infinity,
+        child: const Center(
+          child:
+              CircularProgressIndicator(), // Ou un autre widget de chargement
+        ),
+      ),
     ]));
   }
 }

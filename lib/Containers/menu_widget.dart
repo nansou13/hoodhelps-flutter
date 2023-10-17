@@ -57,7 +57,7 @@ class _MenuWidget extends State<MenuWidget> {
                 onTap: () {
                   Navigator.of(context, rootNavigator: true).pushNamed(
                     '/lobby',
-                    arguments: group.id,
+                    arguments: [group.id],
                   );
                   // redirect to /lobby
                 },

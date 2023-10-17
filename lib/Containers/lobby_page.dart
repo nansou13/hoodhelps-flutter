@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/Containers/lobby_jobs.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/utils.dart';
 
 import 'package:hoodhelps/Containers/menu_widget.dart';
+import 'package:hoodhelps/Containers/lobby_category.dart';
 import 'package:provider/provider.dart';
 
 class LobbyPage extends StatefulWidget {
@@ -24,8 +26,15 @@ class _LobbyPage extends State<LobbyPage> {
 
   @override
   Widget build(BuildContext context) {
-    final arguments = ModalRoute.of(context)!.settings.arguments;
-    final groupId = arguments.toString();
+    final List arguments = ModalRoute.of(context)!.settings.arguments as List;
+    var groupId = '';
+    var categoryId = '';
+    if (arguments.isNotEmpty) {
+      groupId = arguments[0].toString();
+    }
+    if (arguments.length >= 2) {
+      categoryId = arguments[1].toString();
+    }
 
     final translationService = context.read<TranslationService>();
     return MaterialApp(
@@ -43,9 +52,30 @@ class _LobbyPage extends State<LobbyPage> {
           ],
         ),
         drawer: const MenuWidget(),
-        body: Center(
-          child:
-              groupId == 'null' ? _buildNoGroupContent() : _buildGroupContent(),
+        body: Stack(children: [
+          // Image de fond
+      Image.asset(
+        'assets/background_image.jpg', // Remplacez par le chemin de votre image de fond
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+      ),
+
+      Container(
+        color: Colors.white.withOpacity(0.9),
+        width: double.infinity,
+        height: double.infinity,
+        child: Center(
+          child: groupId == ''
+              ? _buildNoGroupContent()
+              : categoryId.isNotEmpty
+                  ? GroupCategoryContent(
+                      groupId: groupId, categoryId: categoryId)
+                  : GroupContent(groupId: groupId),
+        ),
+      ),
+          
+        ],
         ),
       ),
     );
@@ -95,22 +125,6 @@ class _LobbyPage extends State<LobbyPage> {
               ],
             ),
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildGroupContent() {
-    // Remplacez ce widget par le contenu à afficher lorsque groupId n'est pas 'null'
-    return const Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        SizedBox(height: 30.0),
-        Text(
-          'Liste des category',
-          style: TextStyle(fontSize: 20.0),
-          textAlign: TextAlign.center,
         ),
       ],
     );

@@ -49,10 +49,13 @@ class _SplashScreenState extends State<SplashScreen> {
       if (userGroupData.isNotEmpty) {
         Navigator.of(context, rootNavigator: true).pushNamed(
           '/lobby',
-          arguments: userGroupData[0]['id'],
+          arguments: [userGroupData[0]['id']],
         );
       } else {
-        Navigator.of(context).pushReplacementNamed('/lobby');
+        Navigator.of(context).pushReplacementNamed(
+          '/lobby',
+          arguments: [],
+        );
       }
       // isLoading = false;
     } else {

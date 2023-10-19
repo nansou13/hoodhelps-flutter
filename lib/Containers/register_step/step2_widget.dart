@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:intl/intl.dart';
 import 'package:hoodhelps/utils.dart';
 import 'dart:convert';
@@ -20,8 +21,6 @@ class _Step2WidgetState extends State<Step2Widget> {
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
-
-  String _errorMessage = ''; // Message d'erreur local
 
   @override
   Widget build(BuildContext context) {
@@ -51,15 +50,6 @@ class _Step2WidgetState extends State<Step2Widget> {
         TextField(
           controller: phoneController,
           decoration: const InputDecoration(labelText: 'Phone'),
-        ),
-        const SizedBox(height: 20.0),
-        Text(
-          _errorMessage, // Utilisation de errorMessage
-          style: const TextStyle(
-            color: Colors.red,
-            fontSize: 12.0,
-            fontWeight: FontWeight.bold,
-          ),
         ),
         const SizedBox(height: 20.0),
         MaterialButton(
@@ -109,22 +99,19 @@ class _Step2WidgetState extends State<Step2Widget> {
       final data = jsonDecode(response.body);
       if (response.statusCode == 200) {
         // Si la requête réussit (statut 200), analyser la réponse JSON
-
-        setState(() {
-          _errorMessage = '';
-        });
+        final data = jsonDecode(response.body);
+        
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('user_token', data['accessToken']);
+        
         widget.nextStepCallback();
       } else {
         // En cas d'échec de la requête, afficher un message d'erreur
-        setState(() {
-          _errorMessage = 'Échec de la mise à jour $data';
-        });
+        NotificationService.showError(context, 'Échec de la mise à jour $data');
       }
     } catch (e) {
       // En cas d'erreur lors de la requête
-      setState(() {
-        _errorMessage = 'Erreur: $e';
-      });
+      NotificationService.showError(context, 'Erreur: $e');
     }
   }
 }

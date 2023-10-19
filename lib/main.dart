@@ -1,18 +1,26 @@
+// Dart imports
 import 'package:flutter/material.dart';
-import 'package:hoodhelps/Containers/login_page.dart'; // Importez la classe HomePage
-import 'package:hoodhelps/Containers/register.dart'; // Importez la classe HomePage
-import 'package:hoodhelps/Containers/lobby_page.dart'; // Importez la classe HomePage
+
+// Package imports
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+// Local imports
+import 'package:hoodhelps/Containers/job_users.dart';
+import 'package:hoodhelps/Containers/lobby_page.dart';
+import 'package:hoodhelps/Containers/login_page.dart';
+import 'package:hoodhelps/Containers/register.dart';
 import 'package:hoodhelps/Containers/splash_page.dart';
 import 'package:hoodhelps/services/translation_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:provider/provider.dart';
 import 'package:hoodhelps/services/user_service.dart';
 
-void main() async {
-  WidgetsFlutterBinding
-      .ensureInitialized(); // Assurez-vous que les widgets Flutter sont initialisés
+Future<void> main() async {
+  // Assurez-vous que les widgets Flutter sont initialisés
+  WidgetsFlutterBinding.ensureInitialized();
+  
   // Initialisez les préférences partagées
   await SharedPreferences.getInstance();
+
   // Initialisez les langs
   var translationService = TranslationService();
   await translationService.loadTranslations("fr");
@@ -20,8 +28,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        Provider<UserService>(
-            create: (_) => UserService()), // Fournit l'utilisateur
+        Provider<UserService>(create: (_) => UserService()),
         Provider<TranslationService>.value(value: translationService),
       ],
       child: const MyApp(),
@@ -32,32 +39,18 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'HoodHelps',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      initialRoute: '/splash', // Route initiale de l'application
+      theme: ThemeData(primarySwatch: Colors.blue),
+      initialRoute: '/splash',
       routes: {
-        '/splash': (context) => const SplashScreen(), // Écran de chargement
-        '/login': (context) =>
-            const LoginPage(), // Route par défaut (page d'accueil)
-        '/lobby': (context) =>
-            const LobbyPage(), // Exemple de route vers une page de profil
-        '/register': (context) =>
-            const RegisterPage(), // Exemple de route vers une page de paramètres
+        '/splash': (context) => const SplashScreen(),
+        '/login': (context) => const LoginPage(),
+        '/lobby': (context) => const LobbyPage(),
+        '/register': (context) => const RegisterPage(),
+        '/userlist': (context) => const JobUsers(),
       },
     );
   }

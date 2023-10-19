@@ -50,6 +50,7 @@ class _GroupCategoryContentState extends State<GroupCategoryContent> {
   Widget build(BuildContext context) {
     final translationService = context.read<TranslationService>();
     final groupId = widget.groupId;
+    final categoryId = widget.categoryId;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -88,10 +89,10 @@ class _GroupCategoryContentState extends State<GroupCategoryContent> {
                   onTap: () {
                     if (jobUsers > 0) {
                       print(jobId);
-                      // Navigator.of(context, rootNavigator: true).pushNamed(
-                      //   '/lobby',
-                      //   arguments: [groupId, categoryId],
-                      // );
+                      Navigator.of(context, rootNavigator: true).pushNamed(
+                        '/userlist',
+                        arguments: [groupId, categoryId, jobId],
+                      );
                     }
                   },
                   child: Card(

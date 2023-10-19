@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/services/notifications_service.dart';
 import 'dart:convert';
 import 'dart:core';
 import 'package:http/http.dart' as http;
@@ -20,7 +21,6 @@ class _Step1WidgetState extends State<Step1Widget> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  String _errorMessage = ''; // Message d'erreur local
   bool _isButtonDisabled =
       true; // Variable pour contrôler la disponibilité du bouton
 
@@ -85,15 +85,6 @@ class _Step1WidgetState extends State<Step1Widget> {
           obscureText: true,
         ),
         const SizedBox(height: 20.0),
-        Text(
-          _errorMessage, // Affiche le message d'erreur local
-          style: const TextStyle(
-            color: Colors.red,
-            fontSize: 12.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 20.0),
         MaterialButton(
           onPressed: _isButtonDisabled ? null : registerData,
           color: Colors.blue,
@@ -124,14 +115,8 @@ class _Step1WidgetState extends State<Step1Widget> {
     final password = _passwordController.text;
     final email = _emailController.text;
 
-    setState(() {
-      _errorMessage = '';
-    });
-
     if (!isEmailValid(email)) {
-      setState(() {
-        _errorMessage = 'Adresse e-mail invalide';
-      });
+      NotificationService.showError(context, 'Adresse e-mail invalide');
       return;
     }
 
@@ -154,13 +139,12 @@ class _Step1WidgetState extends State<Step1Widget> {
         widget.nextStepCallback();
       } else {
         final errorData = jsonDecode(response.body);
-        setState(() {
-          _errorMessage = 'Échec de la création: ${errorData['message']}';
-        });
+
+        NotificationService.showError(context, "Échec de la création: ${errorData['message']}");
       }
     } catch (e) {
       setState(() {
-        _errorMessage = 'Erreur: $e';
+        NotificationService.showError(context, "Erreur: $e");
       });
     }
   }

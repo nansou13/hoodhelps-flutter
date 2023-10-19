@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/services/translation_service.dart';
+import 'package:hoodhelps/template.dart';
 import 'package:provider/provider.dart';
 
 import 'register_step/step_divider.dart';
@@ -48,12 +49,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
         body: Stack(children: [
       // Image de fond
-      Image.asset(
-        'assets/background_image.jpg', // Remplacez par le chemin de votre image de fond
-        fit: BoxFit.cover,
-        width: double.infinity,
-        height: double.infinity,
-      ),
+      background(),
 
       Container(
         padding: const EdgeInsets.fromLTRB(20.0, 50.0, 20.0, 20.0),

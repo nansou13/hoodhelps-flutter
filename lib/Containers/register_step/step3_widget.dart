@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -24,7 +25,6 @@ class _Step3WidgetState extends State<Step3Widget> {
   String? selectedJobId;
   String description = ""; // Champ de description
   int experienceYears = 0; // Valeur initiale du curseur
-  String _errorMessage = ''; // Message d'erreur local
 
   List<Category> categories = [];
   List<Job> jobs = [];
@@ -82,22 +82,14 @@ class _Step3WidgetState extends State<Step3Widget> {
       final data = jsonDecode(response.body);
       if (response.statusCode == 201) {
         // Si la requête réussit (statut 200), analyser la réponse JSON
-
-        setState(() {
-          _errorMessage = '';
-        });
         widget.nextStepCallback();
       } else {
         // En cas d'échec de la requête, afficher un message d'erreur
-        setState(() {
-          _errorMessage = 'Échec ajout du job $data';
-        });
+        NotificationService.showError(context, "Échec ajout du job $data");
       }
     } catch (e) {
       // En cas d'erreur lors de la requête
-      setState(() {
-        _errorMessage = 'Erreur: $e';
-      });
+      NotificationService.showError(context, "Erreur: $e");
     }
   }
 
@@ -190,15 +182,6 @@ class _Step3WidgetState extends State<Step3Widget> {
             ),
           ),
         ]),
-        const SizedBox(height: 20.0),
-        Text(
-          _errorMessage, // Utilisation de errorMessage
-          style: const TextStyle(
-            color: Colors.red,
-            fontSize: 12.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
         const SizedBox(height: 20.0),
         MaterialButton(
           onPressed: () {

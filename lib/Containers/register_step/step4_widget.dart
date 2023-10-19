@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/services/notifications_service.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,8 +18,6 @@ class Step4Widget extends StatefulWidget {
 
 class _Step4WidgetState extends State<Step4Widget> {
   final TextEditingController _codeController = CodeInputController();
-  // String groupeCode = ""; // Champ de description
-  String _errorMessage = ''; // Message d'erreur local
 
   @override
   void initState() {
@@ -44,35 +43,24 @@ class _Step4WidgetState extends State<Step4Widget> {
           if (addUserInGroup.statusCode == 201) {
             // Si la requête réussit (statut 200), analyser la réponse JSON
 
-            setState(() {
-              _errorMessage = '';
-            });
-            Navigator.of(context).pushReplacementNamed('/lobby');
+            Navigator.of(context).pushReplacementNamed('/splash');
           } else {
             // En cas d'échec de la requête, afficher un message d'erreur
-            setState(() {
-              _errorMessage = 'Échec ajout du user dans le groupe $data';
-            });
+            NotificationService.showError(context, "Échec ajout du user dans le groupe $data");
           }
 
         } catch (e) {
-          setState(() {
-            _errorMessage = 'Erreur lors de la récupération des données du serveur.';
-          });
+          NotificationService.showError(context, "Erreur lors de la récupération des données du serveur. ${e.toString()}");
         }
         break;
       case 401:
-        setState(() {
-          _errorMessage = json.decode(response.body)['error'];
-        });
+        NotificationService.showError(context, json.decode(response.body)['error']);
         break;
       default:
-         _errorMessage = json.decode(response.body);
+         NotificationService.showError(context, json.decode(response.body));
     }
       } catch (e) {
-      setState(() {
-        _errorMessage = 'Erreur lors de la récupération des données du serveur.';
-      });
+        NotificationService.showError(context, "Erreur lors de la récupération des données du serveur. ${e.toString()}");
     }
   }
 
@@ -112,15 +100,6 @@ class _Step4WidgetState extends State<Step4Widget> {
           // },
         ),
         const SizedBox(height: 20), // Ajoute un espacement
-        Text(
-          _errorMessage, // Utilisation de errorMessage
-          style: const TextStyle(
-            color: Colors.red,
-            fontSize: 12.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 20.0),
         MaterialButton(
           onPressed: () {
             fetchGroupeInfo();
@@ -146,7 +125,7 @@ class _Step4WidgetState extends State<Step4Widget> {
         const SizedBox(height: 20.0),
         MaterialButton(
           onPressed: () {
-            widget.nextStepCallback();
+            Navigator.of(context).pushReplacementNamed('/splash');
           },
           color: Colors.blue,
           textColor: Colors.white,

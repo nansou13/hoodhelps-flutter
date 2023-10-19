@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/Containers/lobby_jobs.dart';
 import 'package:hoodhelps/services/translation_service.dart';
+import 'package:hoodhelps/template.dart';
 import 'package:hoodhelps/utils.dart';
 
 import 'package:hoodhelps/Containers/menu_widget.dart';
@@ -54,12 +55,7 @@ class _LobbyPage extends State<LobbyPage> {
         drawer: const MenuWidget(),
         body: Stack(children: [
           // Image de fond
-      Image.asset(
-        'assets/background_image.jpg', // Remplacez par le chemin de votre image de fond
-        fit: BoxFit.cover,
-        width: double.infinity,
-        height: double.infinity,
-      ),
+      background(),
 
       Container(
         color: Colors.white.withOpacity(0.9),

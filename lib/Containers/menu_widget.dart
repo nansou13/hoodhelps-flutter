@@ -5,42 +5,32 @@ import 'package:hoodhelps/services/user_service.dart';
 import 'package:hoodhelps/utils.dart';
 import 'package:provider/provider.dart';
 
-class MenuWidget extends StatefulWidget {
+class MenuWidget extends StatelessWidget {
   const MenuWidget({Key? key}) : super(key: key);
 
   @override
-  _MenuWidget createState() => _MenuWidget();
-}
-
-class _MenuWidget extends State<MenuWidget> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final translationService = context.read<TranslationService>();
-    final user = Provider.of<UserService>(context);
-    final fullname = (user.firstName ?? '') + ' ' + (user.lastName ?? '');
-    final firstInitial = user.firstName != null && user.firstName!.isNotEmpty
-        ? user.firstName![0]
-        : '';
-    final lastInitial = user.lastName != null && user.lastName!.isNotEmpty
-        ? user.lastName![0]
-        : '';
+    final translationService = Provider.of<TranslationService>(context, listen: false);
+    final user = Provider.of<UserService>(context, listen: false);
+
+    final String firstName = user.firstName ?? '';
+    final String lastName = user.lastName ?? '';
+    final String email = user.email ?? '';
+    final String fullName = FunctionUtils.capitalizeFirstLetter('$firstName $lastName');
+    final String initials = '${firstName.isNotEmpty ? firstName[0] : ''}${lastName.isNotEmpty ? lastName[0] : ''}'.toUpperCase();
+
     final groups = user.groups;
 
     return Drawer(
       child: Column(
-        children: <Widget>[
+        children: [
           UserAccountsDrawerHeader(
-            accountName: Text(FunctionUtils.capitalizeFirstLetter(fullname)),
-            accountEmail: Text(user.email ?? ""),
+            accountName: Text(fullName),
+            accountEmail: Text(email),
             currentAccountPicture: CircleAvatar(
               backgroundColor: Colors.blueGrey,
               child: Text(
-                '${firstInitial.toUpperCase()}${lastInitial.toUpperCase()}',
+                initials,
                 style: const TextStyle(
                   fontSize: 24,
                   color: Colors.white,
@@ -48,69 +38,77 @@ class _MenuWidget extends State<MenuWidget> {
               ),
             ),
           ),
-          ...groups.map((group) => GroupCard(
-                name: group.name,
-                address: group.address,
-                cp: group.cp,
-                city: group.city,
-                backgroundUrl: group.backgroundUrl,
-                onTap: () {
-                  Navigator.of(context, rootNavigator: true).pushNamed(
-                    '/lobby',
-                    arguments: [group.id],
-                  );
-                  // redirect to /lobby
-                },
-              )),
-          Card(
-            color: Colors.white, // Couleur de l'arrière-plan de la carte
-            child: InkWell(
+          ...groups.map((group) {
+            final name = group.name;
+            final address = group.address;
+            final cp = group.cp;
+            final city = group.city;
+            final backgroundUrl = group.backgroundUrl;
+            return GroupCard(
+              name: name,
+              address: address,
+              cp: cp,
+              city: city,
+              backgroundUrl: backgroundUrl,
               onTap: () {
-                // Gérez l'action de clic ici
+                Navigator.of(context, rootNavigator: true).pushNamed('/lobby', arguments: [group.id]);
               },
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: double.infinity, // Prend la largeur complète
-                    height: 50.0, // Hauteur de la carte
-                    alignment: Alignment.center,
-                    child: const Icon(
-                      Icons.add,
-                      size: 40.0, // Taille de l'icône "ajouter"
-                      color: Colors.blue, // Couleur de l'icône "ajouter"
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(8.0, 0, 8.0, 10.0),
-                    child: Text(
-                      "Rejoindre un groupe",
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+            );
+          }).toList(),
+          _joinGroupCard(),
           const Spacer(),
-          Padding(
-            padding: const EdgeInsets.only(
-                bottom: 20.0), // Ajustez l'espacement en bas ici
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: ListTile(
-                leading: const Icon(Icons.exit_to_app),
-                title: Text(translationService.translate('DISCONNECT_BUTTON')),
-                onTap: () {
-                  FunctionUtils.disconnectUser(context);
-                },
+          _disconnectButton(translationService, context),
+        ],
+      ),
+    );
+  }
+
+  Widget _joinGroupCard() {
+    return Card(
+      color: Colors.white,
+      child: InkWell(
+        onTap: () {},
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: double.infinity,
+              height: 50.0,
+              alignment: Alignment.center,
+              child: const Icon(
+                Icons.add,
+                size: 40.0,
+                color: Colors.blue,
               ),
             ),
-          ),
-        ],
+            const Padding(
+              padding: EdgeInsets.fromLTRB(8.0, 0, 8.0, 10.0),
+              child: Text(
+                "Rejoindre un groupe",
+                style: TextStyle(
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _disconnectButton(TranslationService translationService, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20.0),
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: ListTile(
+          leading: const Icon(Icons.exit_to_app),
+          title: Text(translationService.translate('DISCONNECT_BUTTON')),
+          onTap: () {
+            FunctionUtils.disconnectUser(context);
+          },
+        ),
       ),
     );
   }

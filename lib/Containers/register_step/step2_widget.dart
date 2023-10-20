@@ -1,3 +1,7 @@
+import 'dart:io';
+import 'package:image/image.dart' as img;
+import 'package:firebase_storage/firebase_storage.dart'; // Importez cette bibliothèque
+import 'package:image_picker/image_picker.dart'; // Importez cette bibliothèque
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:intl/intl.dart';
@@ -21,6 +25,53 @@ class _Step2WidgetState extends State<Step2Widget> {
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
+  String imageUrl = '';
+
+  File? _image;
+  final picker = ImagePicker();
+  final storageRef = FirebaseStorage.instance.ref();
+
+  Future<void> _pickImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        // no image selected
+      }
+    });
+  }
+
+  Future<void> _uploadImageToFirebase() async {
+    if (_image == null) {
+      return;
+    }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userID = prefs.getString('user_id');
+
+    // Charger l'image dans un objet img.Image
+    img.Image image = img.decodeImage(File(_image!.path).readAsBytesSync())!;
+    
+    // Redimensionner l'image
+    img.Image resizedImg = img.copyResize(image, width: 500); // Vous pouvez également fixer la hauteur : height: 500
+
+    // Obtenir l'image redimensionnée sous forme de liste d'uint8
+    List<int> resizedBytes = img.encodeJpg(resizedImg, quality: 85); // 85 est la qualité de l'image
+    
+    // Créez un fichier à partir des octets redimensionnés
+    File resizedFile = File(_image!.path)..writeAsBytesSync(resizedBytes);
+
+    FirebaseStorage storage = FirebaseStorage.instanceFor(bucket: 'gs://hoodhelps.appspot.com');
+
+    final fileName = 'profile_image_${userID ?? DateTime.now().millisecondsSinceEpoch}.jpg';
+    
+    final profileImageRef = storage.ref().child('users').child(fileName);
+    final uploadTask = profileImageRef.putFile(resizedFile);
+
+    final taskSnapshot = await uploadTask.whenComplete(() {});
+    imageUrl = await taskSnapshot.ref.getDownloadURL();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +88,26 @@ class _Step2WidgetState extends State<Step2Widget> {
         const SizedBox(height: 10.0),
         const Text('Veuillez fournir vos informations personnelles pour créer votre compte.'),
         const SizedBox(height: 20.0),
+        Center(
+          child: CircleAvatar(
+          radius: 50,
+          backgroundImage: _image != null ? FileImage(_image!) : null,
+          child: _image == null ? Icon(Icons.person, size: 50) : null,
+        ),
+        ),
+        
+        Center(
+          child: 
+          ElevatedButton(
+          onPressed: () async {
+            await _pickImage();
+            await _uploadImageToFirebase();
+          },
+          child: Text("Choisir une photo"),
+        ),
+        ),
+        const SizedBox(height: 10.0),
+        
         TextField(
           controller: firstNameController,
           decoration: const InputDecoration(labelText: 'Prénom'),
@@ -92,6 +163,7 @@ class _Step2WidgetState extends State<Step2Widget> {
         'first_name': firstname,
         'last_name': lastname,
         'phone_number': phone,
+        'image_url': imageUrl,
       }, headers: {
         'Authorization': 'Bearer $userToken'
       });

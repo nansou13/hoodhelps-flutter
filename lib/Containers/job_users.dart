@@ -145,6 +145,8 @@ class _JobUsers extends State<JobUsers> {
               itemBuilder: (context, index) {
                 final user = usersData[index];
                 final userNameDisplay = displayName(user['first_name'], user['last_name'], user['username']);
+                final userImageUrl = user['image_url'] ?? '';
+                print(user);
                 return GestureDetector(
                   onTap: () {
                     print('click');
@@ -156,10 +158,11 @@ class _JobUsers extends State<JobUsers> {
                       children: <Widget>[
                         const SizedBox(height: 20.0),
                         CircleAvatar(
+                          backgroundImage: userImageUrl.isNotEmpty ? NetworkImage(userImageUrl) : null,
                           backgroundColor: Colors.blueGrey,
                           radius: 50.0,
                           child: Text(
-                            '${user['first_name'].isNotEmpty ? user['first_name'][0] : ''}${user['last_name'].isNotEmpty ? user['last_name'][0] : ''}'.toUpperCase(),
+                            userImageUrl.isEmpty ? '${user['first_name'].isNotEmpty ? user['first_name'][0] : ''}${user['last_name'].isNotEmpty ? user['last_name'][0] : ''}'.toUpperCase(): '',
                             style: const TextStyle(
                               fontSize: 24,
                               color: Colors.white,

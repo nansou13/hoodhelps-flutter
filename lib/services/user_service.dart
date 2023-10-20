@@ -5,6 +5,7 @@ class UserService {
   String? firstName;
   String? lastName;
   String? dateOfBirth;
+  String? imageUrl;
   bool? isActive;
   String? role;
   String? phoneNumber;
@@ -17,6 +18,7 @@ class UserService {
     this.firstName,
     this.lastName,
     this.dateOfBirth,
+    this.imageUrl,
     this.isActive,
     this.role,
     this.phoneNumber,
@@ -30,6 +32,7 @@ class UserService {
     firstName = userData['first_name'];
     lastName = userData['last_name'];
     dateOfBirth = userData['date_of_birth'];
+    imageUrl = userData['image_url'];
     isActive = userData['is_active'];
     role = userData['role'];
     phoneNumber = userData['phone_number'];

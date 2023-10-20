@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Package imports
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 // Local imports
 import 'package:hoodhelps/Containers/job_users.dart';
@@ -24,6 +25,9 @@ Future<void> main() async {
   // Initialisez les langs
   var translationService = TranslationService();
   await translationService.loadTranslations("fr");
+
+  // Initialisez Firebase
+  await Firebase.initializeApp();
 
   runApp(
     MultiProvider(

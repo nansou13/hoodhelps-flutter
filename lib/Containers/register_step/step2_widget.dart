@@ -30,7 +30,7 @@ class _Step2WidgetState extends State<Step2Widget> {
   final storageRef = FirebaseStorage.instance.ref();
 
   Future<void> _pickImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     setState(() {
       if (pickedFile != null) {

@@ -146,7 +146,7 @@ class _JobUsers extends State<JobUsers> {
                 final user = usersData[index];
                 final userNameDisplay = displayName(user['first_name'], user['last_name'], user['username']);
                 final userImageUrl = user['image_url'] ?? '';
-                print(user);
+                
                 return GestureDetector(
                   onTap: () {
                     print('click');

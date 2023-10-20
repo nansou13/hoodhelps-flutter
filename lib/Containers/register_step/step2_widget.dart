@@ -92,7 +92,7 @@ class _Step2WidgetState extends State<Step2Widget> {
           child: CircleAvatar(
           radius: 50,
           backgroundImage: _image != null ? FileImage(_image!) : null,
-          child: _image == null ? Icon(Icons.person, size: 50) : null,
+          child: _image == null ? const Icon(Icons.person, size: 50) : null,
         ),
         ),
         
@@ -103,7 +103,7 @@ class _Step2WidgetState extends State<Step2Widget> {
             await _pickImage();
             await _uploadImageToFirebase();
           },
-          child: Text("Choisir une photo"),
+          child: const Text("Choisir une photo"),
         ),
         ),
         const SizedBox(height: 10.0),

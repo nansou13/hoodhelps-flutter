@@ -16,6 +16,7 @@ class MenuWidget extends StatelessWidget {
     final String firstName = user.firstName ?? '';
     final String lastName = user.lastName ?? '';
     final String email = user.email ?? '';
+    final String imageUrl = user.imageUrl ?? '';
     final String fullName = FunctionUtils.capitalizeFirstLetter('$firstName $lastName');
     final String initials = '${firstName.isNotEmpty ? firstName[0] : ''}${lastName.isNotEmpty ? lastName[0] : ''}'.toUpperCase();
 
@@ -28,9 +29,10 @@ class MenuWidget extends StatelessWidget {
             accountName: Text(fullName),
             accountEmail: Text(email),
             currentAccountPicture: CircleAvatar(
+              backgroundImage: imageUrl.isNotEmpty ? NetworkImage(imageUrl) : null,
               backgroundColor: Colors.blueGrey,
               child: Text(
-                initials,
+                imageUrl.isEmpty ? initials : '',
                 style: const TextStyle(
                   fontSize: 24,
                   color: Colors.white,

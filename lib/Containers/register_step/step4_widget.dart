@@ -28,6 +28,10 @@ class _Step4WidgetState extends State<Step4Widget> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userID = prefs.getString('user_id');
     final groupeCode = _codeController.text.toLowerCase();
+    if (groupeCode.isEmpty) {
+      NotificationService.showError(context, "Veuillez saisir un code de groupe");
+      return;
+    }
     try {
     final response =
         await http.get(Uri.parse('$routeAPI/api/groups/code/$groupeCode'));

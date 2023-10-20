@@ -68,8 +68,6 @@ class _JobUsers extends State<JobUsers> {
       orElse: () => null,
     );
 
-    print('groupId: $groupId, categoryId: $categoryId, jobId: $jobId');
-
     List<dynamic> professionsData = [];
     if (categoryData != null) {
       professionsData = categoryData['professions'];
@@ -79,7 +77,6 @@ class _JobUsers extends State<JobUsers> {
       (job) => job['profession_id'] == jobId,
       orElse: () => null,
     );
-    print(jobData);
     try {
       final response = await http.get(
           Uri.parse('$routeAPI/api/categories/$groupId/jobs/$jobId/users'));
@@ -87,7 +84,6 @@ class _JobUsers extends State<JobUsers> {
       final data = jsonDecode(response.body);
       if (response.statusCode == 200) {
         // Si la requête réussit (statut 200), analyser la réponse JSON
-        print(jsonDecode(response.body));
         setState(() {
           usersData = jsonDecode(response.body);
           groupId;
@@ -97,11 +93,11 @@ class _JobUsers extends State<JobUsers> {
         return;
       } else {
         // En cas d'échec de la requête, afficher un message d'erreur
-        print('Échec de la mise à jour $data');
+        NotificationService.showError(context, "Échec de la mise à jour $data");
       }
     } catch (e) {
       // En cas d'erreur lors de la requête
-      print('Erreur: $e');
+      NotificationService.showError(context, "Erreur: ${e.toString()}");
     }
     setState(() {
       groupId;
@@ -113,6 +109,7 @@ class _JobUsers extends State<JobUsers> {
   @override
   Widget build(BuildContext context) {
     final translationService = context.read<TranslationService>();
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Mon Lobby'),
@@ -135,15 +132,19 @@ class _JobUsers extends State<JobUsers> {
             color: Colors.white.withOpacity(0.9),
             width: double.infinity,
             height: double.infinity,
+            child: Padding(
+            padding: const EdgeInsets.all(
+                16.0), // Marge uniforme autour de la grille
             child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 1, // 1 éléments par ligne
+                crossAxisCount: 2, // 2 éléments par ligne
                 crossAxisSpacing: 16.0, // Espace horizontal entre les éléments
                 mainAxisSpacing: 16.0, // Espace vertical entre les éléments
               ),
               itemCount: usersData.length,
               itemBuilder: (context, index) {
                 final user = usersData[index];
+                final userNameDisplay = displayName(user['first_name'], user['last_name'], user['username']);
                 return GestureDetector(
                   onTap: () {
                     print('click');
@@ -151,24 +152,23 @@ class _JobUsers extends State<JobUsers> {
                   child: Card(
                     color: Colors.white,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        Text(
-                            user['username'] ?? '',
+                        const SizedBox(height: 20.0),
+                        CircleAvatar(
+                          backgroundColor: Colors.blueGrey,
+                          radius: 50.0,
+                          child: Text(
+                            '${user['first_name'].isNotEmpty ? user['first_name'][0] : ''}${user['last_name'].isNotEmpty ? user['last_name'][0] : ''}'.toUpperCase(),
                             style: const TextStyle(
-                              fontSize: 15.0,
+                              fontSize: 24,
+                              color: Colors.white,
                             ),
-                            textAlign: TextAlign.center, // Centrer le texte
                           ),
+                        ),
+                        const SizedBox(height: 10.0),
                         Text(
-                            user['first_name'] ?? '',
-                            style: const TextStyle(
-                              fontSize: 15.0,
-                            ),
-                            textAlign: TextAlign.center, // Centrer le texte
-                          ),
-                        Text(
-                            user['last_name'] ?? '',
+                            userNameDisplay,
                             style: const TextStyle(
                               fontSize: 15.0,
                             ),
@@ -180,9 +180,24 @@ class _JobUsers extends State<JobUsers> {
                 );
               },
             ),
+            ),
           ),
         ],
       ),
     );
+  }
+}
+
+String displayName(String? firstname, String? lastname, String? pseudo) {
+  if (firstname != null && firstname.isNotEmpty) {
+    if (lastname != null && lastname.isNotEmpty) {
+      return "$firstname ${lastname[0]}.";  // e.g., "John D."
+    } else {
+      return firstname;  // e.g., "John"
+    }
+  } else if (pseudo != null && pseudo.isNotEmpty) {
+    return pseudo;  // e.g., "john_doe"
+  } else {
+    return "Utilisateur anonyme";  // Fallback value
   }
 }

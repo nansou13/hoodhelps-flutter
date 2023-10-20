@@ -7,9 +7,10 @@ import 'package:provider/provider.dart';
 class GroupCategoryContent extends StatefulWidget {
   final String groupId;
   final String categoryId;
+  final Function(String newTitle) updateTitleCallback;
 
   const GroupCategoryContent(
-      {Key? key, required this.groupId, required this.categoryId})
+      {Key? key, required this.groupId, required this.categoryId, required this.updateTitleCallback})
       : super(key: key);
 
   @override
@@ -18,7 +19,8 @@ class GroupCategoryContent extends StatefulWidget {
 
 class _GroupCategoryContentState extends State<GroupCategoryContent> {
   List jobData = [];
-
+  String categorieName = '';
+  
   @override
   void initState() {
     super.initState();
@@ -26,6 +28,7 @@ class _GroupCategoryContentState extends State<GroupCategoryContent> {
   }
 
   Future<void> loadJobsData() async {
+    final translationService = context.read<TranslationService>();
     final CategoriesService categoriesService = CategoriesService();
     final groupId = widget.groupId;
     final data = await categoriesService.getCacheCategoryData(groupId);
@@ -43,6 +46,8 @@ class _GroupCategoryContentState extends State<GroupCategoryContent> {
     setState(() {
       jobData =
           professions; // Mettez à jour la liste une fois les données chargées
+      categorieName = categoryData['name'];
+      widget.updateTitleCallback(translationService.translate(categorieName));
     });
   }
 
@@ -57,10 +62,16 @@ class _GroupCategoryContentState extends State<GroupCategoryContent> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         const SizedBox(height: 30.0),
-        Text(
-          'Contenu pour les utilisateurs ayant un groupe avec ID: $groupId',
-          style: const TextStyle(fontSize: 15.0),
-          textAlign: TextAlign.center,
+        Container(
+          color: Colors.white,
+          margin: const EdgeInsets.fromLTRB(
+              20.0, 0, 20.0, 0), // Ajoute 20 points de marge extérieure
+          padding: const EdgeInsets.all(10.0), // Ajoute 8 points de marge intérieure
+          child: Text(
+            "Vous avez sélectionné la catégorie ${translationService.translate(categorieName)}. Ici, vous trouverez une liste de professionnels qualifiés dans votre résidence, prêts à vous aider. N'hésitez pas à entrer en contact directement pour discuter de vos besoins.",
+            style: const TextStyle(fontSize: 15.0),
+            textAlign: TextAlign.center,
+          ),
         ),
         const SizedBox(height: 20.0),
         Expanded(
@@ -76,8 +87,7 @@ class _GroupCategoryContentState extends State<GroupCategoryContent> {
               itemCount: jobData.length,
               itemBuilder: (context, index) {
                 final job = jobData[index];
-                final jobId =
-                    job['profession_id']; // Récupérez l'ID de la catégorie
+                final jobId = job['profession_id']; // Récupérez l'ID de la catégorie
                 final jobName = job['profession_name'];
                 final jobUsers =
                     int.tryParse(job['user_count'].toString()) ?? 0;
@@ -88,7 +98,6 @@ class _GroupCategoryContentState extends State<GroupCategoryContent> {
                       : HitTestBehavior.translucent,
                   onTap: () {
                     if (jobUsers > 0) {
-                      print(jobId);
                       Navigator.of(context, rootNavigator: true).pushNamed(
                         '/userlist',
                         arguments: [groupId, categoryId, jobId],

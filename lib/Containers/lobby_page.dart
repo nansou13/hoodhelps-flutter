@@ -18,11 +18,17 @@ class LobbyPage extends StatefulWidget {
 class _LobbyPage extends State<LobbyPage> {
   bool isLoading =
       true; // Ajoutez une variable pour gérer l'affichage du loader
+  String appBarTitle = 'Home'; 
+
+  void updateAppBarTitle(String newTitle) {
+    setState(() {
+      appBarTitle = newTitle;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    // _loadUserData();
   }
 
   @override
@@ -41,7 +47,7 @@ class _LobbyPage extends State<LobbyPage> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Mon Lobby'),
+          title: Text(appBarTitle),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.logout_rounded),
@@ -66,7 +72,9 @@ class _LobbyPage extends State<LobbyPage> {
               ? _buildNoGroupContent()
               : categoryId.isNotEmpty
                   ? GroupCategoryContent(
-                      groupId: groupId, categoryId: categoryId)
+                      groupId: groupId, 
+                      categoryId: categoryId,
+                      updateTitleCallback: updateAppBarTitle,)
                   : GroupContent(groupId: groupId),
         ),
       ),

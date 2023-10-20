@@ -43,10 +43,16 @@ class _GroupContentState extends State<GroupContent> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         const SizedBox(height: 30.0),
-        Text(
-          'Contenu pour les utilisateurs ayant un groupe avec ID: $groupId',
-          style: const TextStyle(fontSize: 15.0),
-          textAlign: TextAlign.center,
+        Container(
+          color: Colors.white,
+          margin: const EdgeInsets.fromLTRB(
+              20.0, 0, 20.0, 0), // Ajoute 20 points de marge extérieure
+          padding: const EdgeInsets.all(10.0), // Ajoute 8 points de marge intérieure
+          child: const Text(
+            "Trouver le bon professionnel près de chez vous n'a jamais été aussi simple. Parcourez les différentes catégories de métiers ci-dessous pour découvrir les talents qui se cachent dans votre résidence. ",
+            style: TextStyle(fontSize: 15.0),
+            textAlign: TextAlign.center,
+          ),
         ),
         const SizedBox(height: 20.0),
         Expanded(

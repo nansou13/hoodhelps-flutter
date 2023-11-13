@@ -1,5 +1,7 @@
 // Dart imports
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/Containers/user_info.dart';
+import 'package:hoodhelps/Containers/user_update.dart';
 
 // Package imports
 import 'package:provider/provider.dart';
@@ -49,12 +51,15 @@ class MyApp extends StatelessWidget {
       title: 'HoodHelps',
       theme: ThemeData(primarySwatch: Colors.blue),
       initialRoute: '/splash',
+      // initialRoute: '/userinfo',
       routes: {
         '/splash': (context) => const SplashScreen(),
         '/login': (context) => const LoginPage(),
         '/lobby': (context) => const LobbyPage(),
         '/register': (context) => const RegisterPage(),
         '/userlist': (context) => const JobUsers(),
+        '/userinfo': (context) => const ProfilePage(),
+        '/userupdate': (context) => const EditPage(),
       },
     );
   }

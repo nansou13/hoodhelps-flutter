@@ -47,6 +47,14 @@ class _LobbyPage extends State<LobbyPage> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
+          leading: categoryId.isNotEmpty
+      ? IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        )
+      : null,
           title: Text(appBarTitle),
           actions: <Widget>[
             IconButton(

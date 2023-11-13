@@ -9,17 +9,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../constants.dart';
 
-class Step3Widget extends StatefulWidget {
-  final Function nextStepCallback;
+class AddJobWidget extends StatefulWidget {
+  final Function saveJobCallback;
 
-  const Step3Widget({Key? key, required this.nextStepCallback})
+  const AddJobWidget({Key? key, required this.saveJobCallback})
       : super(key: key);
 
   @override
-  _Step3WidgetState createState() => _Step3WidgetState();
+  _AddJobWidgetState createState() => _AddJobWidgetState();
 }
 
-class _Step3WidgetState extends State<Step3Widget> {
+class _AddJobWidgetState extends State<AddJobWidget> {
   String? selectedCategoryId;
   Job? selectedJob;
   String? selectedJobId;
@@ -82,7 +82,11 @@ class _Step3WidgetState extends State<Step3Widget> {
       final data = jsonDecode(response.body);
       if (response.statusCode == 201) {
         // Si la requête réussit (statut 200), analyser la réponse JSON
-        widget.nextStepCallback();
+        widget.saveJobCallback({
+          'profession_id': selectedJobId,
+          'description': description,
+          'experience_years': experienceYears.toString(),
+        });
       } else {
         // En cas d'échec de la requête, afficher un message d'erreur
         NotificationService.showError(context, "Échec ajout du job $data");
@@ -96,20 +100,12 @@ class _Step3WidgetState extends State<Step3Widget> {
   @override
   Widget build(BuildContext context) {
     final translationService = context.read<TranslationService>();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        const Text(
-          'Étape 3',
-          style: TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 10.0),
-        const Text(
-            'Sélectionnez votre métier dans la liste, indiquez le nombre d\'années d\'expérience que vous avez dans ce domaine (de 1 à 10+ ans), et ajoutez une description de vos compétences et de votre expérience professionnelle.'),
-        const SizedBox(height: 20.0),
+    return SingleChildScrollView(
+          // Ajoutez le SingleChildScrollView ici
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            // crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
         TextField(
           enabled: !isLoading,
           onTap: () {
@@ -207,31 +203,9 @@ class _Step3WidgetState extends State<Step3Widget> {
             ),
           ),
         ),
-        const SizedBox(height: 20.0),
-        MaterialButton(
-          onPressed: () {
-            widget.nextStepCallback();
-          },
-          color: Colors.blue,
-          textColor: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Container(
-            width: double.infinity,
-            height: 50.0,
-            alignment: Alignment.center,
-            child: const Text(
-              'Suivant',
-              style: TextStyle(
-                fontSize: 18.0,
-              ),
-            ),
-          ),
-        ),
       ],
-    );
+    ),
+          );
   }
 
   Future<void> _showCategoryPicker(BuildContext context) async {

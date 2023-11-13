@@ -59,6 +59,7 @@ class MenuWidget extends StatelessWidget {
           }).toList(),
           _joinGroupCard(),
           const Spacer(),
+          _parameterButton(translationService, context),
           _disconnectButton(translationService, context),
         ],
       ),
@@ -112,6 +113,18 @@ class MenuWidget extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+  Widget _parameterButton(TranslationService translationService, BuildContext context) {
+    return Align(
+        alignment: Alignment.bottomCenter,
+        child: ListTile(
+          leading: const Icon(Icons.settings),
+          title: Text(translationService.translate('PARAMETER_BUTTON')),
+          onTap: () {
+            Navigator.of(context, rootNavigator: true).pushNamed('/userupdate');
+          },
+        ),
     );
   }
 }

@@ -88,7 +88,8 @@ class _JobUsers extends State<JobUsers> {
           usersData = jsonDecode(response.body);
           groupId;
           category = [categoryId, categoryData['name']];
-          job = [jobId, jobData['name']];
+          job = [jobId, jobData['profession_name']];
+          isLoading = false; // Arrêtez d'afficher le loader
         });
         return;
       } else {
@@ -109,10 +110,22 @@ class _JobUsers extends State<JobUsers> {
   @override
   Widget build(BuildContext context) {
     final translationService = context.read<TranslationService>();
-    
+    if (isLoading) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    } else {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mon Lobby'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        title: Text(translationService.translate(job[1])),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.logout_rounded),
@@ -149,7 +162,10 @@ class _JobUsers extends State<JobUsers> {
                 
                 return GestureDetector(
                   onTap: () {
-                    print('click');
+                    Navigator.of(context, rootNavigator: true).pushNamed(
+                        '/userinfo',
+                        arguments: [user['id'], job[0], job[1], groupId],
+                      );
                   },
                   child: Card(
                     color: Colors.white,
@@ -188,6 +204,8 @@ class _JobUsers extends State<JobUsers> {
         ],
       ),
     );
+
+    }
   }
 }
 

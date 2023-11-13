@@ -65,5 +65,6 @@
     "FORM_LOGIN_ACCOUNT_LINK": "Se connecter",
     "APP_TITLE": "HoodHelps",
     "APP_TITLE_DESC": "Des voisins qui s'entraident.",
-    "DISCONNECT_BUTTON": "Déconnexion"
+    "DISCONNECT_BUTTON": "Déconnexion",
+    "PARAMETER_BUTTON": "Paramètres"
 }

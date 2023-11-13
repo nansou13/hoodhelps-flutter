@@ -65,6 +65,7 @@
     "FORM_LOGIN_ACCOUNT_LINK": "Login",
     "APP_TITLE": "HoodHelps",
     "APP_TITLE_DESC": "Neighborhood helping neighbors",
-    "DISCONNECT_BUTTON": "Logout"
+    "DISCONNECT_BUTTON": "Logout",
+    "PARAMETER_BUTTON": "Parameter"
 }
   

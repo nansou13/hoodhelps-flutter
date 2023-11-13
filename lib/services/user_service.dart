@@ -38,6 +38,21 @@ class UserService {
     phoneNumber = userData['phone_number'];
   }
 
+  getUser() {
+    return {
+      'id': id,
+      'username': username,
+      'email': email,
+      'first_name': firstName,
+      'last_name': lastName,
+      'date_of_birth': dateOfBirth,
+      'image_url': imageUrl,
+      'is_active': isActive,
+      'role': role,
+      'phone_number': phoneNumber,
+    };
+  }
+
   void addUserGroups(List<dynamic> groupData) {
     groups = groupData
         .map((groupData) => Group(

@@ -40,6 +40,14 @@ class MenuWidget extends StatelessWidget {
               ),
             ),
           ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch, 
+              children: [
+                Flexible(
+                  child: SingleChildScrollView(
+          child:Column(
+                children: [
           ...groups.map((group) {
             final name = group.name;
             final address = group.address;
@@ -57,8 +65,16 @@ class MenuWidget extends StatelessWidget {
               },
             );
           }).toList(),
-          _joinGroupCard(),
-          const Spacer(),
+                ],
+        ),
+                  ),
+                ),
+                _joinGroupCard(translationService, context),
+              ],
+            ),
+          ),
+          
+          // const Spacer(),
           _parameterButton(translationService, context),
           _disconnectButton(translationService, context),
         ],
@@ -66,11 +82,13 @@ class MenuWidget extends StatelessWidget {
     );
   }
 
-  Widget _joinGroupCard() {
+  Widget _joinGroupCard(TranslationService translationService, BuildContext context) {
     return Card(
       color: Colors.white,
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+                Navigator.of(context, rootNavigator: true).pushNamed('/joingroup');
+              },
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

@@ -9,16 +9,16 @@ const String cacheTimeKey = 'cacheTime';
 class CategoriesService {
   List<dynamic> categoryData = [];
 
-  Future<void> cacheCategoryData(List<dynamic> data) async {
+  Future<void> cacheCategoryData(List<dynamic> data, groupeID) async {
     final prefs = await SharedPreferences.getInstance();
     final now = DateTime.now().millisecondsSinceEpoch;
-    await prefs.setString(categoryDataKey, jsonEncode(data));
+    await prefs.setString(groupeID, jsonEncode(data));
     await prefs.setInt(cacheTimeKey, now);
   }
 
   Future<List<dynamic>> getCacheCategoryData(String groupId) async {
     final prefs = await SharedPreferences.getInstance();
-    final cachedData = prefs.getString(categoryDataKey);
+    final cachedData = prefs.getString(groupId);
     final cacheTime = prefs.getInt(cacheTimeKey);
 
     if (cachedData != null && cacheTime != null) {
@@ -33,7 +33,7 @@ class CategoriesService {
           await http.get(Uri.parse('$routeAPI/api/categories/group/$groupId'));
       if (responseCategory.statusCode == 200) {
         final data = jsonDecode(responseCategory.body);
-        await cacheCategoryData(data);
+        await cacheCategoryData(data, groupId);
         return data;
       }
     } catch (e) {

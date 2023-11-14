@@ -1,5 +1,6 @@
 // Dart imports
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/Containers/join_group.dart';
 import 'package:hoodhelps/Containers/user_info.dart';
 import 'package:hoodhelps/Containers/user_update.dart';
 
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
         '/userlist': (context) => const JobUsers(),
         '/userinfo': (context) => const ProfilePage(),
         '/userupdate': (context) => const EditPage(),
+        '/joingroup': (context) => const JoinGroup(),
       },
     );
   }

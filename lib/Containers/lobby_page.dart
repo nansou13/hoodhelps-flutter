@@ -75,7 +75,6 @@ class _LobbyPage extends State<LobbyPage> {
         color: Colors.white.withOpacity(0.9),
         width: double.infinity,
         height: double.infinity,
-        child: Center(
           child: groupId == ''
               ? _buildNoGroupContent()
               : categoryId.isNotEmpty
@@ -83,8 +82,7 @@ class _LobbyPage extends State<LobbyPage> {
                       groupId: groupId, 
                       categoryId: categoryId,
                       updateTitleCallback: updateAppBarTitle,)
-                  : GroupContent(groupId: groupId),
-        ),
+                  : GroupContent(groupId: groupId, updateTitleCallback: updateAppBarTitle),
       ),
           
         ],

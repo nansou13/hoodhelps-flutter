@@ -118,8 +118,9 @@ class _EditAvatarState extends State<EditAvatar> {
     setState(() {
       isMiniLoading = true;
     });
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userID = prefs.getString('user_id');
+    final userService = Provider.of<UserService>(context, listen: false);
+    var userData = userService.getUser();
+    String? userID = userData['id'].toString();
     // Charger l'image dans un objet img.Image
     img.Image image = img.decodeImage(File(_image!.path).readAsBytesSync())!;
 

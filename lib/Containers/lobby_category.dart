@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:hoodhelps/services/categories_service.dart';
 import 'package:hoodhelps/services/icons_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
+import 'package:hoodhelps/services/user_service.dart';
 import 'package:provider/provider.dart';
 
 class GroupContent extends StatefulWidget {
   final String groupId;
+  final Function(String newTitle) updateTitleCallback;
 
-  const GroupContent({Key? key, required this.groupId}) : super(key: key);
+  const GroupContent({Key? key, required this.groupId,required this.updateTitleCallback}) : super(key: key);
 
   @override
   _GroupContentState createState() => _GroupContentState();
@@ -15,6 +17,7 @@ class GroupContent extends StatefulWidget {
 
 class _GroupContentState extends State<GroupContent> {
   List categoryData = [];
+  String groupBackgroundUrl = '';
 
   @override
   void initState() {
@@ -24,12 +27,21 @@ class _GroupContentState extends State<GroupContent> {
 
   Future<void> loadCategoryData() async {
     final CategoriesService categoriesService = CategoriesService();
+    final user = Provider.of<UserService>(context, listen: false);
     final groupId = widget.groupId;
-    final data = await categoriesService.getCacheCategoryData(groupId);
+    final groups = user.groups;
+    Group specificGroup = groups.firstWhere(
+    (group) => group.id == groupId,
+    orElse: () => throw Exception('Groupe non trouvé'),
+  );
 
+    
+    final data = await categoriesService.getCacheCategoryData(groupId);
     setState(() {
       categoryData =
           data; // Mettez à jour la liste une fois les données chargées
+      widget.updateTitleCallback(specificGroup.name);
+      groupBackgroundUrl = specificGroup.backgroundUrl;
     });
   }
 
@@ -38,35 +50,49 @@ class _GroupContentState extends State<GroupContent> {
     final translationService = context.read<TranslationService>();
     final groupId = widget.groupId;
 
-    return Column(
+    return SingleChildScrollView( // Utilisez SingleChildScrollView pour rendre tout le contenu déroulable
+    child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         const SizedBox(height: 30.0),
         Container(
           color: Colors.white,
-          margin: const EdgeInsets.fromLTRB(
-              20.0, 0, 20.0, 0), // Ajoute 20 points de marge extérieure
-          padding: const EdgeInsets.all(10.0), // Ajoute 8 points de marge intérieure
-          child: const Text(
-            "Trouver le bon professionnel près de chez vous n'a jamais été aussi simple. Parcourez les différentes catégories de métiers ci-dessous pour découvrir les talents qui se cachent dans votre résidence. ",
-            style: TextStyle(fontSize: 15.0),
-            textAlign: TextAlign.center,
-          ),
+          margin: const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
+          padding: const EdgeInsets.all(10.0),
+          child: Column(children: [
+            if (groupBackgroundUrl.isNotEmpty)
+              Container(
+                width: double.infinity,
+                constraints: const BoxConstraints(
+                  maxHeight: 100,
+                ),
+                child: Image.network(
+                  groupBackgroundUrl,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(height: 10.0),
+            const Text(
+              "Trouver le bon professionnel près de chez vous n'a jamais été aussi simple. Parcourez les différentes catégories de métiers ci-dessous pour découvrir les talents qui se cachent dans votre résidence.",
+              style: TextStyle(fontSize: 15.0),
+              textAlign: TextAlign.center,
+            ),
+          ]),
         ),
         const SizedBox(height: 20.0),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(
-                16.0), // Marge uniforme autour de la grille
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // 2 éléments par ligne
-                crossAxisSpacing: 16.0, // Espace horizontal entre les éléments
-                mainAxisSpacing: 16.0, // Espace vertical entre les éléments
-              ),
-              itemCount: categoryData.length,
-              itemBuilder: (context, index) {
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 16.0,
+              mainAxisSpacing: 16.0,
+            ),
+            physics: const NeverScrollableScrollPhysics(), // Empêcher le GridView de défiler
+            shrinkWrap: true, // Permettre au GridView de s'adapter à son contenu
+            itemCount: categoryData.length,
+            itemBuilder: (context, index) {
                 final category = categoryData[index];
                 final categoryName = category['name'];
                 //force category['users'] to be an int to avoid error when null (null is not a subtype of int)
@@ -116,10 +142,10 @@ class _GroupContentState extends State<GroupContent> {
                   ),
                 );
               },
-            ),
           ),
+            ),
+          ],
         ),
-      ],
     );
   }
 }

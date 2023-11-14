@@ -56,34 +56,53 @@ class _GroupCategoryContentState extends State<GroupCategoryContent> {
     final translationService = context.read<TranslationService>();
     final groupId = widget.groupId;
     final categoryId = widget.categoryId;
+    
+    var groupBackgroundUrl = categorieName.isNotEmpty ? 'assets/categories/$categorieName.jpg' : '';
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        const SizedBox(height: 30.0),
-        Container(
-          color: Colors.white,
-          margin: const EdgeInsets.fromLTRB(
-              20.0, 0, 20.0, 0), // Ajoute 20 points de marge extérieure
-          padding: const EdgeInsets.all(10.0), // Ajoute 8 points de marge intérieure
-          child: Text(
-            "Vous avez sélectionné la catégorie ${translationService.translate(categorieName)}. Ici, vous trouverez une liste de professionnels qualifiés dans votre résidence, prêts à vous aider. N'hésitez pas à entrer en contact directement pour discuter de vos besoins.",
-            style: const TextStyle(fontSize: 15.0),
-            textAlign: TextAlign.center,
+    return SingleChildScrollView( // Utilisez SingleChildScrollView pour rendre tout le contenu déroulable
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          const SizedBox(height: 30.0),
+          Container(
+            color: Colors.white,
+            margin: const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+            if (groupBackgroundUrl.isNotEmpty)
+              Container(
+                width: double.infinity,
+                constraints: const BoxConstraints(
+                  maxHeight: 100,
+                ),
+                child: Image(
+                            image: AssetImage(groupBackgroundUrl),
+                            fit: BoxFit.cover,
+                            // width: 100,
+                          ),
+              ),
+              const SizedBox(height: 10.0),
+            Text(
+              "Vous avez sélectionné la catégorie ${translationService.translate(categorieName)}. Ici, vous trouverez une liste de professionnels qualifiés dans votre résidence, prêts à vous aider. N'hésitez pas à entrer en contact directement pour discuter de vos besoins.",
+              style: const TextStyle(fontSize: 15.0),
+              textAlign: TextAlign.center,
+            ),
+            ]
           ),
-        ),
-        const SizedBox(height: 20.0),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(
-                16.0), // Marge uniforme autour de la grille
+          ),
+          const SizedBox(height: 20.0),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
             child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // 2 éléments par ligne
-                crossAxisSpacing: 16.0, // Espace horizontal entre les éléments
-                mainAxisSpacing: 16.0, // Espace vertical entre les éléments
+                crossAxisCount: 2,
+                crossAxisSpacing: 16.0,
+                mainAxisSpacing: 16.0,
               ),
+              physics: const NeverScrollableScrollPhysics(), // Empêcher le GridView de défiler
+              shrinkWrap: true, // Permettre au GridView de s'adapter à son contenu
               itemCount: jobData.length,
               itemBuilder: (context, index) {
                 final job = jobData[index];
@@ -134,8 +153,8 @@ class _GroupCategoryContentState extends State<GroupCategoryContent> {
               },
             ),
           ),
+        ],
         ),
-      ],
     );
   }
 }

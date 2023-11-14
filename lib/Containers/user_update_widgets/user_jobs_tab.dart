@@ -145,18 +145,23 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
       return const Center(child: CircularProgressIndicator());
     } else {
       final translationService = context.read<TranslationService>();
-      return Column(
+      return Expanded(
+                child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch, 
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
-            child: ListView.builder(
-              padding: EdgeInsets.zero,
-              scrollDirection: Axis.vertical, // Défilement vertical
-              shrinkWrap: true, // Prendre la taille des éléments
-              physics:
-                  const NeverScrollableScrollPhysics(), // Puisqu'il est dans un ListView déjà déroulable.
-              itemCount: userJob.length,
-              itemBuilder: (context, index) {
+          Flexible(
+            child: SingleChildScrollView( // Utilisez SingleChildScrollView pour rendre le contenu défilable
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
+              child: Column(
+                children: [
+                  // ...Liste des travaux...
+                  ListView.builder(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true, // Important pour ListView.builder dans une colonne
+                    physics: const NeverScrollableScrollPhysics(), // Pour que ListView n'intercepte pas le défilement
+                    itemCount: userJob.length,
+                    itemBuilder: (context, index) {
                 final job = userJob[index];
                 final jobName = job['name'] ?? '';
                 String experienceYears =
@@ -226,9 +231,14 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
                 );
               },
             ),
+                ],
+              ),
           ),
+          )
+        ),
           _joinJobCard(),
         ],
+      )
       );
     }
   }
@@ -347,7 +357,7 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
 
   Widget _joinJobCard() {
   return Padding(
-      padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
+      padding: const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 20.0),
       child: Card(
         color: Colors.white,
         margin: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),

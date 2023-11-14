@@ -11,6 +11,7 @@ Widget buildTabMenu(_selectedTabIndex, _onNavBarTapped) {
             children: <Widget>[
               Icon(Icons.person,
                   color: _selectedTabIndex == 0 ? Colors.blue : Colors.black),
+              const SizedBox(width: 10.0),
               Text(
                 'MES INFOS',
                 style: TextStyle(
@@ -34,6 +35,7 @@ Widget buildTabMenu(_selectedTabIndex, _onNavBarTapped) {
             children: <Widget>[
               Icon(Icons.work,
                   color: _selectedTabIndex == 1 ? Colors.blue : Colors.black),
+              const SizedBox(width: 10.0),
               Text(
                 'MES JOBS',
                 style: TextStyle(

@@ -66,23 +66,23 @@ class _LoginPageState extends State<LoginPage> {
       padding: const EdgeInsets.fromLTRB(20.0, 50.0, 20.0, 20.0),
       width: double.infinity,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            translationService.translate("APP_TITLE"),
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 50.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 10.0),
+          const SizedBox(height: 30.0),
+          const SizedBox(height: 300.0,
+          child: Image(
+                            image: AssetImage('assets/icon.png'),
+                            // width: 100,
+                          ),),
+          
           Text(
             translationService.translate("APP_TITLE_DESC"),
+            textAlign: TextAlign.center,
             style: const TextStyle(
               color: Colors.white,
+
               fontSize: 25.0,
-              fontStyle: FontStyle.italic,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],

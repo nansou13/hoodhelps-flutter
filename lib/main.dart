@@ -20,11 +20,15 @@ import 'package:hoodhelps/Containers/register.dart';
 import 'package:hoodhelps/Containers/splash_page.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
+import 'package:flutter/services.dart';
 
 Future<void> main() async {
   // Assurez-vous que les widgets Flutter sont initialisés
   WidgetsFlutterBinding.ensureInitialized();
-  
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   // Initialisez les préférences partagées
   await SharedPreferences.getInstance();
 

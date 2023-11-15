@@ -76,8 +76,7 @@ class _JoinGroupState extends State<JoinGroup> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
@@ -169,8 +168,7 @@ class _JoinGroupState extends State<JoinGroup> {
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 }
 

@@ -44,8 +44,7 @@ class _LobbyPage extends State<LobbyPage> {
     }
 
     final translationService = context.read<TranslationService>();
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           leading: categoryId.isNotEmpty
       ? IconButton(
@@ -87,8 +86,7 @@ class _LobbyPage extends State<LobbyPage> {
           
         ],
         ),
-      ),
-    );
+      );
   }
 
   Widget _buildNoGroupContent() {

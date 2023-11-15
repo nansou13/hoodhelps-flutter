@@ -69,18 +69,18 @@ class _LoginPageState extends State<LoginPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 30.0),
-          const SizedBox(height: 300.0,
-          child: Image(
-                            image: AssetImage('assets/icon.png'),
-                            // width: 100,
-                          ),),
-          
+          const SizedBox(
+            height: 300.0,
+            child: Image(
+              image: AssetImage('assets/icon.png'),
+              // width: 100,
+            ),
+          ),
           Text(
             translationService.translate("APP_TITLE_DESC"),
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: Colors.white,
-
               fontSize: 25.0,
               fontWeight: FontWeight.bold,
             ),
@@ -101,6 +101,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            const SizedBox(height: 10.0),
             buildTextField(
               controller: _usernameController,
               hintText: translationService.translate("FORM_USERNAME"),
@@ -114,7 +115,9 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 10.0),
             buildConnectButton(translationService),
             const SizedBox(height: 10.0),
-            registerLink(translationService),
+            buildRegisterButton(translationService),
+            const SizedBox(height: 10.0),
+            forgotAccountLink(translationService),
           ],
         ),
       ),
@@ -162,14 +165,39 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  InkWell registerLink(TranslationService translationService) {
+  MaterialButton buildRegisterButton(TranslationService translationService) {
+    return MaterialButton(
+      onPressed: () {
+          Navigator.pushNamed(context, "/register");
+        },
+      color: Colors.white,
+      textColor: Colors.black,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Container(
+        width: double.infinity,
+        height: 50.0,
+        alignment: Alignment.center,
+        child: Text(
+          translationService.translate("FORM_CREATE_ACCOUNT_LINK"),
+          style: const TextStyle(
+            fontSize: 18.0,
+          ),
+        ),
+      ),
+    );
+  }
+
+  InkWell forgotAccountLink(TranslationService translationService) {
     return InkWell(
       child: GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, "/register");
+          Navigator.pushNamed(context, "/forgotpassword");
         },
         child: Text(
-          translationService.translate("FORM_CREATE_ACCOUNT_LINK"),
+          translationService.translate("FORM_FORGOT_ACCOUNT_LINK"),
           style: const TextStyle(
             color: Colors.white,
             decoration: TextDecoration.underline,

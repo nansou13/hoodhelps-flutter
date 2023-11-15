@@ -1,5 +1,8 @@
 // Dart imports
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/Containers/forgot_password.dart';
+import 'package:hoodhelps/Containers/forgot_password_reset_code.dart';
+import 'package:hoodhelps/Containers/forgot_password_reset_success.dart';
 import 'package:hoodhelps/Containers/join_group.dart';
 import 'package:hoodhelps/Containers/user_info.dart';
 import 'package:hoodhelps/Containers/user_update.dart';
@@ -62,6 +65,9 @@ class MyApp extends StatelessWidget {
         '/userinfo': (context) => const ProfilePage(),
         '/userupdate': (context) => const EditPage(),
         '/joingroup': (context) => const JoinGroup(),
+        '/forgotpassword': (context) => const ForgotPassword(),
+        '/forgotpasswordresetcode': (context) => const ForgotPasswordResetCode(),
+        '/forgotpasswordresetsuccess': (context) => const ForgotPasswordResetSuccess(),
       },
     );
   }

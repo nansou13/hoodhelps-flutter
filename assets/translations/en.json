@@ -62,6 +62,7 @@
     "FORM_PASSWORD" : "Password",
     "FORM_CONNECT_BUTTON": "Login",
     "FORM_CREATE_ACCOUNT_LINK": "Create an account",
+    "FORM_FORGOT_ACCOUNT_LINK": "Mot de passe oublié ?",
     "FORM_LOGIN_ACCOUNT_LINK": "Login",
     "APP_TITLE": "HoodHelps",
     "APP_TITLE_DESC": "Neighborhood helping neighbors",

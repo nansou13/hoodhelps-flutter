@@ -62,6 +62,7 @@
     "FORM_PASSWORD" : "Mot de passe",
     "FORM_CONNECT_BUTTON": "Se connecter",
     "FORM_CREATE_ACCOUNT_LINK": "Créer un compte",
+    "FORM_FORGOT_ACCOUNT_LINK": "Mot de passe oublié ?",
     "FORM_LOGIN_ACCOUNT_LINK": "Se connecter",
     "APP_TITLE": "HoodHelps",
     "APP_TITLE_DESC": "Des voisins qui s'entraident.",

@@ -21,6 +21,7 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   int _currentStep = 1; // Étape actuelle du registre
   //bool _isLoading = false;
+  String appBarTitle = 'Création de compte'; 
 
   @override
   void initState() {
@@ -43,16 +44,52 @@ class _RegisterPageState extends State<RegisterPage> {
     });
   }
 
+
+  void updateAppBarTitle(String newTitle) {
+    setState(() {
+      appBarTitle = newTitle;
+    });
+  }
+
+  returnButtonManage() {
+    if(_currentStep == 1) {
+      return IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          );
+    } else if(_currentStep == 2){
+      return null;
+    }else{
+      return IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: _previousStep,
+          );
+    }
+  } 
+
   @override
   Widget build(BuildContext context) {
     final translationService = context.read<TranslationService>();
     return Scaffold(
+      appBar: AppBar(
+          automaticallyImplyLeading: false,
+          leading: returnButtonManage(),
+          title: _currentStep == 1
+                  ? const Text('Création de compte')
+                  : _currentStep == 2
+                      ? const Text('Création de compte')
+                      : _currentStep == 3
+                          ? const Text('Ajouter vos métiers')
+                          : const Text('Intégrer un groupe')
+        ),
         body: Stack(children: [
       // Image de fond
       background(),
 
       Container(
-        padding: const EdgeInsets.fromLTRB(20.0, 50.0, 20.0, 20.0),
+        padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 20.0),
         color: Colors.white.withOpacity(0.9),
         width: double.infinity,
         height: double.infinity,
@@ -95,36 +132,21 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
 
               // Boutons de navigation
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  if (_currentStep > 1)
-                    ElevatedButton(
-                      onPressed: _previousStep,
-                      child: const Text('Précédent'),
-                    ),
-                  if (_currentStep < 4)
-                    ElevatedButton(
-                      onPressed: _nextStep,
-                      child: const Text('Suivant'),
-                    ),
-                ],
-              ),
-              InkWell(
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, "/login");
-                  },
-                  child: Center(
-                    child: Text(
-                      translationService.translate("FORM_LOGIN_ACCOUNT_LINK"),
-                      style: const TextStyle(
-                          color: Colors.black,
-                          decoration: TextDecoration.underline),
-                    ),
-                  ),
-                ),
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     if (_currentStep > 1)
+              //       ElevatedButton(
+              //         onPressed: _previousStep,
+              //         child: const Text('Précédent'),
+              //       ),
+              //     if (_currentStep < 4)
+              //       ElevatedButton(
+              //         onPressed: _nextStep,
+              //         child: const Text('Suivant'),
+              //       ),
+              //   ],
+              // ),
             ],
           ),
         ),

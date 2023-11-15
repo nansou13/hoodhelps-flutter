@@ -15,7 +15,8 @@ import '../../constants.dart';
 class Step2Widget extends StatefulWidget {
   final Function nextStepCallback; // Ajoutez ce paramètre
 
-  const Step2Widget({Key? key, required this.nextStepCallback}) : super(key: key);
+  const Step2Widget({Key? key, required this.nextStepCallback})
+      : super(key: key);
 
   @override
   _Step2WidgetState createState() => _Step2WidgetState();
@@ -52,20 +53,24 @@ class _Step2WidgetState extends State<Step2Widget> {
 
     // Charger l'image dans un objet img.Image
     img.Image image = img.decodeImage(File(_image!.path).readAsBytesSync())!;
-    
+
     // Redimensionner l'image
-    img.Image resizedImg = img.copyResize(image, width: 500); // Vous pouvez également fixer la hauteur : height: 500
+    img.Image resizedImg = img.copyResize(image,
+        width: 500); // Vous pouvez également fixer la hauteur : height: 500
 
     // Obtenir l'image redimensionnée sous forme de liste d'uint8
-    List<int> resizedBytes = img.encodeJpg(resizedImg, quality: 85); // 85 est la qualité de l'image
-    
+    List<int> resizedBytes =
+        img.encodeJpg(resizedImg, quality: 85); // 85 est la qualité de l'image
+
     // Créez un fichier à partir des octets redimensionnés
     File resizedFile = File(_image!.path)..writeAsBytesSync(resizedBytes);
 
-    FirebaseStorage storage = FirebaseStorage.instanceFor(bucket: 'gs://hoodhelps.appspot.com');
+    FirebaseStorage storage =
+        FirebaseStorage.instanceFor(bucket: 'gs://hoodhelps.appspot.com');
 
-    final fileName = 'profile_image_${userID ?? DateTime.now().millisecondsSinceEpoch}.jpg';
-    
+    final fileName =
+        'profile_image_${userID ?? DateTime.now().millisecondsSinceEpoch}.jpg';
+
     final profileImageRef = storage.ref().child('users').child(fileName);
     final uploadTask = profileImageRef.putFile(resizedFile);
 
@@ -78,48 +83,63 @@ class _Step2WidgetState extends State<Step2Widget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Étape 2',
-          style: TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 10.0),
-        const Text('Veuillez fournir vos informations personnelles pour créer votre compte.'),
+        Container(
+            color: Colors.white,
+            padding: const EdgeInsets.all(
+                10.0), // Ajoute 8 points de marge intérieure
+            child: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //add image
+                Text(
+                  'Étape 2',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                    'Veuillez fournir vos informations personnelles pour créer votre compte.'),
+              ],
+            )),
         const SizedBox(height: 20.0),
         Center(
           child: CircleAvatar(
-          radius: 50,
-          backgroundImage: _image != null ? FileImage(_image!) : null,
-          child: _image == null ? const Icon(Icons.person, size: 50) : null,
+            radius: 50,
+            backgroundImage: _image != null ? FileImage(_image!) : null,
+            child: _image == null ? const Icon(Icons.person, size: 50) : null,
+          ),
         ),
-        ),
-        
         Center(
-          child: 
-          ElevatedButton(
-          onPressed: () async {
-            await _pickImage();
-            await _uploadImageToFirebase();
-          },
-          child: const Text("Choisir une photo"),
-        ),
-        ),
-        const SizedBox(height: 10.0),
-        
-        TextField(
-          controller: firstNameController,
-          decoration: const InputDecoration(labelText: 'Prénom'),
+          child: ElevatedButton(
+            onPressed: () async {
+              await _pickImage();
+              await _uploadImageToFirebase();
+            },
+            child: const Text("Choisir une photo"),
+          ),
         ),
         const SizedBox(height: 10.0),
-        TextField(
-          controller: lastNameController,
-          decoration: const InputDecoration(labelText: 'Nom'),
+        Row(
+          children: [
+            Expanded(
+                child: TextField(
+              controller: firstNameController,
+              decoration: const InputDecoration(labelText: 'Prénom'),
+            )),
+            const SizedBox(width: 20.0),
+            Expanded(
+                child: TextField(
+              controller: lastNameController,
+              decoration: const InputDecoration(labelText: 'Nom'),
+            )),
+          ],
         ),
-        const SizedBox(height: 10.0),
+        // const SizedBox(height: 10.0),
         TextField(
           controller: phoneController,
+          keyboardType: TextInputType.number,
           decoration: const InputDecoration(labelText: 'Phone'),
         ),
         const SizedBox(height: 20.0),
@@ -138,7 +158,30 @@ class _Step2WidgetState extends State<Step2Widget> {
             height: 50.0,
             alignment: Alignment.center,
             child: const Text(
-              'Inscription',
+              'Enregistrer mes informations',
+              style: TextStyle(
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 20.0),
+        MaterialButton(
+          onPressed: () {
+            widget.nextStepCallback();
+          },
+          color: Colors.white,
+          textColor: Colors.black,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Container(
+            width: double.infinity,
+            height: 50.0,
+            alignment: Alignment.center,
+            child: const Text(
+              'Passer',
               style: TextStyle(
                 fontSize: 18.0,
               ),
@@ -150,16 +193,18 @@ class _Step2WidgetState extends State<Step2Widget> {
   }
 
   Future<void> saveUserInfoData() async {
-    final firstname = FunctionUtils.capitalizeFirstLetter(firstNameController.text);
-    final lastname = FunctionUtils.capitalizeFirstLetter(lastNameController.text);
+    final firstname =
+        FunctionUtils.capitalizeFirstLetter(firstNameController.text);
+    final lastname =
+        FunctionUtils.capitalizeFirstLetter(lastNameController.text);
     final phone = phoneController.text;
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userToken = prefs.getString('user_token');
 
     try {
-      final response = await http
-          .put(Uri.parse('$routeAPI/api/users/me'), body: {
+      final response =
+          await http.put(Uri.parse('$routeAPI/api/users/me'), body: {
         'first_name': firstname,
         'last_name': lastname,
         'phone_number': phone,
@@ -167,15 +212,15 @@ class _Step2WidgetState extends State<Step2Widget> {
       }, headers: {
         'Authorization': 'Bearer $userToken'
       });
-      
+
       final data = jsonDecode(response.body);
       if (response.statusCode == 200) {
         // Si la requête réussit (statut 200), analyser la réponse JSON
         final data = jsonDecode(response.body);
-        
+
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('user_token', data['accessToken']);
-        
+
         widget.nextStepCallback();
       } else {
         // En cas d'échec de la requête, afficher un message d'erreur

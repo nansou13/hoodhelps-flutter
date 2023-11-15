@@ -99,16 +99,31 @@ class _Step3WidgetState extends State<Step3Widget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const Text(
-          'Étape 3',
-          style: TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 10.0),
-        const Text(
+        Container(
+            color: Colors.white,
+            padding: const EdgeInsets.all(
+                10.0), // Ajoute 8 points de marge intérieure
+            child: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //add image
+                Image(
+                  image: AssetImage('assets/registerJob.jpg'),
+                  // width: 100,
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Étape 3',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Text(
             'Sélectionnez votre métier dans la liste, indiquez le nombre d\'années d\'expérience que vous avez dans ce domaine (de 1 à 10+ ans), et ajoutez une description de vos compétences et de votre expérience professionnelle.'),
+        ],
+            )),
         const SizedBox(height: 20.0),
         TextField(
           enabled: !isLoading,
@@ -212,8 +227,8 @@ class _Step3WidgetState extends State<Step3Widget> {
           onPressed: () {
             widget.nextStepCallback();
           },
-          color: Colors.blue,
-          textColor: Colors.white,
+          color: Colors.white,
+          textColor: Colors.black,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
@@ -223,7 +238,7 @@ class _Step3WidgetState extends State<Step3Widget> {
             height: 50.0,
             alignment: Alignment.center,
             child: const Text(
-              'Suivant',
+              'Passer',
               style: TextStyle(
                 fontSize: 18.0,
               ),

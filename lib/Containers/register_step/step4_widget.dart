@@ -29,42 +29,47 @@ class _Step4WidgetState extends State<Step4Widget> {
     String? userID = prefs.getString('user_id');
     final groupeCode = _codeController.text.toLowerCase();
     if (groupeCode.isEmpty) {
-      NotificationService.showError(context, "Veuillez saisir un code de groupe");
+      NotificationService.showError(
+          context, "Veuillez saisir un code de groupe");
       return;
     }
     try {
-    final response =
-        await http.get(Uri.parse('$routeAPI/api/groups/code/$groupeCode'));
-    switch (response.statusCode) {
-      case 200:
-        final codeID = json.decode(response.body)['id'];
-        try {
-          final addUserInGroup = await http.post(Uri.parse('$routeAPI/api/groups/$codeID/user'), body: {
-            "user_id": userID,
-          });
-          final data = jsonDecode(response.body);
+      final response =
+          await http.get(Uri.parse('$routeAPI/api/groups/code/$groupeCode'));
+      switch (response.statusCode) {
+        case 200:
+          final codeID = json.decode(response.body)['id'];
+          try {
+            final addUserInGroup = await http
+                .post(Uri.parse('$routeAPI/api/groups/$codeID/user'), body: {
+              "user_id": userID,
+            });
+            final data = jsonDecode(response.body);
 
-          if (addUserInGroup.statusCode == 201) {
-            // Si la requête réussit (statut 200), analyser la réponse JSON
+            if (addUserInGroup.statusCode == 201) {
+              // Si la requête réussit (statut 200), analyser la réponse JSON
 
-            Navigator.of(context).pushReplacementNamed('/splash');
-          } else {
-            // En cas d'échec de la requête, afficher un message d'erreur
-            NotificationService.showError(context, "Échec ajout du user dans le groupe $data");
+              Navigator.of(context).pushReplacementNamed('/splash');
+            } else {
+              // En cas d'échec de la requête, afficher un message d'erreur
+              NotificationService.showError(
+                  context, "Échec ajout du user dans le groupe $data");
+            }
+          } catch (e) {
+            NotificationService.showError(context,
+                "Erreur lors de la récupération des données du serveur. ${e.toString()}");
           }
-
-        } catch (e) {
-          NotificationService.showError(context, "Erreur lors de la récupération des données du serveur. ${e.toString()}");
-        }
-        break;
-      case 401:
-        NotificationService.showError(context, json.decode(response.body)['error']);
-        break;
-      default:
-         NotificationService.showError(context, json.decode(response.body));
-    }
-      } catch (e) {
-        NotificationService.showError(context, "Erreur lors de la récupération des données du serveur. ${e.toString()}");
+          break;
+        case 401:
+          NotificationService.showError(
+              context, json.decode(response.body)['error']);
+          break;
+        default:
+          NotificationService.showError(context, json.decode(response.body));
+      }
+    } catch (e) {
+      NotificationService.showError(context,
+          "Erreur lors de la récupération des données du serveur. ${e.toString()}");
     }
   }
 
@@ -73,19 +78,36 @@ class _Step4WidgetState extends State<Step4Widget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const Text(
-          'Étape 4',
-          style: TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 10.0),
-        const Text('Saisissez le code du groupe que vous souhaitez rejoindre. Ce code vous permettra d\'accéder au groupe et de collaborer avec d\'autres membres.'),
+        Container(
+            color: Colors.white,
+            padding: const EdgeInsets.all(
+                10.0), // Ajoute 8 points de marge intérieure
+            child: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //add image
+                Image(
+                  image: AssetImage('assets/joinGroup.jpeg'),
+                  // width: 100,
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Étape 4',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                    'Saisissez le code du groupe que vous souhaitez rejoindre. Ce code vous permettra d\'accéder au groupe et de collaborer avec d\'autres membres.'),
+              ],
+            )),
         const SizedBox(height: 40.0),
         TextField(
           controller: _codeController,
-          keyboardType: TextInputType.text,
+          textAlign: TextAlign.center,
+          keyboardType: TextInputType.number,
           style: const TextStyle(
               fontSize: 32,
               fontWeight: FontWeight
@@ -131,8 +153,8 @@ class _Step4WidgetState extends State<Step4Widget> {
           onPressed: () {
             Navigator.of(context).pushReplacementNamed('/splash');
           },
-          color: Colors.blue,
-          textColor: Colors.white,
+          color: Colors.white,
+          textColor: Colors.black,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
@@ -142,7 +164,7 @@ class _Step4WidgetState extends State<Step4Widget> {
             height: 50.0,
             alignment: Alignment.center,
             child: const Text(
-              'Suivant',
+              'Passer',
               style: TextStyle(
                 fontSize: 18.0,
               ),

@@ -76,6 +76,8 @@ flutter:
     - assets/background_image.png
     - assets/joinGroup.jpeg
     - assets/forgotPassword.jpg
+    - assets/register.jpg
+    - assets/registerJob.jpg
     - assets/icon.png
     - assets/translations/
     - assets/categories/LEGAL_FINANCIAL.jpg

@@ -58,16 +58,32 @@ class _Step1WidgetState extends State<Step1Widget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Étape 1',
-          style: TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 10.0),
-        const Text(
-            'Pour commencer, veuillez saisir votre adresse e-mail, un nom d\'utilisateur et un mot de passe'),
+        Container(
+          color: Colors.white,
+          padding: const EdgeInsets.all(
+              10.0), // Ajoute 8 points de marge intérieure
+          child: const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              //add image
+              Image(
+                image: AssetImage('assets/register.jpg'),
+                // width: 100,
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Étape 1',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 10.0),
+              Text(
+                  'Pour commencer, veuillez saisir votre adresse e-mail, un nom d\'utilisateur et un mot de passe'),
+              
+            ],
+          )),
         const SizedBox(height: 20.0),
         TextField(
           controller: _usernameController,
@@ -76,6 +92,7 @@ class _Step1WidgetState extends State<Step1Widget> {
         const SizedBox(height: 10.0),
         TextField(
           controller: _emailController,
+          keyboardType: TextInputType.emailAddress,
           decoration: const InputDecoration(labelText: 'Email'),
         ),
         const SizedBox(height: 10.0),
@@ -100,6 +117,29 @@ class _Step1WidgetState extends State<Step1Widget> {
             alignment: Alignment.center,
             child: const Text(
               'Inscription',
+              style: TextStyle(
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 20.0),
+        MaterialButton(
+          onPressed: () {
+                    Navigator.pushNamed(context, "/login");
+                  },
+          color: Colors.white,
+          textColor: Colors.black,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Container(
+            width: double.infinity,
+            height: 50.0,
+            alignment: Alignment.center,
+            child: const Text(
+              'Retour à la connexion',
               style: TextStyle(
                 fontSize: 18.0,
               ),

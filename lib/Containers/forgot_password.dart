@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/constants.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
+import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/template.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key}) : super(key: key);
@@ -21,9 +23,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   Future<void> sendMailForgotAccount() async {
     final userEmail = _mailController.text.toLowerCase();
+    final translationService = context.read<TranslationService>();
 
     if (userEmail.isEmpty) {
-      NotificationService.showError(context, "Veuillez saisir votre email");
+      NotificationService.showError(
+          context, translationService.translate("NOTIF_PLEASE_ENTER_EMAIL"));
       return;
     }
     try {
@@ -50,6 +54,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   @override
   Widget build(BuildContext context) {
+    final translationService = context.read<TranslationService>();
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -58,7 +63,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               Navigator.of(context).pop();
             },
           ),
-          title: const Text('Mot de passe oublié ?'),
+          title: Text(translationService.translate("FORM_FORGOT_ACCOUNT_LINK")),
         ),
         body: Stack(
           children: [
@@ -80,17 +85,19 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           color: Colors.white,
                           padding: const EdgeInsets.all(
                               10.0), // Ajoute 8 points de marge intérieure
-                          child: const Column(
+                          child: Column(
                             children: [
                               //add image
-                              Image(
+                              const Image(
                                 image: AssetImage('assets/forgotPassword.jpg'),
                                 // width: 100,
                               ),
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
+
                               Text(
-                                "Vous avez oublié votre mot de passe ? Pas de souci, nous sommes là pour vous aider. Entrez l'adresse e-mail associée à votre compte dans le champ ci-dessous.",
-                                style: TextStyle(fontSize: 15.0),
+                                translationService
+                                    .translate("FORGOT_PASSWORD_DESCRIPTION"),
+                                style: const TextStyle(fontSize: 15.0),
                                 textAlign: TextAlign.center,
                               ),
                             ],
@@ -99,7 +106,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
                       TextField(
                         controller: _mailController,
-                        decoration: const InputDecoration(labelText: 'Email'),
+                        decoration: InputDecoration(labelText: translationService.translate("LABEL_TEXT_EMAIL")),
                       ),
                       const SizedBox(height: 40), // Ajoute un espacement
                       MaterialButton(
@@ -116,9 +123,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           width: double.infinity,
                           height: 50.0,
                           alignment: Alignment.center,
-                          child: const Text(
-                            'Envoyer le code',
-                            style: TextStyle(
+                          child: Text(
+                            translationService.translate("SEND_THE_CODE"),
+                            style: const TextStyle(
                               fontSize: 18.0,
                             ),
                           ),
@@ -140,9 +147,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           width: double.infinity,
                           height: 50.0,
                           alignment: Alignment.center,
-                          child: const Text(
-                            "J'ai déjà un code",
-                            style: TextStyle(
+                          child: Text(
+                            translationService.translate("ALREADY_HAVE_A_CODE"),
+                            style: const TextStyle(
                               fontSize: 18.0,
                             ),
                           ),

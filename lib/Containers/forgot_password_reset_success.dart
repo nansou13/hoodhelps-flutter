@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/template.dart';
+import 'package:provider/provider.dart';
 
 class ForgotPasswordResetSuccess extends StatelessWidget {
   const ForgotPasswordResetSuccess({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final translationService = context.read<TranslationService>();
     return Scaffold(
         appBar: AppBar(
           leading: null,
-          title: const Text('Mot de passe oublié ?'),
+          title: Text(translationService.translate("FORM_FORGOT_ACCOUNT_LINK")),
         ),
         body: Stack(
           children: [
@@ -31,17 +34,17 @@ class ForgotPasswordResetSuccess extends StatelessWidget {
                           color: Colors.white,
                           padding: const EdgeInsets.all(
                               10.0), // Ajoute 8 points de marge intérieure
-                          child: const Column(
+                          child: Column(
                             children: [
                               //add image
-                              Image(
+                              const Image(
                                 image: AssetImage('assets/forgotPassword.jpg'),
                                 // width: 100,
                               ),
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               Text(
-                                "Votre code a bien été modifié, vous pouvez retourner à l'écran de connexion.",
-                                style: TextStyle(fontSize: 15.0),
+                                translationService.translate("UPDATE_PASSWORD_SUCCESS"),
+                                style: const TextStyle(fontSize: 15.0),
                                 textAlign: TextAlign.center,
                               ),
                             ],
@@ -61,9 +64,9 @@ class ForgotPasswordResetSuccess extends StatelessWidget {
                           width: double.infinity,
                           height: 50.0,
                           alignment: Alignment.center,
-                          child: const Text(
-                            'Retour à la connexion',
-                            style: TextStyle(
+                          child: Text(
+                            translationService.translate("GO_TO_LOGIN"),
+                            style: const TextStyle(
                               fontSize: 18.0,
                             ),
                           ),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
 import 'package:image/image.dart' as img;
 import 'package:firebase_storage/firebase_storage.dart'; // Importez cette bibliothèque
@@ -20,7 +21,6 @@ class EditAvatar extends StatefulWidget {
 }
 
 class _EditAvatarState extends State<EditAvatar> {
-
   bool isMiniLoading = false;
   String imageUrl = '';
   File? _image;
@@ -32,9 +32,7 @@ class _EditAvatarState extends State<EditAvatar> {
     super.initState();
   }
 
-
   Future<void> updateImage() async {
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userToken = prefs.getString('user_token');
 
@@ -71,6 +69,7 @@ class _EditAvatarState extends State<EditAvatar> {
   }
 
   Future<void> _pickImage() async {
+    final translateService = context.read<TranslationService>();
     // Afficher un menu en bas de l'écran pour choisir la source de l'image
     await showModalBottomSheet(
         context: context,
@@ -80,14 +79,16 @@ class _EditAvatarState extends State<EditAvatar> {
               children: <Widget>[
                 ListTile(
                     leading: const Icon(Icons.photo_library),
-                    title: const Text('Galerie'),
+                    title: Text(
+                        translateService.translate('PICTURE_FROM_GALLERY')),
                     onTap: () async {
                       await _getImage(ImageSource.gallery);
                       Navigator.of(context).pop();
                     }),
                 ListTile(
                   leading: const Icon(Icons.photo_camera),
-                  title: const Text('Camera'),
+                  title:
+                      Text(translateService.translate('PICTURE_FROM_CAMERA')),
                   onTap: () async {
                     await _getImage(ImageSource.camera);
                     Navigator.of(context).pop();
@@ -153,6 +154,8 @@ class _EditAvatarState extends State<EditAvatar> {
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<UserService>(context, listen: false);
+    final translationService = context.read<TranslationService>();
+
     var userUrl = userService.imageUrl ?? '';
     var firstName = userService.firstName ?? '';
     var lastname = userService.lastName ?? '';
@@ -200,7 +203,7 @@ class _EditAvatarState extends State<EditAvatar> {
                 await _pickImage();
                 await _uploadImageToFirebase();
               },
-              child: const Text("Modifier ma photo"),
+              child: Text(translationService.translate('UPDATE_MY_PICTURE')),
             ),
           ),
         ],

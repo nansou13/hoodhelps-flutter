@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hoodhelps/Containers/menu_widget.dart';
 import 'package:hoodhelps/constants.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
+import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
 import 'package:hoodhelps/template.dart';
 import 'package:provider/provider.dart';
@@ -26,12 +27,14 @@ class _JoinGroupState extends State<JoinGroup> {
 
   Future<void> fetchGroupeInfo() async {
     final userService = Provider.of<UserService>(context, listen: false);
-      var userData = userService.getUser();
-    
+    final translationService = context.read<TranslationService>();
+
+    var userData = userService.getUser();
+
     final groupeCode = _codeController.text.toLowerCase();
     if (groupeCode.isEmpty) {
       NotificationService.showError(
-          context, "Veuillez saisir un code de groupe");
+          context, translationService.translate("NOTIF_PLEASE_ENTER_GROUP_CODE"));
       return;
     }
     try {
@@ -76,61 +79,68 @@ class _JoinGroupState extends State<JoinGroup> {
 
   @override
   Widget build(BuildContext context) {
+    final translationService = context.read<TranslationService>();
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          title: const Text('Rejoindre un groupe'),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
-        drawer: const MenuWidget(),
-        body: Stack(
-          children: [
-            // Image de fond
-            background(),
+        title: Text(translationService.translate("JOIN_A_GROUP")),
+      ),
+      drawer: const MenuWidget(),
+      body: Stack(
+        children: [
+          // Image de fond
+          background(),
 
-            Container(
-              color: Colors.white.withOpacity(0.9),
-              width: double.infinity,
-              height: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: SingleChildScrollView(  // Ajout de SingleChildScrollView
+          Container(
+            color: Colors.white.withOpacity(0.9),
+            width: double.infinity,
+            height: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: SingleChildScrollView(
+                // Ajout de SingleChildScrollView
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Container(
-                      color: Colors.white,
-                      padding: const EdgeInsets.all(10.0), // Ajoute 8 points de marge intérieure
-                      child: const Column(children: [
-                        //add image
-                        Image(
-                            image: AssetImage('assets/joinGroup.jpeg'),
-                            // width: 100,
-                          ),
-            
-                           Text(
-                        "Saisissez le code du groupe que vous souhaitez rejoindre. Ce code vous permettra d'accéder au groupe et de collaborer avec d'autres membres.",
-                        style: TextStyle(fontSize: 15.0),
-                        textAlign: TextAlign.center,
-                      ),
-                      ],)
-                    ),
+                        color: Colors.white,
+                        padding: const EdgeInsets.all(
+                            10.0), // Ajoute 8 points de marge intérieure
+                        child: Column(
+                          children: [
+                            //add image
+                            const Image(
+                              image: AssetImage('assets/joinGroup.jpeg'),
+                              // width: 100,
+                            ),
+
+                            Text(
+                              translationService
+                                  .translate('JOIN_A_GROUP_DESCRIPTION'),
+                              style: const TextStyle(fontSize: 15.0),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        )),
                     const SizedBox(height: 20.0),
-                    
+
                     TextField(
                       controller: _codeController,
+                      textAlign: TextAlign.center,
                       keyboardType: TextInputType.text,
                       style: const TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight
                               .bold), // Personnalisez la taille et le style du texte
-                      decoration: const InputDecoration(
-                        hintText: 'Entrez le code',
-                        hintStyle: TextStyle(
+                      decoration: InputDecoration(
+                        hintText: translationService
+                            .translate('HINT_TEXT_ENTER_CODE'),
+                        hintStyle: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight
                                 .bold), // Personnalisez le style du texte d'infobulle
@@ -151,9 +161,9 @@ class _JoinGroupState extends State<JoinGroup> {
                         width: double.infinity,
                         height: 50.0,
                         alignment: Alignment.center,
-                        child: const Text(
-                          'Entrer dans le groupe',
-                          style: TextStyle(
+                        child: Text(
+                          translationService.translate('JOIN_THE_GROUP'),
+                          style: const TextStyle(
                             fontSize: 18.0,
                           ),
                         ),
@@ -162,13 +172,12 @@ class _JoinGroupState extends State<JoinGroup> {
                     const SizedBox(height: 20.0),
                   ],
                 ),
-              
-                ),
               ),
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
   }
 }
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
 import 'package:hoodhelps/utils.dart';
 import 'package:flutter/material.dart';
@@ -51,17 +52,16 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
       final userService = Provider.of<UserService>(context, listen: false);
       var userData = userService.getUser();
 
-        setState(() {
-          userInfo = userData;
-          isLoading = false;
-          usernameController.text = userData['username'] ?? '';
-          emailController.text = userData['email'] ?? '';
-          firstNameController.text = userData['first_name'] ?? '';
-          lastNameController.text = userData['last_name'] ?? '';
-          phoneController.text = userData['phone_number'] ?? '';
-        });
-        return;
-      
+      setState(() {
+        userInfo = userData;
+        isLoading = false;
+        usernameController.text = userData['username'] ?? '';
+        emailController.text = userData['email'] ?? '';
+        firstNameController.text = userData['first_name'] ?? '';
+        lastNameController.text = userData['last_name'] ?? '';
+        phoneController.text = userData['phone_number'] ?? '';
+      });
+      return;
     } catch (e) {
       // En cas d'erreur lors de la requête
       NotificationService.showError(context, "Erreur: ${e.toString()}");
@@ -119,99 +119,107 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
 
   @override
   Widget build(BuildContext context) {
+    final translationService = context.read<TranslationService>();
     if (isLoading) {
       return const Center(child: CircularProgressIndicator());
     } else {
       return Expanded(
-                child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch, 
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Flexible(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch, 
-                children: [
-                  TextField(
-                    controller: usernameController,
-                    enabled: false,
-                    decoration: const InputDecoration(labelText: 'Username'),
-                  ),
-                  const SizedBox(height: 10.0),
-                  TextField(
-                    controller: emailController,
-                    decoration: const InputDecoration(labelText: 'Email'),
-                  ),
-                  const SizedBox(height: 10.0),
-                  TextField(
-                    controller: firstNameController,
-                    decoration: const InputDecoration(labelText: 'Prénom'),
-                  ),
-                  const SizedBox(height: 10.0),
-                  TextField(
-                    controller: lastNameController,
-                    decoration: const InputDecoration(labelText: 'Nom'),
-                  ),
-                  const SizedBox(height: 10.0),
-                  TextField(
-                    controller: phoneController,
-                    decoration: const InputDecoration(labelText: 'Phone'),
-                  ),
-                ],
-              )
-            ),
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    TextField(
+                      controller: usernameController,
+                      enabled: false,
+                      decoration: InputDecoration(
+                          labelText: translationService
+                              .translate('LABEL_TEXT_USERNAME')),
+                    ),
+                    const SizedBox(height: 10.0),
+                    TextField(
+                      controller: emailController,
+                      decoration: InputDecoration(
+                          labelText:
+                              translationService.translate('LABEL_TEXT_EMAIL')),
+                    ),
+                    const SizedBox(height: 10.0),
+                    TextField(
+                      controller: firstNameController,
+                      decoration: InputDecoration(
+                          labelText: translationService
+                              .translate('LABEL_TEXT_FIRSTNAME')),
+                    ),
+                    const SizedBox(height: 10.0),
+                    TextField(
+                      controller: lastNameController,
+                      decoration: InputDecoration(
+                          labelText: translationService
+                              .translate('LABEL_TEXT_LASTNAME')),
+                    ),
+                    const SizedBox(height: 10.0),
+                    TextField(
+                      controller: phoneController,
+                      decoration: InputDecoration(
+                          labelText:
+                              translationService.translate('LABEL_TEXT_PHONE')),
+                    ),
+                  ],
+                )),
           ),
           const SizedBox(height: 20.0),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: MaterialButton(
-            onPressed: () {
-              if (!isMiniLoading) {
-                updateUser();
-              }
-            },
-            color: !isMiniLoading ? Colors.blue : Colors.grey,
-            textColor: Colors.white,
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Container(
-                width: double.infinity,
-                height: 50.0,
-                alignment: Alignment.center,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      'Enregistrer',
-                      style: TextStyle(
-                        fontSize: 18.0,
+              onPressed: () {
+                if (!isMiniLoading) {
+                  updateUser();
+                }
+              },
+              color: !isMiniLoading ? Colors.blue : Colors.grey,
+              textColor: Colors.white,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Container(
+                  width: double.infinity,
+                  height: 50.0,
+                  alignment: Alignment.center,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        translationService.translate('SAVE_MY_DATA'),
+                        style: const TextStyle(
+                          fontSize: 18.0,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 20.0),
-                    isMiniLoading
-                        ? const SizedBox(
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.white),
-                                strokeWidth: 3,
+                      const SizedBox(width: 20.0),
+                      isMiniLoading
+                          ? const SizedBox(
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
+                                  strokeWidth: 3,
+                                ),
                               ),
-                            ),
-                            height: 20.0,
-                            width: 20.0,
-                          )
-                        : const SizedBox(),
-                  ],
-                )),
+                              height: 20.0,
+                              width: 20.0,
+                            )
+                          : const SizedBox(),
+                    ],
+                  )),
+            ),
           ),
-          ),
-          
           const SizedBox(height: 40.0),
         ],
-      )
-      );
+      ));
     }
   }
 }

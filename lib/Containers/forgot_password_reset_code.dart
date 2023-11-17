@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/constants.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
+import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/template.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class ForgotPasswordResetCode extends StatefulWidget {
   const ForgotPasswordResetCode({Key? key}) : super(key: key);
@@ -25,18 +27,20 @@ class _ForgotPasswordResetCodeState extends State<ForgotPasswordResetCode> {
   }
 
   Future<void> updatePasswordWithCode() async {
+    final translationService = context.read<TranslationService>();
     if (_codeController.text.isEmpty) {
-      NotificationService.showError(context, "Veuillez saisir un code");
+      NotificationService.showError(
+          context, translationService.translate("NOTIF_PLEASE_ENTER_CODE"));
       return;
     }
     if (_newPasswordController.text.isEmpty) {
       NotificationService.showError(
-          context, "Veuillez saisir un nouveau mot de passe");
+          context, translationService.translate("NOTIF_PLEASE_ENTER_PASSWORD"));
       return;
     }
     if (_newPassword2Controller.text.isEmpty) {
-      NotificationService.showError(
-          context, "Veuillez saisir à nouveau votre nouveau mot de passe");
+      NotificationService.showError(context,
+          translationService.translate("NOTIF_PLEASE_ENTER_PASSWORD2"));
       return;
     }
 
@@ -64,6 +68,7 @@ class _ForgotPasswordResetCodeState extends State<ForgotPasswordResetCode> {
 
   @override
   Widget build(BuildContext context) {
+    final translationService = context.read<TranslationService>();
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -72,7 +77,9 @@ class _ForgotPasswordResetCodeState extends State<ForgotPasswordResetCode> {
               Navigator.of(context).pop();
             },
           ),
-          title: const Text('Mot de passe oublié ?'),
+          title: Text(
+            translationService.translate("FORM_FORGOT_ACCOUNT_LINK"),
+          ),
         ),
         body: Stack(
           children: [
@@ -94,17 +101,19 @@ class _ForgotPasswordResetCodeState extends State<ForgotPasswordResetCode> {
                           color: Colors.white,
                           padding: const EdgeInsets.all(
                               10.0), // Ajoute 8 points de marge intérieure
-                          child: const Column(
+                          child: Column(
                             children: [
                               //add image
-                              Image(
+                              const Image(
                                 image: AssetImage('assets/forgotPassword.jpg'),
                                 // width: 100,
                               ),
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
+
                               Text(
-                                "Entrez le code reçu via votre e-mail associée à votre compte dans le champ ci-dessous. Ainsi que votre nouveau mot de passe.",
-                                style: TextStyle(fontSize: 15.0),
+                                translationService
+                                    .translate("RESET_CODE_DESCRIPTION"),
+                                style: const TextStyle(fontSize: 15.0),
                                 textAlign: TextAlign.center,
                               ),
                             ],
@@ -115,9 +124,10 @@ class _ForgotPasswordResetCodeState extends State<ForgotPasswordResetCode> {
                         controller: _codeController,
                         style: const TextStyle(
                             fontSize: 32, fontWeight: FontWeight.bold),
-                        decoration: const InputDecoration(
-                          hintText: 'Entrez le code',
-                          hintStyle: TextStyle(
+                        decoration: InputDecoration(
+                          hintText: translationService
+                              .translate("HINT_TEXT_ENTER_CODE"),
+                          hintStyle: const TextStyle(
                               fontSize: 24, fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -127,16 +137,18 @@ class _ForgotPasswordResetCodeState extends State<ForgotPasswordResetCode> {
                       TextField(
                         controller: _newPasswordController,
                         obscureText: true,
-                        decoration: const InputDecoration(
-                            labelText: 'Nouveau mot de passe'),
+                        decoration: InputDecoration(
+                            labelText: translationService
+                                .translate("LABEL_TEXT_PASSWORD")),
                       ),
                       const SizedBox(height: 20.0),
 
                       TextField(
                         controller: _newPassword2Controller,
                         obscureText: true,
-                        decoration: const InputDecoration(
-                            labelText: 'Tappez à nouveau votre mot de passe'),
+                        decoration: InputDecoration(
+                            labelText: translationService
+                                .translate("HINT_TEXT_ENTER_NEW_PASSWORD2")),
                       ),
                       const SizedBox(height: 40), // Ajoute un espacement
                       MaterialButton(
@@ -153,9 +165,9 @@ class _ForgotPasswordResetCodeState extends State<ForgotPasswordResetCode> {
                           width: double.infinity,
                           height: 50.0,
                           alignment: Alignment.center,
-                          child: const Text(
-                            'Modifier mon mot de passe',
-                            style: TextStyle(
+                          child: Text(
+                            translationService.translate("UPDATE_PASSWORD"),
+                            style: const TextStyle(
                               fontSize: 18.0,
                             ),
                           ),

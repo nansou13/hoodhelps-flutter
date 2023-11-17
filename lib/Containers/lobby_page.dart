@@ -18,7 +18,7 @@ class LobbyPage extends StatefulWidget {
 class _LobbyPage extends State<LobbyPage> {
   bool isLoading =
       true; // Ajoutez une variable pour gérer l'affichage du loader
-  String appBarTitle = 'Home'; 
+  String appBarTitle = 'Home';
 
   void updateAppBarTitle(String newTitle) {
     setState(() {
@@ -45,59 +45,63 @@ class _LobbyPage extends State<LobbyPage> {
 
     final translationService = context.read<TranslationService>();
     return Scaffold(
-        appBar: AppBar(
-          leading: categoryId.isNotEmpty
-      ? IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        )
-      : null,
-          title: Text(appBarTitle),
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.logout_rounded),
-              tooltip: translationService.translate('DISCONNECT_BUTTON'),
-              onPressed: () {
-                FunctionUtils.disconnectUser(context);
-              },
-            ),
-          ],
-        ),
-        drawer: const MenuWidget(),
-        body: Stack(children: [
-          // Image de fond
-      background(),
-
-      Container(
-        color: Colors.white.withOpacity(0.9),
-        width: double.infinity,
-        height: double.infinity,
-          child: groupId == ''
-              ? _buildNoGroupContent()
-              : categoryId.isNotEmpty
-                  ? GroupCategoryContent(
-                      groupId: groupId, 
-                      categoryId: categoryId,
-                      updateTitleCallback: updateAppBarTitle,)
-                  : GroupContent(groupId: groupId, updateTitleCallback: updateAppBarTitle),
-      ),
-          
+      appBar: AppBar(
+        leading: categoryId.isNotEmpty
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            : null,
+        title: Text(appBarTitle),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.logout_rounded),
+            tooltip: translationService.translate('DISCONNECT_BUTTON'),
+            onPressed: () {
+              FunctionUtils.disconnectUser(context);
+            },
+          ),
         ],
-        ),
-      );
+      ),
+      drawer: const MenuWidget(),
+      body: Stack(
+        children: [
+          // Image de fond
+          background(),
+
+          Container(
+            color: Colors.white.withOpacity(0.9),
+            width: double.infinity,
+            height: double.infinity,
+            child: groupId == ''
+                ? _buildNoGroupContent()
+                : categoryId.isNotEmpty
+                    ? GroupCategoryContent(
+                        groupId: groupId,
+                        categoryId: categoryId,
+                        updateTitleCallback: updateAppBarTitle,
+                      )
+                    : GroupContent(
+                        groupId: groupId,
+                        updateTitleCallback: updateAppBarTitle),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildNoGroupContent() {
+    final translationService = context.read<TranslationService>();
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         const SizedBox(height: 30.0),
-        const Text(
-          'Vous n\'êtes pas encore membre d\'un groupe',
-          style: TextStyle(fontSize: 20.0),
+        Text(
+          translationService.translate('NOT_IN_A_GROUP_MESSAGE'),
+          style: const TextStyle(fontSize: 20.0),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 20.0),
@@ -120,11 +124,11 @@ class _LobbyPage extends State<LobbyPage> {
                     color: Colors.blue,
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(8.0, 0, 8.0, 10.0),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 10.0),
                   child: Text(
-                    "Rejoindre un groupe",
-                    style: TextStyle(
+                    translationService.translate('JOIN_A_GROUP'),
+                    style: const TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,
                     ),

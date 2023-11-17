@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
+import 'package:hoodhelps/services/translation_service.dart';
 import 'dart:convert';
 import 'dart:core';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../constants.dart';
@@ -55,50 +57,49 @@ class _Step1WidgetState extends State<Step1Widget> {
 
   @override
   Widget build(BuildContext context) {
+    final translationService = context.read<TranslationService>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          color: Colors.white,
-          padding: const EdgeInsets.all(
-              10.0), // Ajoute 8 points de marge intérieure
-          child: const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              //add image
-              Image(
-                image: AssetImage('assets/register.jpg'),
-                // width: 100,
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Étape 1',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
+            color: Colors.white,
+            padding: const EdgeInsets.all(
+                10.0), // Ajoute 8 points de marge intérieure
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //add image
+                const Image(
+                  image: AssetImage('assets/register.jpg'),
+                  // width: 100,
                 ),
-              ),
-              SizedBox(height: 10.0),
-              Text(
-                  'Pour commencer, veuillez saisir votre adresse e-mail, un nom d\'utilisateur et un mot de passe'),
-              
-            ],
-          )),
+                const SizedBox(height: 10),
+                Text(
+                  translationService.translate('STEP1_TITLE'),
+                  style: const TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10.0),
+                Text(translationService.translate('STEP1_DESCRIPTION')),
+              ],
+            )),
         const SizedBox(height: 20.0),
         TextField(
           controller: _usernameController,
-          decoration: const InputDecoration(labelText: 'Username'),
+          decoration: InputDecoration(labelText: translationService.translate('LABEL_TEXT_USERNAME')),
         ),
         const SizedBox(height: 10.0),
         TextField(
           controller: _emailController,
           keyboardType: TextInputType.emailAddress,
-          decoration: const InputDecoration(labelText: 'Email'),
+          decoration: InputDecoration(labelText: translationService.translate('LABEL_TEXT_EMAIL')),
         ),
         const SizedBox(height: 10.0),
         TextField(
           controller: _passwordController,
-          decoration: const InputDecoration(labelText: 'Password'),
+          decoration: InputDecoration(labelText: translationService.translate('LABEL_TEXT_PASS')),
           obscureText: true,
         ),
         const SizedBox(height: 20.0),
@@ -115,9 +116,9 @@ class _Step1WidgetState extends State<Step1Widget> {
             width: double.infinity,
             height: 50.0,
             alignment: Alignment.center,
-            child: const Text(
-              'Inscription',
-              style: TextStyle(
+            child: Text(
+              translationService.translate('CREATE_ACCOUNT_BUTTON'),
+              style: const TextStyle(
                 fontSize: 18.0,
               ),
             ),
@@ -126,8 +127,8 @@ class _Step1WidgetState extends State<Step1Widget> {
         const SizedBox(height: 20.0),
         MaterialButton(
           onPressed: () {
-                    Navigator.pushNamed(context, "/login");
-                  },
+            Navigator.pushNamed(context, "/login");
+          },
           color: Colors.white,
           textColor: Colors.black,
           elevation: 0,
@@ -138,9 +139,9 @@ class _Step1WidgetState extends State<Step1Widget> {
             width: double.infinity,
             height: 50.0,
             alignment: Alignment.center,
-            child: const Text(
-              'Retour à la connexion',
-              style: TextStyle(
+            child: Text(
+              translationService.translate('GO_TO_LOGIN'),
+              style: const TextStyle(
                 fontSize: 18.0,
               ),
             ),
@@ -180,7 +181,8 @@ class _Step1WidgetState extends State<Step1Widget> {
       } else {
         final errorData = jsonDecode(response.body);
 
-        NotificationService.showError(context, "Échec de la création: ${errorData['message']}");
+        NotificationService.showError(
+            context, "Échec de la création: ${errorData['message']}");
       }
     } catch (e) {
       setState(() {

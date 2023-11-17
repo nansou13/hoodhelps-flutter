@@ -77,12 +77,12 @@ class _RegisterPageState extends State<RegisterPage> {
           automaticallyImplyLeading: false,
           leading: returnButtonManage(),
           title: _currentStep == 1
-                  ? const Text('Création de compte')
+                  ? Text(translationService.translate("ACCOUNT_CREATION"))
                   : _currentStep == 2
-                      ? const Text('Création de compte')
+                      ? Text(translationService.translate("ACCOUNT_CREATION"))
                       : _currentStep == 3
-                          ? const Text('Ajouter vos métiers')
-                          : const Text('Intégrer un groupe')
+                          ? Text(translationService.translate("ADD_JOBS"))
+                          : Text(translationService.translate("JOIN_A_GROUP"))
         ),
         body: Stack(children: [
       // Image de fond

@@ -10,7 +10,10 @@ class GroupCategoryContent extends StatefulWidget {
   final Function(String newTitle) updateTitleCallback;
 
   const GroupCategoryContent(
-      {Key? key, required this.groupId, required this.categoryId, required this.updateTitleCallback})
+      {Key? key,
+      required this.groupId,
+      required this.categoryId,
+      required this.updateTitleCallback})
       : super(key: key);
 
   @override
@@ -20,7 +23,7 @@ class GroupCategoryContent extends StatefulWidget {
 class _GroupCategoryContentState extends State<GroupCategoryContent> {
   List jobData = [];
   String categorieName = '';
-  
+
   @override
   void initState() {
     super.initState();
@@ -56,10 +59,12 @@ class _GroupCategoryContentState extends State<GroupCategoryContent> {
     final translationService = context.read<TranslationService>();
     final groupId = widget.groupId;
     final categoryId = widget.categoryId;
-    
-    var groupBackgroundUrl = categorieName.isNotEmpty ? 'assets/categories/$categorieName.jpg' : '';
 
-    return SingleChildScrollView( // Utilisez SingleChildScrollView pour rendre tout le contenu déroulable
+    var groupBackgroundUrl =
+        categorieName.isNotEmpty ? 'assets/categories/$categorieName.jpg' : '';
+
+    return SingleChildScrollView(
+      // Utilisez SingleChildScrollView pour rendre tout le contenu déroulable
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -69,28 +74,26 @@ class _GroupCategoryContentState extends State<GroupCategoryContent> {
             color: Colors.white,
             margin: const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
             padding: const EdgeInsets.all(10.0),
-            child: Column(
-              children: [
-            if (groupBackgroundUrl.isNotEmpty)
-              Container(
-                width: double.infinity,
-                constraints: const BoxConstraints(
-                  maxHeight: 100,
+            child: Column(children: [
+              if (groupBackgroundUrl.isNotEmpty)
+                Container(
+                  width: double.infinity,
+                  constraints: const BoxConstraints(
+                    maxHeight: 100,
+                  ),
+                  child: Image(
+                    image: AssetImage(groupBackgroundUrl),
+                    fit: BoxFit.cover,
+                    // width: 100,
+                  ),
                 ),
-                child: Image(
-                            image: AssetImage(groupBackgroundUrl),
-                            fit: BoxFit.cover,
-                            // width: 100,
-                          ),
-              ),
               const SizedBox(height: 10.0),
-            Text(
-              "Vous avez sélectionné la catégorie ${translationService.translate(categorieName)}. Ici, vous trouverez une liste de professionnels qualifiés dans votre résidence, prêts à vous aider. N'hésitez pas à entrer en contact directement pour discuter de vos besoins.",
-              style: const TextStyle(fontSize: 15.0),
-              textAlign: TextAlign.center,
-            ),
-            ]
-          ),
+              Text(
+                "${translationService.translate("YOU_SELECTED_THE_CATEGORY")} ${translationService.translate(categorieName)}. ${translationService.translate("LOBBY_CATEGORY_DESCRIPTION")}}",
+                style: const TextStyle(fontSize: 15.0),
+                textAlign: TextAlign.center,
+              ),
+            ]),
           ),
           const SizedBox(height: 20.0),
           Padding(
@@ -101,12 +104,15 @@ class _GroupCategoryContentState extends State<GroupCategoryContent> {
                 crossAxisSpacing: 16.0,
                 mainAxisSpacing: 16.0,
               ),
-              physics: const NeverScrollableScrollPhysics(), // Empêcher le GridView de défiler
-              shrinkWrap: true, // Permettre au GridView de s'adapter à son contenu
+              physics:
+                  const NeverScrollableScrollPhysics(), // Empêcher le GridView de défiler
+              shrinkWrap:
+                  true, // Permettre au GridView de s'adapter à son contenu
               itemCount: jobData.length,
               itemBuilder: (context, index) {
                 final job = jobData[index];
-                final jobId = job['profession_id']; // Récupérez l'ID de la catégorie
+                final jobId =
+                    job['profession_id']; // Récupérez l'ID de la catégorie
                 final jobName = job['profession_name'];
                 final jobUsers =
                     int.tryParse(job['user_count'].toString()) ?? 0;
@@ -154,7 +160,7 @@ class _GroupCategoryContentState extends State<GroupCategoryContent> {
             ),
           ),
         ],
-        ),
+      ),
     );
   }
 }

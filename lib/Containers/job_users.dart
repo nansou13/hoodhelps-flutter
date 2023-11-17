@@ -117,94 +117,100 @@ class _JobUsers extends State<JobUsers> {
         ),
       );
     } else {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        title: Text(translationService.translate(job[1])),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.logout_rounded),
-            tooltip: translationService.translate('DISCONNECT_BUTTON'),
+      return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              FunctionUtils.disconnectUser(context);
+              Navigator.of(context).pop();
             },
           ),
-        ],
-      ),
-      drawer: const MenuWidget(),
-      body: Stack(
-        children: [
-          // Image de fond
-          background(),
-          Container(
-            color: Colors.white.withOpacity(0.9),
-            width: double.infinity,
-            height: double.infinity,
-            child: Padding(
-            padding: const EdgeInsets.all(
-                16.0), // Marge uniforme autour de la grille
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // 2 éléments par ligne
-                crossAxisSpacing: 16.0, // Espace horizontal entre les éléments
-                mainAxisSpacing: 16.0, // Espace vertical entre les éléments
-              ),
-              itemCount: usersData.length,
-              itemBuilder: (context, index) {
-                final user = usersData[index];
-                final userNameDisplay = displayName(user['first_name'], user['last_name'], user['username']);
-                final userImageUrl = user['image_url'] ?? '';
-                
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.of(context, rootNavigator: true).pushNamed(
-                        '/userinfo',
-                        arguments: [user['id'], job[0], job[1], groupId],
-                      );
-                  },
-                  child: Card(
-                    color: Colors.white,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        const SizedBox(height: 20.0),
-                        CircleAvatar(
-                          backgroundImage: userImageUrl.isNotEmpty ? NetworkImage(userImageUrl) : null,
-                          backgroundColor: Colors.blueGrey,
-                          radius: 50.0,
-                          child: Text(
-                            userImageUrl.isEmpty ? '${user['first_name'].isNotEmpty ? user['first_name'][0] : ''}${user['last_name'].isNotEmpty ? user['last_name'][0] : ''}'.toUpperCase(): '',
-                            style: const TextStyle(
-                              fontSize: 24,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 10.0),
-                        Text(
-                            userNameDisplay,
-                            style: const TextStyle(
-                              fontSize: 15.0,
-                            ),
-                            textAlign: TextAlign.center, // Centrer le texte
-                          ),
-                      ],
-                    ),
-                  ),
-                );
+          title: Text(translationService.translate(job[1])),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.logout_rounded),
+              tooltip: translationService.translate('DISCONNECT_BUTTON'),
+              onPressed: () {
+                FunctionUtils.disconnectUser(context);
               },
             ),
-            ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+        drawer: const MenuWidget(),
+        body: Stack(
+          children: [
+            // Image de fond
+            background(),
+            Container(
+              color: Colors.white.withOpacity(0.9),
+              width: double.infinity,
+              height: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.all(
+                    16.0), // Marge uniforme autour de la grille
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // 2 éléments par ligne
+                    crossAxisSpacing:
+                        16.0, // Espace horizontal entre les éléments
+                    mainAxisSpacing: 16.0, // Espace vertical entre les éléments
+                  ),
+                  itemCount: usersData.length,
+                  itemBuilder: (context, index) {
+                    final user = usersData[index];
+                    final userNameDisplay = displayName(user['first_name'],
+                        user['last_name'], user['username']);
+                    final userImageUrl = user['image_url'] ?? '';
 
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.of(context, rootNavigator: true).pushNamed(
+                          '/userinfo',
+                          arguments: [user['id'], job[0], job[1], groupId],
+                        );
+                      },
+                      child: Card(
+                        color: Colors.white,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            const SizedBox(height: 20.0),
+                            CircleAvatar(
+                              backgroundImage: userImageUrl.isNotEmpty
+                                  ? NetworkImage(userImageUrl)
+                                  : null,
+                              backgroundColor: Colors.blueGrey,
+                              radius: 50.0,
+                              child: Text(
+                                userImageUrl.isEmpty
+                                    ? '${user['first_name'].isNotEmpty ? user['first_name'][0] : ''}${user['last_name'].isNotEmpty ? user['last_name'][0] : ''}'
+                                        .toUpperCase()
+                                    : '',
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10.0),
+                            Text(
+                              userNameDisplay,
+                              style: const TextStyle(
+                                fontSize: 15.0,
+                              ),
+                              textAlign: TextAlign.center, // Centrer le texte
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
     }
   }
 }
@@ -212,13 +218,13 @@ class _JobUsers extends State<JobUsers> {
 String displayName(String? firstname, String? lastname, String? pseudo) {
   if (firstname != null && firstname.isNotEmpty) {
     if (lastname != null && lastname.isNotEmpty) {
-      return "$firstname ${lastname[0]}.";  // e.g., "John D."
+      return "$firstname ${lastname[0]}."; // e.g., "John D."
     } else {
-      return firstname;  // e.g., "John"
+      return firstname; // e.g., "John"
     }
   } else if (pseudo != null && pseudo.isNotEmpty) {
-    return pseudo;  // e.g., "john_doe"
+    return pseudo; // e.g., "john_doe"
   } else {
-    return "Utilisateur anonyme";  // Fallback value
+    return "Utilisateur anonyme"; // Fallback value
   }
 }

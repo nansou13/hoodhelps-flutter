@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:hoodhelps/services/translation_service.dart';
 import 'package:image/image.dart' as img;
 import 'package:firebase_storage/firebase_storage.dart'; // Importez cette bibliothèque
 import 'package:image_picker/image_picker.dart'; // Importez cette bibliothèque
@@ -8,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:hoodhelps/utils.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../constants.dart';
@@ -80,6 +82,7 @@ class _Step2WidgetState extends State<Step2Widget> {
 
   @override
   Widget build(BuildContext context) {
+    final translationService = context.read<TranslationService>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -87,20 +90,19 @@ class _Step2WidgetState extends State<Step2Widget> {
             color: Colors.white,
             padding: const EdgeInsets.all(
                 10.0), // Ajoute 8 points de marge intérieure
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //add image
                 Text(
-                  'Étape 2',
-                  style: TextStyle(
+                  translationService.translate('STEP2_TITLE'),
+                  style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 10.0),
-                Text(
-                    'Veuillez fournir vos informations personnelles pour créer votre compte.'),
+                const SizedBox(height: 10.0),
+                Text(translationService.translate('STEP2_DESCRIPTION')),
               ],
             )),
         const SizedBox(height: 20.0),
@@ -117,7 +119,7 @@ class _Step2WidgetState extends State<Step2Widget> {
               await _pickImage();
               await _uploadImageToFirebase();
             },
-            child: const Text("Choisir une photo"),
+            child: Text(translationService.translate('UPDATE_MY_PICTURE')),
           ),
         ),
         const SizedBox(height: 10.0),
@@ -126,13 +128,17 @@ class _Step2WidgetState extends State<Step2Widget> {
             Expanded(
                 child: TextField(
               controller: firstNameController,
-              decoration: const InputDecoration(labelText: 'Prénom'),
+              decoration: InputDecoration(
+                  labelText:
+                      translationService.translate('LABEL_TEXT_FIRSTNAME')),
             )),
             const SizedBox(width: 20.0),
             Expanded(
                 child: TextField(
               controller: lastNameController,
-              decoration: const InputDecoration(labelText: 'Nom'),
+              decoration: InputDecoration(
+                  labelText:
+                      translationService.translate('LABEL_TEXT_LASTNAME')),
             )),
           ],
         ),
@@ -140,7 +146,8 @@ class _Step2WidgetState extends State<Step2Widget> {
         TextField(
           controller: phoneController,
           keyboardType: TextInputType.number,
-          decoration: const InputDecoration(labelText: 'Phone'),
+          decoration: InputDecoration(
+              labelText: translationService.translate('LABEL_TEXT_PHONE')),
         ),
         const SizedBox(height: 20.0),
         MaterialButton(
@@ -157,9 +164,9 @@ class _Step2WidgetState extends State<Step2Widget> {
             width: double.infinity,
             height: 50.0,
             alignment: Alignment.center,
-            child: const Text(
-              'Enregistrer mes informations',
-              style: TextStyle(
+            child: Text(
+              translationService.translate('SAVE_MY_DATA'),
+              style: const TextStyle(
                 fontSize: 18.0,
               ),
             ),
@@ -180,9 +187,9 @@ class _Step2WidgetState extends State<Step2Widget> {
             width: double.infinity,
             height: 50.0,
             alignment: Alignment.center,
-            child: const Text(
-              'Passer',
-              style: TextStyle(
+            child: Text(
+              translationService.translate('SKIP_BUTTON'),
+              style: const TextStyle(
                 fontSize: 18.0,
               ),
             ),

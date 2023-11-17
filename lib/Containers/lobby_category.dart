@@ -9,7 +9,9 @@ class GroupContent extends StatefulWidget {
   final String groupId;
   final Function(String newTitle) updateTitleCallback;
 
-  const GroupContent({Key? key, required this.groupId,required this.updateTitleCallback}) : super(key: key);
+  const GroupContent(
+      {Key? key, required this.groupId, required this.updateTitleCallback})
+      : super(key: key);
 
   @override
   _GroupContentState createState() => _GroupContentState();
@@ -31,11 +33,10 @@ class _GroupContentState extends State<GroupContent> {
     final groupId = widget.groupId;
     final groups = user.groups;
     Group specificGroup = groups.firstWhere(
-    (group) => group.id == groupId,
-    orElse: () => throw Exception('Groupe non trouvé'),
-  );
+      (group) => group.id == groupId,
+      orElse: () => throw Exception('Groupe non trouvé'),
+    );
 
-    
     final data = await categoriesService.getCacheCategoryData(groupId);
     setState(() {
       categoryData =
@@ -50,49 +51,52 @@ class _GroupContentState extends State<GroupContent> {
     final translationService = context.read<TranslationService>();
     final groupId = widget.groupId;
 
-    return SingleChildScrollView( // Utilisez SingleChildScrollView pour rendre tout le contenu déroulable
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        const SizedBox(height: 30.0),
-        Container(
-          color: Colors.white,
-          margin: const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
-          padding: const EdgeInsets.all(10.0),
-          child: Column(children: [
-            if (groupBackgroundUrl.isNotEmpty)
-              Container(
-                width: double.infinity,
-                constraints: const BoxConstraints(
-                  maxHeight: 100,
+    return SingleChildScrollView(
+      // Utilisez SingleChildScrollView pour rendre tout le contenu déroulable
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          const SizedBox(height: 30.0),
+          Container(
+            color: Colors.white,
+            margin: const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
+            padding: const EdgeInsets.all(10.0),
+            child: Column(children: [
+              if (groupBackgroundUrl.isNotEmpty)
+                Container(
+                  width: double.infinity,
+                  constraints: const BoxConstraints(
+                    maxHeight: 100,
+                  ),
+                  child: Image.network(
+                    groupBackgroundUrl,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-                child: Image.network(
-                  groupBackgroundUrl,
-                  fit: BoxFit.cover,
-                ),
-              ),
               const SizedBox(height: 10.0),
-            const Text(
-              "Trouver le bon professionnel près de chez vous n'a jamais été aussi simple. Parcourez les différentes catégories de métiers ci-dessous pour découvrir les talents qui se cachent dans votre résidence.",
-              style: TextStyle(fontSize: 15.0),
-              textAlign: TextAlign.center,
-            ),
-          ]),
-        ),
-        const SizedBox(height: 20.0),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 16.0,
-              mainAxisSpacing: 16.0,
-            ),
-            physics: const NeverScrollableScrollPhysics(), // Empêcher le GridView de défiler
-            shrinkWrap: true, // Permettre au GridView de s'adapter à son contenu
-            itemCount: categoryData.length,
-            itemBuilder: (context, index) {
+              Text(
+                translationService.translate('LOBBY_DESCRIPTION'),
+                style: const TextStyle(fontSize: 15.0),
+                textAlign: TextAlign.center,
+              ),
+            ]),
+          ),
+          const SizedBox(height: 20.0),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 16.0,
+                mainAxisSpacing: 16.0,
+              ),
+              physics:
+                  const NeverScrollableScrollPhysics(), // Empêcher le GridView de défiler
+              shrinkWrap:
+                  true, // Permettre au GridView de s'adapter à son contenu
+              itemCount: categoryData.length,
+              itemBuilder: (context, index) {
                 final category = categoryData[index];
                 final categoryName = category['name'];
                 //force category['users'] to be an int to avoid error when null (null is not a subtype of int)
@@ -142,10 +146,10 @@ class _GroupContentState extends State<GroupContent> {
                   ),
                 );
               },
-          ),
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
     );
   }
 }

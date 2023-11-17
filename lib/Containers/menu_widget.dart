@@ -102,11 +102,11 @@ class MenuWidget extends StatelessWidget {
                 color: Colors.blue,
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(8.0, 0, 8.0, 10.0),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 10.0),
               child: Text(
-                "Rejoindre un groupe",
-                style: TextStyle(
+                translationService.translate('JOIN_A_GROUP'),
+                style: const TextStyle(
                   fontSize: 15.0,
                   fontWeight: FontWeight.bold,
                 ),

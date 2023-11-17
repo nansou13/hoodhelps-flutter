@@ -101,111 +101,111 @@ class _AddJobWidgetState extends State<AddJobWidget> {
   Widget build(BuildContext context) {
     final translationService = context.read<TranslationService>();
     return SingleChildScrollView(
-          // Ajoutez le SingleChildScrollView ici
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            // crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-        TextField(
-          enabled: !isLoading,
-          onTap: () {
-            _showCategoryPicker(context);
-          },
-          readOnly: true,
-          decoration: const InputDecoration(
-            hintText: 'Sélectionnez une catégorie',
-          ),
-          controller: TextEditingController(
-            text: translationService.translate(categories
-                .firstWhere(
-                  (category) => category.id == selectedCategoryId,
-                  orElse: () => Category(id: '', name: ''),
-                )
-                .name),
-          ),
-        ),
-        const SizedBox(height: 20), // Ajoute un espacement
-        TextField(
-          onTap: () {
-            // Utilisez onTap pour ouvrir la liste des emplois lorsqu'il est cliqué
-            if (isJobTextFieldEnabled) {
-              _showJobPicker(context);
-            }
-          },
-          readOnly: true,
-          enabled: isJobTextFieldEnabled,
-          decoration: const InputDecoration(
-            hintText: 'Sélectionnez un emploi',
-          ),
-          controller: TextEditingController(
-            text: translationService.translate(jobs
-                .firstWhere(
-                  (job) => job.id == selectedJobId,
-                  orElse: () => Job(id: '', name: ''),
-                )
-                .name),
-          ),
-        ),
-        const SizedBox(height: 20),
-        TextField(
-          onChanged: (value) {
-            setState(() {
-              description = value; // Mettre à jour la description
-            });
-          },
-          decoration: const InputDecoration(
-            hintText: 'Ajouter une description',
-          ),
-          enabled: selectedJobId != null,
-        ),
-        const SizedBox(height: 20),
-        Row(children: <Widget>[
-          Text(
-              'Expérience: ${experienceYears == 10 ? '10+' : experienceYears.toString()} ans'),
-          Expanded(
-            child: Slider(
-              value: experienceYears.toDouble(),
-              onChanged: (value) {
-                if (selectedJobId != null) {
-                  setState(() {
-                    experienceYears = value.toInt();
-                  });
-                }
-              },
-              min: 0,
-              max: 10,
-              divisions: 10,
+      // Ajoutez le SingleChildScrollView ici
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        // crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          TextField(
+            enabled: !isLoading,
+            onTap: () {
+              _showCategoryPicker(context);
+            },
+            readOnly: true,
+            decoration: InputDecoration(
+              hintText: translationService.translate('HINT_TEXT_SELECT_CATEGORY'),
+            ),
+            controller: TextEditingController(
+              text: translationService.translate(categories
+                  .firstWhere(
+                    (category) => category.id == selectedCategoryId,
+                    orElse: () => Category(id: '', name: ''),
+                  )
+                  .name),
             ),
           ),
-        ]),
-        const SizedBox(height: 20.0),
-        MaterialButton(
-          onPressed: () {
-            if (selectedJobId != null) {
-              saveUserJobData();
-            }
-          },
-          color: selectedJobId != null ? Colors.blue : Colors.grey,
-          textColor: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+          const SizedBox(height: 20), // Ajoute un espacement
+          TextField(
+            onTap: () {
+              // Utilisez onTap pour ouvrir la liste des emplois lorsqu'il est cliqué
+              if (isJobTextFieldEnabled) {
+                _showJobPicker(context);
+              }
+            },
+            readOnly: true,
+            enabled: isJobTextFieldEnabled,
+            decoration: InputDecoration(
+              hintText: translationService.translate('HINT_TEXT_SELECT_JOB'),
+            ),
+            controller: TextEditingController(
+              text: translationService.translate(jobs
+                  .firstWhere(
+                    (job) => job.id == selectedJobId,
+                    orElse: () => Job(id: '', name: ''),
+                  )
+                  .name),
+            ),
           ),
-          child: Container(
-            width: double.infinity,
-            height: 50.0,
-            alignment: Alignment.center,
-            child: const Text(
-              'Ajouter ce metier',
-              style: TextStyle(
-                fontSize: 18.0,
+          const SizedBox(height: 20),
+          TextField(
+            onChanged: (value) {
+              setState(() {
+                description = value; // Mettre à jour la description
+              });
+            },
+            decoration: InputDecoration(
+              hintText: translationService.translate('HINT_TEXT_ADD_DESCRIPTION'),
+            ),
+            enabled: selectedJobId != null,
+          ),
+          const SizedBox(height: 20),
+          Row(children: <Widget>[
+            Text(
+                '${translationService.translate("EXPERIENCE")}: ${experienceYears == 10 ? '10+' : experienceYears.toString()} ${translationService.translate("YEARS")}'),
+            Expanded(
+              child: Slider(
+                value: experienceYears.toDouble(),
+                onChanged: (value) {
+                  if (selectedJobId != null) {
+                    setState(() {
+                      experienceYears = value.toInt();
+                    });
+                  }
+                },
+                min: 0,
+                max: 10,
+                divisions: 10,
+              ),
+            ),
+          ]),
+          const SizedBox(height: 20.0),
+          MaterialButton(
+            onPressed: () {
+              if (selectedJobId != null) {
+                saveUserJobData();
+              }
+            },
+            color: selectedJobId != null ? Colors.blue : Colors.grey,
+            textColor: Colors.white,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Container(
+              width: double.infinity,
+              height: 50.0,
+              alignment: Alignment.center,
+              child: Text(
+                translationService.translate('ADD_THIS_JOB'),
+                style: const TextStyle(
+                  fontSize: 18.0,
+                ),
               ),
             ),
           ),
-        ),
-      ],
-    ),
-          );
+        ],
+      ),
+    );
   }
 
   Future<void> _showCategoryPicker(BuildContext context) async {

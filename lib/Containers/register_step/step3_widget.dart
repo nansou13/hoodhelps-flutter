@@ -103,26 +103,25 @@ class _Step3WidgetState extends State<Step3Widget> {
             color: Colors.white,
             padding: const EdgeInsets.all(
                 10.0), // Ajoute 8 points de marge intérieure
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //add image
-                Image(
+                const Image(
                   image: AssetImage('assets/registerJob.jpg'),
                   // width: 100,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
-                  'Étape 3',
-                  style: TextStyle(
+                  translationService.translate('STEP3_TITLE'),
+                  style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 10.0),
-                Text(
-            'Sélectionnez votre métier dans la liste, indiquez le nombre d\'années d\'expérience que vous avez dans ce domaine (de 1 à 10+ ans), et ajoutez une description de vos compétences et de votre expérience professionnelle.'),
-        ],
+                const SizedBox(height: 10.0),
+                Text(translationService.translate('STEP3_DESCRIPTION')),
+              ],
             )),
         const SizedBox(height: 20.0),
         TextField(
@@ -131,8 +130,8 @@ class _Step3WidgetState extends State<Step3Widget> {
             _showCategoryPicker(context);
           },
           readOnly: true,
-          decoration: const InputDecoration(
-            hintText: 'Sélectionnez une catégorie',
+          decoration: InputDecoration(
+            hintText: translationService.translate('HINT_TEXT_SELECT_CATEGORY'),
           ),
           controller: TextEditingController(
             text: translationService.translate(categories
@@ -153,8 +152,8 @@ class _Step3WidgetState extends State<Step3Widget> {
           },
           readOnly: true,
           enabled: isJobTextFieldEnabled,
-          decoration: const InputDecoration(
-            hintText: 'Sélectionnez un emploi',
+          decoration: InputDecoration(
+            hintText: translationService.translate('HINT_TEXT_SELECT_JOB'),
           ),
           controller: TextEditingController(
             text: translationService.translate(jobs
@@ -172,15 +171,15 @@ class _Step3WidgetState extends State<Step3Widget> {
               description = value; // Mettre à jour la description
             });
           },
-          decoration: const InputDecoration(
-            hintText: 'Ajouter une description',
+          decoration: InputDecoration(
+            hintText: translationService.translate('HINT_TEXT_ADD_DESCRIPTION'),
           ),
           enabled: selectedJobId != null,
         ),
         const SizedBox(height: 20),
         Row(children: <Widget>[
           Text(
-              'Expérience: ${experienceYears == 10 ? '10+' : experienceYears.toString()} ans'),
+              '${translationService.translate("EXPERIENCE")}: ${experienceYears == 10 ? '10+' : experienceYears.toString()} ${translationService.translate("YEARS")}'),
           Expanded(
             child: Slider(
               value: experienceYears.toDouble(),
@@ -214,9 +213,9 @@ class _Step3WidgetState extends State<Step3Widget> {
             width: double.infinity,
             height: 50.0,
             alignment: Alignment.center,
-            child: const Text(
-              'Ajouter ce metier',
-              style: TextStyle(
+            child: Text(
+              translationService.translate('ADD_THIS_JOB'),
+              style: const TextStyle(
                 fontSize: 18.0,
               ),
             ),
@@ -237,9 +236,9 @@ class _Step3WidgetState extends State<Step3Widget> {
             width: double.infinity,
             height: 50.0,
             alignment: Alignment.center,
-            child: const Text(
-              'Passer',
-              style: TextStyle(
+            child: Text(
+              translationService.translate('SKIP_BUTTON'),
+              style: const TextStyle(
                 fontSize: 18.0,
               ),
             ),

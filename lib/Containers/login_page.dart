@@ -168,8 +168,8 @@ class _LoginPageState extends State<LoginPage> {
   MaterialButton buildRegisterButton(TranslationService translationService) {
     return MaterialButton(
       onPressed: () {
-          Navigator.pushNamed(context, "/register");
-        },
+        Navigator.pushNamed(context, "/register");
+      },
       color: Colors.white,
       textColor: Colors.black,
       elevation: 0,

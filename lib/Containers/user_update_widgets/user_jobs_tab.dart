@@ -116,16 +116,15 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
     String? userToken = prefs.getString('user_token');
 
     try {
-      final response =
-          await http.delete(Uri.parse('$routeAPI/api/users/me/job/$jobID'), 
-          headers: {
-        'Authorization': 'Bearer $userToken'
-      });
-      
+      final response = await http.delete(
+          Uri.parse('$routeAPI/api/users/me/job/$jobID'),
+          headers: {'Authorization': 'Bearer $userToken'});
+
       if (response.statusCode == 204) {
         // Si la requête réussit (statut 200), analyser la réponse JSON
-       
-        NotificationService.showInfo(context, 'Suppression effectuée avec succès');
+
+        NotificationService.showInfo(
+            context, 'Suppression effectuée avec succès');
       } else {
         // En cas d'échec de la requête, afficher un message d'erreur
         NotificationService.showError(context, 'Échec de la suppression');
@@ -146,11 +145,12 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
     } else {
       final translationService = context.read<TranslationService>();
       return Expanded(
-                child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch, 
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Flexible(
-            child: SingleChildScrollView( // Utilisez SingleChildScrollView pour rendre le contenu défilable
+              child: SingleChildScrollView(
+            // Utilisez SingleChildScrollView pour rendre le contenu défilable
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
               child: Column(
@@ -158,88 +158,96 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
                   // ...Liste des travaux...
                   ListView.builder(
                     padding: EdgeInsets.zero,
-                    shrinkWrap: true, // Important pour ListView.builder dans une colonne
-                    physics: const NeverScrollableScrollPhysics(), // Pour que ListView n'intercepte pas le défilement
+                    shrinkWrap:
+                        true, // Important pour ListView.builder dans une colonne
+                    physics:
+                        const NeverScrollableScrollPhysics(), // Pour que ListView n'intercepte pas le défilement
                     itemCount: userJob.length,
                     itemBuilder: (context, index) {
-                final job = userJob[index];
-                final jobName = job['name'] ?? '';
-                String experienceYears =
-                    job['experience_years']?.toString() ?? '';
+                      final job = userJob[index];
+                      final jobName = job['name'] ?? '';
+                      String experienceYears =
+                          job['experience_years']?.toString() ?? '';
 
-                return Dismissible(
-                  key: Key(job['id'].toString()), // Assurez-vous que c'est unique
-                  direction: DismissDirection.endToStart,
-                  onDismissed: (direction) {
-                    // Appelez votre fonction de suppression ici
-                    //print(job['id']);
-                    deleteJob(job['id']);
-                    setState(() {
-                      userJob.removeAt(index);
-                    });
-                  },
-                  background: Container(
-                    color: Colors.red,
-                    child: const Align(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Icon(Icons.delete, color: Colors.white),
-                      ),
-                      alignment: Alignment.centerRight,
-                    ),
-                  ),
-                  child: 
-                Card(
-                  margin: const EdgeInsets.all(8.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Row(children: [
-                              Icon(
-                                IconsExtension.getIconData(jobName),
-                                size: 25,
-                              ), // Icône de travail
-                              const SizedBox(width: 10.0),
-                              Text(translationService.translate(jobName),
-                                  style: const TextStyle(fontSize: 18)),
-                            ]),
-                            Padding(
-                                padding: const EdgeInsets.only(left: 34.0),
-                                child: Text(
-                                  'Expérience : ' + experienceYears + ' years',
-                                  style: const TextStyle(fontSize: 12),
-                                )), // Affichage des années d'expérience
-                          ],
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () {
-                            _showEditDialog(job,
-                                index); // Passer les informations nécessaires en paramètre
+                      return Dismissible(
+                          key: Key(job['id']
+                              .toString()), // Assurez-vous que c'est unique
+                          direction: DismissDirection.endToStart,
+                          onDismissed: (direction) {
+                            // Appelez votre fonction de suppression ici
+                            //print(job['id']);
+                            deleteJob(job['id']);
+                            setState(() {
+                              userJob.removeAt(index);
+                            });
                           },
-                        ),
-                      ],
-                    ),
+                          background: Container(
+                            color: Colors.red,
+                            child: const Align(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                                child: Icon(Icons.delete, color: Colors.white),
+                              ),
+                              alignment: Alignment.centerRight,
+                            ),
+                          ),
+                          child: Card(
+                            margin: const EdgeInsets.all(8.0),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Row(children: [
+                                        Icon(
+                                          IconsExtension.getIconData(jobName),
+                                          size: 25,
+                                        ), // Icône de travail
+                                        const SizedBox(width: 10.0),
+                                        Text(
+                                            translationService
+                                                .translate(jobName),
+                                            style:
+                                                const TextStyle(fontSize: 18)),
+                                      ]),
+                                      Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 34.0),
+                                          child: Text(
+                                            '${translationService.translate("EXPERIENCE")} : ' +
+                                                experienceYears +
+                                                ' ${translationService.translate("YEARS")}',
+                                            style:
+                                                const TextStyle(fontSize: 12),
+                                          )), // Affichage des années d'expérience
+                                    ],
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.edit),
+                                    onPressed: () {
+                                      _showEditDialog(job,
+                                          index); // Passer les informations nécessaires en paramètre
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ));
+                    },
                   ),
-                )
-                );
-              },
-            ),
                 ],
               ),
-          ),
-          )
-        ),
+            ),
+          )),
           _joinJobCard(),
         ],
-      )
-      );
+      ));
     }
   }
 
@@ -261,18 +269,20 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: const Text("Modifier Job"),
+              title: Text(translationService.translate("EDIT_JOB")),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   TextField(
                     enabled: false,
                     controller: jobNameController,
-                    decoration: const InputDecoration(labelText: "Nom du job"),
+                    decoration: InputDecoration(
+                        labelText:
+                            translationService.translate("HINT_TEXT_JOB")),
                   ),
                   Row(children: <Widget>[
                     Text(
-                        'Expérience: ${_currentSliderValue >= 10 ? '10+' : _currentSliderValue.toInt().toString()} ans'),
+                        '${translationService.translate("EXPERIENCE")}: ${_currentSliderValue >= 10 ? '10+' : _currentSliderValue.toInt().toString()} ${translationService.translate("YEARS")}'),
                     Expanded(
                       child: Slider(
                         value: _currentSliderValue,
@@ -291,20 +301,21 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
                   ]),
                   TextField(
                     controller: descriptionController,
-                    decoration: const InputDecoration(labelText: "Description"),
+                    decoration: InputDecoration(
+                        labelText: translationService.translate("DESCRIPTION")),
                     maxLines: 3,
                   ),
                 ],
               ),
               actions: <Widget>[
                 MaterialButton(
-                  child: const Text("Annuler"),
+                  child: Text(translationService.translate("CANCEL")),
                   onPressed: () {
                     Navigator.of(context).pop(); // Ferme la boîte de dialogue
                   },
                 ),
                 MaterialButton(
-                  child: const Text("Valider"),
+                  child: Text(translationService.translate("SAVE")),
                   onPressed: () async {
                     await updateJob(job['id'], descriptionController.text,
                         _currentSliderValue.round());
@@ -323,23 +334,25 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
   }
 
   void _saveJobCallback(data) {
-     Navigator.of(context).pop(); // Ferme la boîte de dialogue
+    Navigator.of(context).pop(); // Ferme la boîte de dialogue
     loadData();
   }
 
   void _showAddJob() {
+    final translationService = context.read<TranslationService>();
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: const Text("Ajouter un Job"),
-              content: AddJobWidget(saveJobCallback: _saveJobCallback,),
-              
+              title: Text(translationService.translate("ADD_JOB")),
+              content: AddJobWidget(
+                saveJobCallback: _saveJobCallback,
+              ),
               actions: <Widget>[
                 MaterialButton(
-                  child: const Text("Annuler"),
+                  child: Text(translationService.translate("CANCEL")),
                   onPressed: () {
                     Navigator.of(context).pop(); // Ferme la boîte de dialogue
                   },
@@ -356,33 +369,32 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
   }
 
   Widget _joinJobCard() {
-  return Padding(
-      padding: const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 20.0),
-      child: Card(
-        color: Colors.white,
-        margin: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: InkWell(
-            onTap: _showAddJob,
-            child: const Row(children: [
-              Icon(
-                Icons.add,
-                size: 25.0,
-              ), // Icône de travail
-              SizedBox(width: 10.0),
-              Text(
-                "Ajouter un métier",
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
+    final translationService = context.read<TranslationService>();
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 20.0),
+        child: Card(
+          color: Colors.white,
+          margin: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: InkWell(
+              onTap: _showAddJob,
+              child: Row(children: [
+                const Icon(
+                  Icons.add,
+                  size: 25.0,
+                ), // Icône de travail
+                const SizedBox(width: 10.0),
+                Text(
+                  translationService.translate('ADD_JOB'),
+                  style: const TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ]),
+              ]),
+            ),
           ),
-        ),
-      ));
+        ));
+  }
 }
-
-}
-

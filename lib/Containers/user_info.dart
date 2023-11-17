@@ -72,11 +72,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // Extrait en une fonction séparée pour réutilisation
   Future<void> _launchUri(Uri uri) async {
+    final translationService = context.read<TranslationService>();
     if (!await canLaunchUrl(uri)) {
       // Remplacer par une gestion d'erreur appropriée.
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Impossible de lancer l'URL $uri"),
+          content: Text(
+              "${translationService.translate("ERROR_ERROR_ON_ACTION")} : $uri"),
         ),
       );
     } else {
@@ -231,51 +233,57 @@ class _ProfilePageState extends State<ProfilePage> {
                                     fontWeight: FontWeight.bold, fontSize: 25),
                               ),
                               Text(
-                                  'Expérience : ${currentJob['experience_years']} ans',
+                                  '${translationService.translate('EXPERIENCE')} : ${currentJob['experience_years']} ${translationService.translate('YEARS')}',
                                   style: const TextStyle(fontSize: 16)),
                               const SizedBox(height: 20.0),
-                              const Text('Description du professionnel',
-                                  style: TextStyle(fontSize: 16)),
+                              Text(translationService.translate('DESCRIPTION'),
+                                  style: const TextStyle(fontSize: 16)),
                               const SizedBox(height: 10.0),
-                             Container(
-                              width: double.infinity, 
-  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-  margin: const EdgeInsets.symmetric(horizontal: 10),
-  decoration: BoxDecoration(
-    color: Colors.grey[100], // Couleur de fond de la boîte de citation
-    borderRadius: BorderRadius.circular(12),
-    boxShadow: [
-      BoxShadow(
-        color: Colors.grey[300]!,
-        blurRadius: 6,
-        offset: const Offset(0, 3),
-      ),
-    ],
-  ),
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start, // Assurez-vous que les enfants sont alignés au début de la croix
-    children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Text(
-          currentJob['description'], // Description du job
-          style: const TextStyle(
-            fontSize: 16,
-            fontStyle: FontStyle.italic,
-          ),
-          textAlign: TextAlign.justify,
-        ),
-      ),
-    ],
-  ),
-),
-
+                              Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 24, vertical: 24),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[
+                                      100], // Couleur de fond de la boîte de citation
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey[300]!,
+                                      blurRadius: 6,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment
+                                      .start, // Assurez-vous que les enfants sont alignés au début de la croix
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8),
+                                      child: Text(
+                                        currentJob[
+                                            'description'], // Description du job
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                        textAlign: TextAlign.justify,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
                         otherJobs.isNotEmpty
                             ? ExpansionTile(
-                                title: const Text('Ses autres métiers'),
+                                title: Text(
+                                    translationService.translate('OTHER_JOBS')),
                                 children: otherJobs.map<Widget>((job) {
                                   return ListTile(
                                     leading: Icon(IconsExtension.getIconData(job[

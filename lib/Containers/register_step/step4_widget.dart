@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
+import 'package:hoodhelps/services/translation_service.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../constants.dart';
@@ -75,6 +77,7 @@ class _Step4WidgetState extends State<Step4Widget> {
 
   @override
   Widget build(BuildContext context) {
+    final translationService = context.read<TranslationService>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -82,39 +85,37 @@ class _Step4WidgetState extends State<Step4Widget> {
             color: Colors.white,
             padding: const EdgeInsets.all(
                 10.0), // Ajoute 8 points de marge intérieure
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //add image
-                Image(
+                const Image(
                   image: AssetImage('assets/joinGroup.jpeg'),
                   // width: 100,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
-                  'Étape 4',
-                  style: TextStyle(
+                  translationService.translate('STEP4_TITLE'),
+                  style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 10.0),
-                Text(
-                    'Saisissez le code du groupe que vous souhaitez rejoindre. Ce code vous permettra d\'accéder au groupe et de collaborer avec d\'autres membres.'),
+                const SizedBox(height: 10.0),
+                Text(translationService.translate('STEP4_DESCRIPTION')),
               ],
             )),
         const SizedBox(height: 40.0),
         TextField(
           controller: _codeController,
           textAlign: TextAlign.center,
-          keyboardType: TextInputType.number,
           style: const TextStyle(
               fontSize: 32,
               fontWeight: FontWeight
                   .bold), // Personnalisez la taille et le style du texte
-          decoration: const InputDecoration(
-            hintText: 'Entrez le code',
-            hintStyle: TextStyle(
+          decoration: InputDecoration(
+            hintText: translationService.translate('HINT_TEXT_ENTER_CODE'),
+            hintStyle: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight
                     .bold), // Personnalisez le style du texte d'infobulle
@@ -140,9 +141,9 @@ class _Step4WidgetState extends State<Step4Widget> {
             width: double.infinity,
             height: 50.0,
             alignment: Alignment.center,
-            child: const Text(
-              'Entrer dans le groupe',
-              style: TextStyle(
+            child: Text(
+              translationService.translate('JOIN_THE_GROUP'),
+              style: const TextStyle(
                 fontSize: 18.0,
               ),
             ),
@@ -163,9 +164,9 @@ class _Step4WidgetState extends State<Step4Widget> {
             width: double.infinity,
             height: 50.0,
             alignment: Alignment.center,
-            child: const Text(
-              'Passer',
-              style: TextStyle(
+            child: Text(
+              translationService.translate('SKIP_BUTTON'),
+              style: const TextStyle(
                 fontSize: 18.0,
               ),
             ),

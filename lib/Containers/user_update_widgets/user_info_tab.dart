@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
 import 'package:hoodhelps/utils.dart';
@@ -45,7 +46,7 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
       String? userToken = prefs.getString('user_token');
 
       if (userToken == null) {
-        Navigator.of(context).pushReplacementNamed('/login');
+        Navigator.of(context).pushReplacementNamed(RouteConstants.login);
         return;
       }
 

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/Containers/menu_widget.dart';
 import 'package:hoodhelps/constants.dart';
+import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
@@ -53,7 +54,7 @@ class _JoinGroupState extends State<JoinGroup> {
             if (addUserInGroup.statusCode == 201) {
               // Si la requête réussit (statut 200), analyser la réponse JSON
 
-              Navigator.of(context).pushReplacementNamed('/splash');
+              Navigator.of(context).pushReplacementNamed(RouteConstants.splash);
             } else {
               // En cas d'échec de la requête, afficher un message d'erreur
               NotificationService.showError(

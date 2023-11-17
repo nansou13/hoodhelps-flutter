@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'dart:convert';
@@ -51,7 +52,7 @@ class _Step4WidgetState extends State<Step4Widget> {
             if (addUserInGroup.statusCode == 201) {
               // Si la requête réussit (statut 200), analyser la réponse JSON
 
-              Navigator.of(context).pushReplacementNamed('/splash');
+              Navigator.of(context).pushReplacementNamed(RouteConstants.splash);
             } else {
               // En cas d'échec de la requête, afficher un message d'erreur
               NotificationService.showError(
@@ -152,7 +153,7 @@ class _Step4WidgetState extends State<Step4Widget> {
         const SizedBox(height: 20.0),
         MaterialButton(
           onPressed: () {
-            Navigator.of(context).pushReplacementNamed('/splash');
+            Navigator.of(context).pushReplacementNamed(RouteConstants.splash);
           },
           color: Colors.white,
           textColor: Colors.black,

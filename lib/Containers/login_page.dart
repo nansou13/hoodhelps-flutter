@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/template.dart';
@@ -38,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
         final data = jsonDecode(response.body);
         final prefs = await SharedPreferences.getInstance();
         prefs.setString('user_token', data['accessToken']);
-        Navigator.of(context).pushReplacementNamed('/splash');
+        Navigator.of(context).pushReplacementNamed(RouteConstants.splash);
       } else {
         NotificationService.showError(context, "Échec de la connexion");
       }
@@ -168,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
   MaterialButton buildRegisterButton(TranslationService translationService) {
     return MaterialButton(
       onPressed: () {
-        Navigator.pushNamed(context, "/register");
+        Navigator.pushNamed(context, RouteConstants.register);
       },
       color: Colors.white,
       textColor: Colors.black,
@@ -194,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
     return InkWell(
       child: GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, "/forgotpassword");
+          Navigator.pushNamed(context, RouteConstants.forgotPassword);
         },
         child: Text(
           translationService.translate("FORM_FORGOT_ACCOUNT_LINK"),

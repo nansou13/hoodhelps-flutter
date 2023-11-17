@@ -1,23 +1,26 @@
 // Dart imports
 import 'package:flutter/material.dart';
-import 'package:hoodhelps/Containers/forgot_password.dart';
-import 'package:hoodhelps/Containers/forgot_password_reset_code.dart';
-import 'package:hoodhelps/Containers/forgot_password_reset_success.dart';
-import 'package:hoodhelps/Containers/join_group.dart';
-import 'package:hoodhelps/Containers/user_info.dart';
-import 'package:hoodhelps/Containers/user_update.dart';
+import 'package:hoodhelps/route_constants.dart';
 
 // Package imports
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-// Local imports
+// Container imports
+import 'package:hoodhelps/Containers/forgot_password.dart';
+import 'package:hoodhelps/Containers/forgot_password_reset_code.dart';
+import 'package:hoodhelps/Containers/forgot_password_reset_success.dart';
+import 'package:hoodhelps/Containers/join_group.dart';
+import 'package:hoodhelps/Containers/user_info.dart';
+import 'package:hoodhelps/Containers/user_update.dart';
 import 'package:hoodhelps/Containers/job_users.dart';
 import 'package:hoodhelps/Containers/lobby_page.dart';
 import 'package:hoodhelps/Containers/login_page.dart';
 import 'package:hoodhelps/Containers/register.dart';
 import 'package:hoodhelps/Containers/splash_page.dart';
+
+// Local imports
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
 import 'package:flutter/services.dart';
@@ -58,20 +61,19 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'HoodHelps',
       theme: ThemeData(primarySwatch: Colors.blue),
-      initialRoute: '/splash',
-      // initialRoute: '/userinfo',
+      initialRoute: RouteConstants.splash,
       routes: {
-        '/splash': (context) => const SplashScreen(),
-        '/login': (context) => const LoginPage(),
-        '/lobby': (context) => const LobbyPage(),
-        '/register': (context) => const RegisterPage(),
-        '/userlist': (context) => const JobUsers(),
-        '/userinfo': (context) => const ProfilePage(),
-        '/userupdate': (context) => const EditPage(),
-        '/joingroup': (context) => const JoinGroup(),
-        '/forgotpassword': (context) => const ForgotPassword(),
-        '/forgotpasswordresetcode': (context) => const ForgotPasswordResetCode(),
-        '/forgotpasswordresetsuccess': (context) => const ForgotPasswordResetSuccess(),
+        RouteConstants.splash: (context) => const SplashScreen(),
+        RouteConstants.login: (context) => const LoginPage(),
+        RouteConstants.lobby: (context) => const LobbyPage(),
+        RouteConstants.register: (context) => const RegisterPage(),
+        RouteConstants.userList: (context) => const JobUsers(),
+        RouteConstants.userInfo: (context) => const ProfilePage(),
+        RouteConstants.editUser: (context) => const EditPage(),
+        RouteConstants.joinGroup: (context) => const JoinGroup(),
+        RouteConstants.forgotPassword: (context) => const ForgotPassword(),
+        RouteConstants.forgotPasswordResetCode: (context) => const ForgotPasswordResetCode(),
+        RouteConstants.forgotPasswordResetSuccess: (context) => const ForgotPasswordResetSuccess(),
       },
     );
   }

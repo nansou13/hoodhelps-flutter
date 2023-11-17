@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/Containers/group_widget.dart';
+import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
 import 'package:hoodhelps/utils.dart';
@@ -61,7 +62,7 @@ class MenuWidget extends StatelessWidget {
               city: city,
               backgroundUrl: backgroundUrl,
               onTap: () {
-                Navigator.of(context, rootNavigator: true).pushNamed('/lobby', arguments: [group.id]);
+                Navigator.of(context, rootNavigator: true).pushNamed(RouteConstants.lobby, arguments: [group.id]);
               },
             );
           }).toList(),
@@ -87,7 +88,7 @@ class MenuWidget extends StatelessWidget {
       color: Colors.white,
       child: InkWell(
         onTap: () {
-                Navigator.of(context, rootNavigator: true).pushNamed('/joingroup');
+                Navigator.of(context, rootNavigator: true).pushNamed(RouteConstants.joinGroup);
               },
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -140,7 +141,7 @@ class MenuWidget extends StatelessWidget {
           leading: const Icon(Icons.settings),
           title: Text(translationService.translate('PARAMETER_BUTTON')),
           onTap: () {
-            Navigator.of(context, rootNavigator: true).pushNamed('/userupdate');
+            Navigator.of(context, rootNavigator: true).pushNamed(RouteConstants.editUser);
           },
         ),
     );

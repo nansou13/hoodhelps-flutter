@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/constants.dart';
+import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/template.dart';
 import 'package:http/http.dart' as http;
@@ -56,12 +57,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
         if (userGroupData.isNotEmpty) {
           Navigator.of(context, rootNavigator: true).pushNamed(
-            '/lobby',
+            RouteConstants.lobby,
             arguments: [userGroupData[0]['id']],
           );
         } else {
           Navigator.of(context).pushReplacementNamed(
-            '/lobby',
+            RouteConstants.lobby,
             arguments: [],
           );
         }
@@ -78,7 +79,7 @@ class _SplashScreenState extends State<SplashScreen> {
 }
 
 void _navigateToLogin() {
-  Navigator.of(context).pushReplacementNamed('/login');
+  Navigator.of(context).pushReplacementNamed(RouteConstants.login);
 }
 
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/constants.dart';
+import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/template.dart';
@@ -38,7 +39,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       switch (response.statusCode) {
         case 200:
           Navigator.of(context, rootNavigator: true)
-              .pushNamed('/forgotpasswordresetcode');
+              .pushNamed(RouteConstants.forgotPasswordResetCode);
           break;
         case 404:
           NotificationService.showError(context, response.body);
@@ -135,7 +136,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       MaterialButton(
                         onPressed: () {
                           Navigator.of(context, rootNavigator: true)
-                              .pushNamed('/forgotpasswordresetcode');
+                              .pushNamed(RouteConstants.forgotPasswordResetCode);
                         },
                         color: Colors.white,
                         textColor: Colors.black,

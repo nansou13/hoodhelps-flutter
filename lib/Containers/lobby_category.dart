@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/categories_service.dart';
 import 'package:hoodhelps/services/icons_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
@@ -113,7 +114,7 @@ class _GroupContentState extends State<GroupContent> {
                   onTap: () {
                     if (categoryUsers > 0) {
                       Navigator.of(context, rootNavigator: true).pushNamed(
-                        '/lobby',
+                        RouteConstants.lobby,
                         arguments: [groupId, categoryId],
                       );
                     }

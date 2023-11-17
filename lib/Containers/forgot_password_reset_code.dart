@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/constants.dart';
+import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/template.dart';
@@ -55,7 +56,7 @@ class _ForgotPasswordResetCodeState extends State<ForgotPasswordResetCode> {
       switch (response.statusCode) {
         case 200:
           Navigator.of(context)
-              .pushReplacementNamed('/forgotpasswordresetsuccess');
+              .pushReplacementNamed(RouteConstants.forgotPasswordResetSuccess);
           break;
         default:
           var result = json.decode(response.body);

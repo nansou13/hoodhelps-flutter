@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/template.dart';
 import 'package:provider/provider.dart';
@@ -52,7 +53,7 @@ class ForgotPasswordResetSuccess extends StatelessWidget {
                       const SizedBox(height: 20.0),
                       MaterialButton(
                         onPressed: () {
-                          Navigator.of(context).pushReplacementNamed('/login');
+                          Navigator.of(context).pushReplacementNamed(RouteConstants.login);
                         },
                         color: Colors.blue,
                         textColor: Colors.white,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/categories_service.dart';
 import 'package:hoodhelps/services/icons_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
@@ -124,7 +125,7 @@ class _GroupCategoryContentState extends State<GroupCategoryContent> {
                   onTap: () {
                     if (jobUsers > 0) {
                       Navigator.of(context, rootNavigator: true).pushNamed(
-                        '/userlist',
+                        RouteConstants.userList,
                         arguments: [groupId, categoryId, jobId],
                       );
                     }

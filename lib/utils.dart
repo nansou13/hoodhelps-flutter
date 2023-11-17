@@ -1,3 +1,4 @@
+import 'package:hoodhelps/route_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +11,7 @@ class FunctionUtils {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool success = await prefs.setString(userTokenKey, '');
     if (success) {
-      Navigator.of(context, rootNavigator: true).pushReplacementNamed('/login');
+      Navigator.of(context, rootNavigator: true).pushReplacementNamed(RouteConstants.login);
     } else {
       // Gérez l'erreur comme vous le souhaitez, peut-être en affichant un message d'erreur
     }

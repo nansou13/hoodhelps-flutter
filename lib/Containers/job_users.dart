@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/constants.dart';
+import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/categories_service.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
@@ -165,7 +166,7 @@ class _JobUsers extends State<JobUsers> {
                     return GestureDetector(
                       onTap: () {
                         Navigator.of(context, rootNavigator: true).pushNamed(
-                          '/userinfo',
+                          RouteConstants.userInfo,
                           arguments: [user['id'], job[0], job[1], groupId],
                         );
                       },

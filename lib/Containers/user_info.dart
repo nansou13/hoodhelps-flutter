@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/constants.dart';
+import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/icons_service.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
@@ -293,7 +294,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       // Code pour naviguer vers une nouvelle page.
                                       Navigator.of(context, rootNavigator: true)
                                           .pushNamed(
-                                        '/userinfo',
+                                        RouteConstants.userInfo,
                                         arguments: [userInfo['id'], job['id']],
                                       );
                                     }, // Assurez-vous que 'name' est la clé correcte pour le nom du métier.

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:hoodhelps/Containers/widgets/add_job_widget.dart';
+import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/icons_service.dart';
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/constants.dart';
@@ -39,7 +40,7 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
       String? userToken = prefs.getString('user_token');
 
       if (userToken == null) {
-        Navigator.of(context).pushReplacementNamed('/login');
+        Navigator.of(context).pushReplacementNamed(RouteConstants.login);
         return;
       }
       //recupere les jobs du users
@@ -56,7 +57,7 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
         });
         return;
       } else {
-        Navigator.of(context).pushReplacementNamed('/login');
+        Navigator.of(context).pushReplacementNamed(RouteConstants.login);
         return;
       }
     } catch (e) {

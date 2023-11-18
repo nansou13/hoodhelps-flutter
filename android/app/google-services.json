@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "790389788852",
+    "project_id": "hoodhelps",
+    "storage_bucket": "hoodhelps.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:790389788852:android:731466604327f4d31787e1",
+        "android_client_info": {
+          "package_name": "com.example.hoodhelps"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDozvbz46ieF5Bn-6cigemaSZ35_uxkDRc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

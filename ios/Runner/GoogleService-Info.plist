@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.exemple.hoodhelps</string>
+	<string>com.nans.hoodhelps</string>
 	<key>PROJECT_ID</key>
 	<string>hoodhelps</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:790389788852:ios:91a86051888faadf1787e1</string>
+	<string>1:790389788852:ios:71377de4b3c6cc8c1787e1</string>
 </dict>
 </plist>

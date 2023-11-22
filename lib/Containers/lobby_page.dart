@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/Containers/lobby_jobs.dart';
+import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/template.dart';
 import 'package:hoodhelps/utils.dart';
@@ -109,7 +110,7 @@ class _LobbyPage extends State<LobbyPage> {
           color: Colors.white,
           child: InkWell(
             onTap: () {
-              // Gérez l'action de clic ici
+              Navigator.of(context, rootNavigator: true).pushNamed(RouteConstants.joinGroup);
             },
             child: Column(
               mainAxisSize: MainAxisSize.min,

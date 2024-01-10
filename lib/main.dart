@@ -23,6 +23,7 @@ import 'package:hoodhelps/Containers/splash_page.dart';
 // Local imports
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
+import 'package:hoodhelps/services/firebase_messaging_service.dart';
 import 'package:flutter/services.dart';
 
 Future<void> main() async {
@@ -42,6 +43,10 @@ Future<void> main() async {
   // Initialisez Firebase
   await Firebase.initializeApp();
 
+  // Initialisez le service FCM
+  var firebaseMessagingService = FirebaseMessagingService();
+  await firebaseMessagingService.initFirebaseMessaging();
+  
   runApp(
     MultiProvider(
       providers: [

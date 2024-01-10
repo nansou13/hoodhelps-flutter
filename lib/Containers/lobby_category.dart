@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hoodhelps/route_constants.dart';
+import 'package:hoodhelps/Containers/lobby_category_grid.dart';
+import 'package:hoodhelps/Containers/lobby_category_list.dart';
 import 'package:hoodhelps/services/categories_service.dart';
-import 'package:hoodhelps/services/icons_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
 import 'package:provider/provider.dart';
@@ -18,9 +18,14 @@ class GroupContent extends StatefulWidget {
   _GroupContentState createState() => _GroupContentState();
 }
 
+enum LobbyView { grid, list }
+
 class _GroupContentState extends State<GroupContent> {
   List categoryData = [];
   String groupBackgroundUrl = '';
+  bool isLoading = false;
+
+  LobbyView lobbyView = LobbyView.grid; // Défaut à grille
 
   @override
   void initState() {
@@ -50,7 +55,6 @@ class _GroupContentState extends State<GroupContent> {
   @override
   Widget build(BuildContext context) {
     final translationService = context.read<TranslationService>();
-    final groupId = widget.groupId;
 
     return SingleChildScrollView(
       // Utilisez SingleChildScrollView pour rendre tout le contenu déroulable
@@ -85,72 +89,43 @@ class _GroupContentState extends State<GroupContent> {
           ),
           const SizedBox(height: 20.0),
           Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16.0,
-                mainAxisSpacing: 16.0,
-              ),
-              physics:
-                  const NeverScrollableScrollPhysics(), // Empêcher le GridView de défiler
-              shrinkWrap:
-                  true, // Permettre au GridView de s'adapter à son contenu
-              itemCount: categoryData.length,
-              itemBuilder: (context, index) {
-                final category = categoryData[index];
-                final categoryName = category['name'];
-                //force category['users'] to be an int to avoid error when null (null is not a subtype of int)
+            padding: EdgeInsets.only(right: 20), // Padding à droite
+            child: Align(
+                alignment: Alignment.topRight,
+                child: SegmentedButton(
+                  showSelectedIcon: false,
+                  segments: const <ButtonSegment>[
+                    ButtonSegment(
+                        value: LobbyView.grid, icon: Icon(Icons.grid_view)),
+                    ButtonSegment(
+                        value: LobbyView.list, icon: Icon(Icons.people_alt)),
+                  ],
+                  selected: {lobbyView},
+                  onSelectionChanged: (Set newSelection) {
+                    setState(() {
+                      // By default there is only a single segment that can be
+                      // selected at one time, so its value is always the first
+                      // item in the selected set.
 
-                final categoryUsers =
-                    int.tryParse(category['users'].toString()) ?? 0;
-                final categoryId =
-                    category['id']; // Récupérez l'ID de la catégorie
-
-                return GestureDetector(
-                  behavior: categoryUsers > 0
-                      ? HitTestBehavior.opaque
-                      : HitTestBehavior.translucent,
-                  onTap: () {
-                    if (categoryUsers > 0) {
-                      Navigator.of(context, rootNavigator: true).pushNamed(
-                        RouteConstants.lobby,
-                        arguments: [groupId, categoryId],
-                      );
-                    }
+                      lobbyView = newSelection.first;
+                    });
                   },
-                  child: Card(
-                    color: categoryUsers > 0 ? Colors.white : Colors.grey[200],
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(IconsExtension.getIconData(categoryName),
-                            size: 60.0,
-                            color: categoryUsers > 0
-                                ? Colors.black
-                                : Colors.grey[
-                                    400]), // Affichez l'icône ici à gauche
-
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(8.0, 30.0, 8.0, 10.0),
-                          child: Text(
-                            translationService.translate(categoryName),
-                            style: const TextStyle(
-                              fontSize: 15.0,
-                            ),
-                            textAlign: TextAlign.center, // Centrer le texte
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
+                )),
           ),
+          buildLobbyView(),
         ],
       ),
     );
+  }
+
+  Widget buildLobbyView() {
+    switch (lobbyView) {
+      case LobbyView.grid:
+        return GroupContentGrid(groupId: widget.groupId);
+      case LobbyView.list:
+        return GroupContentList(groupId: widget.groupId);
+      default:
+        return GroupContentGrid(groupId: widget.groupId);
+    }
   }
 }

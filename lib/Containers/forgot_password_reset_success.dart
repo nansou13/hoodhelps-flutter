@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/translation_service.dart';
-import 'package:hoodhelps/template.dart';
 import 'package:provider/provider.dart';
 
 class ForgotPasswordResetSuccess extends StatelessWidget {
@@ -12,50 +11,53 @@ class ForgotPasswordResetSuccess extends StatelessWidget {
     final translationService = context.read<TranslationService>();
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Color(0xFFF2F2F2),
+          automaticallyImplyLeading: false,
+          centerTitle: false,
+          titleTextStyle: TextStyle(
+              decoration: TextDecoration.none,
+              color: Colors.black,
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold),
           leading: null,
           title: Text(translationService.translate("FORM_FORGOT_ACCOUNT_LINK")),
         ),
         body: Stack(
           children: [
-            // Image de fond
-            background(),
-
             Container(
-              color: Colors.white.withOpacity(0.9),
+              color: Color(0xFFF2F2F2),
               width: double.infinity,
               height: double.infinity,
               child: Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(40.0),
                 child: SingleChildScrollView(
                   // Ajout de SingleChildScrollView
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                          color: Colors.white,
-                          padding: const EdgeInsets.all(
-                              10.0), // Ajoute 8 points de marge intérieure
-                          child: Column(
-                            children: [
-                              //add image
-                              const Image(
-                                image: AssetImage('assets/forgotPassword.jpg'),
-                                // width: 100,
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                translationService.translate("UPDATE_PASSWORD_SUCCESS"),
-                                style: const TextStyle(fontSize: 15.0),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          )),
-                      const SizedBox(height: 20.0),
+                      Column(children: [
+                        const Image(
+                          image: AssetImage('assets/cuate.png'),
+                          height: 200,
+                        ),
+                        const SizedBox(height: 20.0),
+                        Text(
+                          translationService
+                              .translate('UPDATE_PASSWORD_SUCCESS'),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 15.0,
+                            color: Color(0xFF696969),
+                          ),
+                        ),
+                      ]),
+                      const SizedBox(height: 40.0),
                       MaterialButton(
                         onPressed: () {
-                          Navigator.of(context).pushReplacementNamed(RouteConstants.login);
+                          Navigator.of(context)
+                              .pushReplacementNamed(RouteConstants.login);
                         },
-                        color: Colors.blue,
+                        color: Color(0xFF102820),
                         textColor: Colors.white,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
@@ -68,7 +70,8 @@ class ForgotPasswordResetSuccess extends StatelessWidget {
                           child: Text(
                             translationService.translate("GO_TO_LOGIN"),
                             style: const TextStyle(
-                              fontSize: 18.0,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),

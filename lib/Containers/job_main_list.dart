@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/Containers/Modules/jobs/job_category_display_grid.dart';
 import 'package:hoodhelps/Containers/template_connected_page.dart';
 import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/translation_service.dart';
+import 'package:hoodhelps/Containers/Modules/jobs/Job_display.dart';
 import 'package:hoodhelps/services/user_service.dart';
 import 'package:provider/provider.dart';
 
-class LobbyPage extends StatefulWidget {
-  const LobbyPage({Key? key}) : super(key: key);
+class JobMainListPage extends StatefulWidget {
+  const JobMainListPage({Key? key}) : super(key: key);
 
   @override
-  _LobbyPage createState() => _LobbyPage();
+  _JobMainListPage createState() => _JobMainListPage();
 }
 
-class _LobbyPage extends State<LobbyPage> {
+class _JobMainListPage extends State<JobMainListPage> {
   bool isLoading =
       true; // Ajoutez une variable pour gérer l'affichage du loader
-  String appBarTitle = 'Home';
+  String appBarTitle = 'Liste des métiers';
 
   void updateAppBarTitle(String newTitle) {
     setState(() {
@@ -30,56 +32,31 @@ class _LobbyPage extends State<LobbyPage> {
 
   @override
   Widget build(BuildContext context) {
-    final translationService = context.read<TranslationService>();
     final user = Provider.of<UserService>(context, listen: false);
-    final groups = user.groups;
+
+    final List<dynamic>? arguments =
+        ModalRoute.of(context)!.settings.arguments as List<dynamic>?;
     var groupId = user.currentGroupId;
     var categoryId = '';
-    var groupBackgroundUrl = '';
 
-    Group specificGroup = groups.firstWhere(
-      (group) => group.id == groupId,
-      orElse: () => throw Exception('Groupe non trouvé'),
-    );
-    groupBackgroundUrl = specificGroup.backgroundUrl;
-    updateAppBarTitle(specificGroup.name);
-    // if (arguments.length >= 2) {
-    //   categoryId = arguments[1].toString();
-    // }
+    if (arguments != null && arguments.isNotEmpty) {
+      categoryId = arguments[0].toString();
+    }
 
     return ConnectedPage(
-        showBottomNav: groupId != '',
-        showLeading: categoryId.isNotEmpty,
-        appTitle: appBarTitle,
-        child: Column(
-          children: [
-            groupId == ''
-                ? _buildNoGroupContent()
-                : Container(
-                    color: Colors.white,
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(children: [
-                      if (groupBackgroundUrl.isNotEmpty)
-                        Container(
-                          width: double.infinity,
-                          constraints: const BoxConstraints(
-                            maxHeight: 100,
-                          ),
-                          child: Image.network(
-                            groupBackgroundUrl,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      const SizedBox(height: 10.0),
-                      Text(
-                        translationService.translate('LOBBY_DESCRIPTION'),
-                        style: const TextStyle(fontSize: 15.0),
-                        textAlign: TextAlign.center,
-                      ),
-                    ]),
-                  ),
-          ],
-        ));
+      showBottomNav: groupId != '',
+      showLeading: categoryId.isNotEmpty,
+      appTitle: appBarTitle,
+      child: groupId == ''
+          ? _buildNoGroupContent()
+          : categoryId.isNotEmpty
+              ? JobCategoryDisplayGrid(
+                  groupId: groupId,
+                  categoryId: categoryId,
+                  updateTitleCallback: updateAppBarTitle,
+                )
+              : JobDisplay(updateTitleCallback: updateAppBarTitle),
+    );
   }
 
   Widget _buildNoGroupContent() {

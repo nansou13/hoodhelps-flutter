@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:hoodhelps/Containers/widgets/add_job_widget.dart';
+import 'package:hoodhelps/Containers/Widgets/add_job_widget.dart';
 import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/icons_service.dart';
 import 'package:flutter/material.dart';

@@ -7,13 +7,13 @@ Widget buildStepIndicator(int stepNumber, bool isActive) {
     height: 40.0,
     decoration: BoxDecoration(
       shape: BoxShape.circle,
-      color: isActive ? Colors.blue : Colors.grey,
+      color: isActive ? Color(0xFF2CC394) : Color(0xFFD9D9D9),
     ),
     alignment: Alignment.center,
     child: Text(
       stepNumber.toString(),
-      style: const TextStyle(
-        color: Colors.white,
+      style: TextStyle(
+        color: isActive ? Colors.white : Colors.black,
         fontWeight: FontWeight.bold,
       ),
     ),

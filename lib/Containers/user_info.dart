@@ -128,7 +128,7 @@ class _ProfilePageState extends State<ProfilePage> {
       }
 
       return Scaffold(
-        backgroundColor: Colors.blue,
+        backgroundColor: Color(0xFF2CC394),
         body: Stack(
           children: [
             Column(
@@ -137,7 +137,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 Container(
                   height: 300,
                   width: double.infinity,
-                  color: Colors.blue,
+                  color: Color(0xFF2CC394),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -289,7 +289,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   return ListTile(
                                     leading: Icon(IconsExtension.getIconData(job[
                                         'name'])), // Remplacer par une icône pertinente ou retirer si non nécessaire.
-                                    title: Text(job['name']),
+                                    title: Text(translationService
+                                        .translate(job['name'])),
                                     onTap: () {
                                       // Code pour naviguer vers une nouvelle page.
                                       Navigator.of(context, rootNavigator: true)

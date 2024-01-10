@@ -1,16 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/Containers/template_connected_page.dart';
 import 'package:hoodhelps/constants.dart';
 import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/categories_service.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
-import 'package:hoodhelps/template.dart';
-import 'package:hoodhelps/utils.dart';
+import 'package:hoodhelps/services/user_service.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:hoodhelps/Containers/menu_widget.dart';
 import 'package:provider/provider.dart';
 
 class JobUsers extends StatefulWidget {
@@ -42,18 +41,18 @@ class _JobUsers extends State<JobUsers> {
 
   Future<void> _loadJobUsersData() async {
     final CategoriesService categoriesService = CategoriesService();
+    final user = Provider.of<UserService>(context, listen: false);
     final List arguments = ModalRoute.of(context)!.settings.arguments as List;
-    var groupId = '';
+    var groupId = user.currentGroupId;
     var categoryId = '';
     var jobId = '';
-    if (arguments.isNotEmpty) {
-      groupId = arguments[0].toString();
+
+    if (arguments.length >= 1) {
+      categoryId = arguments[0].toString();
     }
+
     if (arguments.length >= 2) {
-      categoryId = arguments[1].toString();
-    }
-    if (arguments.length >= 3) {
-      jobId = arguments[2].toString();
+      jobId = arguments[1].toString();
     }
 
     var dataCateg = [];
@@ -87,7 +86,6 @@ class _JobUsers extends State<JobUsers> {
         // Si la requête réussit (statut 200), analyser la réponse JSON
         setState(() {
           usersData = jsonDecode(response.body);
-          groupId;
           category = [categoryId, categoryData['name']];
           job = [jobId, jobData['profession_name']];
           isLoading = false; // Arrêtez d'afficher le loader
@@ -102,7 +100,6 @@ class _JobUsers extends State<JobUsers> {
       NotificationService.showError(context, "Erreur: ${e.toString()}");
     }
     setState(() {
-      groupId;
       category = [categoryId, categoryData['name']];
       job = [jobId, jobData['name']];
     });
@@ -118,98 +115,64 @@ class _JobUsers extends State<JobUsers> {
         ),
       );
     } else {
-      return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+      return ConnectedPage(
+        appTitle: translationService.translate(job[1]),
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, // 2 éléments par ligne
+            crossAxisSpacing: 16.0, // Espace horizontal entre les éléments
+            mainAxisSpacing: 16.0, // Espace vertical entre les éléments
           ),
-          title: Text(translationService.translate(job[1])),
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.logout_rounded),
-              tooltip: translationService.translate('DISCONNECT_BUTTON'),
-              onPressed: () {
-                FunctionUtils.disconnectUser(context);
-              },
-            ),
-          ],
-        ),
-        drawer: const MenuWidget(),
-        body: Stack(
-          children: [
-            // Image de fond
-            background(),
-            Container(
-              color: Colors.white.withOpacity(0.9),
-              width: double.infinity,
-              height: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.all(
-                    16.0), // Marge uniforme autour de la grille
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // 2 éléments par ligne
-                    crossAxisSpacing:
-                        16.0, // Espace horizontal entre les éléments
-                    mainAxisSpacing: 16.0, // Espace vertical entre les éléments
-                  ),
-                  itemCount: usersData.length,
-                  itemBuilder: (context, index) {
-                    final user = usersData[index];
-                    final userNameDisplay = displayName(user['first_name'],
-                        user['last_name'], user['username']);
-                    final userImageUrl = user['image_url'] ?? '';
+          itemCount: usersData.length,
+          itemBuilder: (context, index) {
+            final user = usersData[index];
+            final userNameDisplay = displayName(
+                user['first_name'], user['last_name'], user['username']);
+            final userImageUrl = user['image_url'] ?? '';
 
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.of(context, rootNavigator: true).pushNamed(
-                          RouteConstants.userInfo,
-                          arguments: [user['id'], job[0], job[1], groupId],
-                        );
-                      },
-                      child: Card(
-                        color: Colors.white,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            const SizedBox(height: 20.0),
-                            CircleAvatar(
-                              backgroundImage: userImageUrl.isNotEmpty
-                                  ? NetworkImage(userImageUrl)
-                                  : null,
-                              backgroundColor: Colors.blueGrey,
-                              radius: 50.0,
-                              child: Text(
-                                userImageUrl.isEmpty
-                                    ? '${user['first_name'].isNotEmpty ? user['first_name'][0] : ''}${user['last_name'].isNotEmpty ? user['last_name'][0] : ''}'
-                                        .toUpperCase()
-                                    : '',
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 10.0),
-                            Text(
-                              userNameDisplay,
-                              style: const TextStyle(
-                                fontSize: 15.0,
-                              ),
-                              textAlign: TextAlign.center, // Centrer le texte
-                            ),
-                          ],
+            return GestureDetector(
+              onTap: () {
+                Navigator.of(context, rootNavigator: true).pushNamed(
+                  RouteConstants.userInfo,
+                  arguments: [user['id'], job[0], job[1], groupId],
+                );
+              },
+              child: Card(
+                color: Colors.white,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    const SizedBox(height: 20.0),
+                    CircleAvatar(
+                      backgroundImage: userImageUrl.isNotEmpty
+                          ? NetworkImage(userImageUrl)
+                          : null,
+                      backgroundColor: Colors.blueGrey,
+                      radius: 50.0,
+                      child: Text(
+                        userImageUrl.isEmpty
+                            ? '${user['first_name'].isNotEmpty ? user['first_name'][0] : ''}${user['last_name'].isNotEmpty ? user['last_name'][0] : ''}'
+                                .toUpperCase()
+                            : '',
+                        style: const TextStyle(
+                          fontSize: 24,
+                          color: Colors.white,
                         ),
                       ),
-                    );
-                  },
+                    ),
+                    const SizedBox(height: 10.0),
+                    Text(
+                      userNameDisplay,
+                      style: const TextStyle(
+                        fontSize: 15.0,
+                      ),
+                      textAlign: TextAlign.center, // Centrer le texte
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
+            );
+          },
         ),
       );
     }

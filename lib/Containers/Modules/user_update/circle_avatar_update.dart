@@ -154,58 +154,78 @@ class _EditAvatarState extends State<EditAvatar> {
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<UserService>(context, listen: false);
-    final translationService = context.read<TranslationService>();
 
     var userUrl = userService.imageUrl ?? '';
     var firstName = userService.firstName ?? '';
     var lastname = userService.lastName ?? '';
     return Container(
-      height: 250,
+      height: 150,
       width: double.infinity,
-      color: Colors.blue,
+      color: Color(0xFF2CC394),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.5),
-                  blurRadius: 10,
-                ),
-              ],
-            ),
-            child: CircleAvatar(
-              backgroundImage: userUrl.isNotEmpty && _image == null
-                  ? NetworkImage(userUrl)
-                  : _image != null
-                      ? FileImage(_image!) as ImageProvider<Object>
-                      : null,
-              backgroundColor: Colors.blueGrey,
-              radius: 60.0,
-              child: Text(
-                userUrl.isEmpty && _image == null
-                    ? '${firstName.isNotEmpty ? firstName[0] : ''}${lastname.isNotEmpty ? lastname[0] : ''}'
-                        .toUpperCase()
-                    : '',
-                style: const TextStyle(
-                  fontSize: 50,
-                  color: Colors.white,
-                ),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.5),
+                    blurRadius: 10,
+                  ),
+                ],
               ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Center(
-            child: ElevatedButton(
-              onPressed: () async {
-                await _pickImage();
-                await _uploadImageToFirebase();
-              },
-              child: Text(translationService.translate('UPDATE_MY_PICTURE')),
-            ),
-          ),
+              child: Stack(children: <Widget>[
+                CircleAvatar(
+                  backgroundImage: userUrl.isNotEmpty && _image == null
+                      ? NetworkImage(userUrl)
+                      : _image != null
+                          ? FileImage(_image!) as ImageProvider<Object>
+                          : null,
+                  backgroundColor: Colors.blueGrey,
+                  radius: 60.0,
+                  child: Text(
+                    userUrl.isEmpty && _image == null
+                        ? '${firstName.isNotEmpty ? firstName[0] : ''}${lastname.isNotEmpty ? lastname[0] : ''}'
+                            .toUpperCase()
+                        : '',
+                    style: const TextStyle(
+                      fontSize: 50,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      color: Color(0xFF102820),
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                      icon: Icon(Icons.camera_alt_rounded,
+                          size: 15, color: Colors.white),
+                      onPressed: () async {
+                        await _pickImage();
+                        await _uploadImageToFirebase();
+                      },
+                    ),
+                  ),
+                ),
+              ])),
+          // const SizedBox(height: 10),
+          // Center(
+          //   child: ElevatedButton(
+          //     onPressed: () async {
+          //       await _pickImage();
+          //       await _uploadImageToFirebase();
+          //     },
+          //     child: Text(translationService.translate('UPDATE_MY_PICTURE')),
+          //   ),
+          // ),
         ],
       ),
     );

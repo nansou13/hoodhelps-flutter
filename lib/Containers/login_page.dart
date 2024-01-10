@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/route_constants.dart';
+import 'package:hoodhelps/services/firebase_messaging_service.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/template.dart';
@@ -28,13 +29,19 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> fetchLoginData() async {
     try {
+      // Initialisez le service FCM
+      var firebaseMessagingService = FirebaseMessagingService();
+      String? fcmToken = await firebaseMessagingService.getToken();
+
       final response = await http.post(
         Uri.parse('$routeAPI/api/users/login'),
         body: {
           'username': _usernameController.text,
           'password': _passwordController.text,
+          'token_notification': fcmToken,
         },
       );
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final prefs = await SharedPreferences.getInstance();
@@ -64,17 +71,17 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget appTitle(TranslationService translationService) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(20.0, 50.0, 20.0, 20.0),
+      padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 20.0),
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 30.0),
-          const SizedBox(
-            height: 300.0,
+          const SizedBox(height: 10.0),
+          SizedBox(
+            height: MediaQuery.of(context).size.height - 450,
             child: Image(
               image: AssetImage('assets/icon.png'),
-              // width: 100,
+              width: MediaQuery.of(context).size.width * 0.8,
             ),
           ),
           Text(
@@ -98,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
         padding: const EdgeInsets.all(20.0),
         color: Colors.black.withOpacity(0.8),
         width: double.infinity,
-        height: MediaQuery.of(context).size.height * 0.4,
+        height: 350,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -106,11 +113,13 @@ class _LoginPageState extends State<LoginPage> {
             buildTextField(
               controller: _usernameController,
               hintText: translationService.translate("FORM_USERNAME"),
+              key: 'usernameField',
             ),
             const SizedBox(height: 10.0),
             buildTextField(
               controller: _passwordController,
               hintText: translationService.translate("FORM_PASSWORD"),
+              key: 'passwordField',
               obscureText: true,
             ),
             const SizedBox(height: 10.0),
@@ -128,8 +137,10 @@ class _LoginPageState extends State<LoginPage> {
   TextField buildTextField(
       {required TextEditingController controller,
       required String hintText,
+      required String key,
       bool obscureText = false}) {
     return TextField(
+      key: Key(key),
       controller: controller,
       decoration: InputDecoration(
         hintText: hintText,
@@ -145,8 +156,9 @@ class _LoginPageState extends State<LoginPage> {
 
   MaterialButton buildConnectButton(TranslationService translationService) {
     return MaterialButton(
+      key: const Key('loginButton'),
       onPressed: fetchLoginData,
-      color: Colors.blue,
+      color: Color(0xFF2CC394),
       textColor: Colors.white,
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -171,6 +183,7 @@ class _LoginPageState extends State<LoginPage> {
       onPressed: () {
         Navigator.pushNamed(context, RouteConstants.register);
       },
+      key: const Key('registerButton'),
       color: Colors.white,
       textColor: Colors.black,
       elevation: 0,

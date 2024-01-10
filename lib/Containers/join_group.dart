@@ -1,13 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:hoodhelps/Containers/menu_widget.dart';
+import 'package:hoodhelps/Containers/Widgets/menu_widget.dart';
 import 'package:hoodhelps/constants.dart';
 import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
-import 'package:hoodhelps/template.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -34,8 +33,8 @@ class _JoinGroupState extends State<JoinGroup> {
 
     final groupeCode = _codeController.text.toLowerCase();
     if (groupeCode.isEmpty) {
-      NotificationService.showError(
-          context, translationService.translate("NOTIF_PLEASE_ENTER_GROUP_CODE"));
+      NotificationService.showError(context,
+          translationService.translate("NOTIF_PLEASE_ENTER_GROUP_CODE"));
       return;
     }
     try {
@@ -83,6 +82,14 @@ class _JoinGroupState extends State<JoinGroup> {
     final translationService = context.read<TranslationService>();
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xFFF2F2F2),
+        automaticallyImplyLeading: false,
+        centerTitle: false,
+        titleTextStyle: TextStyle(
+            decoration: TextDecoration.none,
+            color: Colors.black,
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -95,84 +102,76 @@ class _JoinGroupState extends State<JoinGroup> {
       body: Stack(
         children: [
           // Image de fond
-          background(),
 
           Container(
-            color: Colors.white.withOpacity(0.9),
+            color: Color(0xFFF2F2F2),
+            padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 20.0),
             width: double.infinity,
             height: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: SingleChildScrollView(
-                // Ajout de SingleChildScrollView
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Container(
-                        color: Colors.white,
-                        padding: const EdgeInsets.all(
-                            10.0), // Ajoute 8 points de marge intérieure
-                        child: Column(
-                          children: [
-                            //add image
-                            const Image(
-                              image: AssetImage('assets/joinGroup.jpeg'),
-                              // width: 100,
-                            ),
-
-                            Text(
-                              translationService
-                                  .translate('JOIN_A_GROUP_DESCRIPTION'),
-                              style: const TextStyle(fontSize: 15.0),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        )),
-                    const SizedBox(height: 20.0),
-
-                    TextField(
-                      controller: _codeController,
-                      textAlign: TextAlign.center,
-                      keyboardType: TextInputType.text,
-                      style: const TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight
-                              .bold), // Personnalisez la taille et le style du texte
-                      decoration: InputDecoration(
-                        hintText: translationService
-                            .translate('HINT_TEXT_ENTER_CODE'),
-                        hintStyle: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight
-                                .bold), // Personnalisez le style du texte d'infobulle
-                      ),
+            child: SingleChildScrollView(
+              // Ajout de SingleChildScrollView
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Image(
+                    image: AssetImage('assets/joinGroup.jpeg'),
+                    // width: 100,
+                  ),
+                  const SizedBox(height: 10.0),
+                  Text(
+                    translationService.translate('JOIN_A_GROUP_DESCRIPTION'),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 15.0,
+                      color: Color(0xFF696969),
                     ),
-                    const SizedBox(height: 40), // Ajoute un espacement
-                    MaterialButton(
-                      onPressed: () {
-                        fetchGroupeInfo();
-                      },
-                      color: Colors.blue,
-                      textColor: Colors.white,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Container(
-                        width: double.infinity,
-                        height: 50.0,
-                        alignment: Alignment.center,
-                        child: Text(
-                          translationService.translate('JOIN_THE_GROUP'),
-                          style: const TextStyle(
-                            fontSize: 18.0,
-                          ),
+                  ),
+
+                  const SizedBox(height: 20.0),
+
+                  TextField(
+                    controller: _codeController,
+                    textAlign: TextAlign.center,
+                    keyboardType: TextInputType.text,
+                    style: const TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight
+                            .bold), // Personnalisez la taille et le style du texte
+                    decoration: InputDecoration(
+                      hintText:
+                          translationService.translate('HINT_TEXT_ENTER_CODE'),
+                      hintStyle: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight
+                              .bold), // Personnalisez le style du texte d'infobulle
+                    ),
+                  ),
+                  const SizedBox(height: 40), // Ajoute un espacement
+                  MaterialButton(
+                    onPressed: () {
+                      fetchGroupeInfo();
+                    },
+                    color: Color(0xFF102820),
+                    textColor: Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Container(
+                      width: double.infinity,
+                      height: 50.0,
+                      alignment: Alignment.center,
+                      child: Text(
+                        translationService.translate('JOIN_THE_GROUP'),
+                        style: const TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20.0),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 20.0),
+                ],
               ),
             ),
           ),

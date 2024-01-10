@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/Containers/Widgets/textfield_widget.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'dart:convert';
@@ -7,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:hoodhelps/services/icons_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../constants.dart';
+import '../../../constants.dart';
 
 class Step3Widget extends StatefulWidget {
   final Function nextStepCallback;
@@ -23,7 +24,7 @@ class _Step3WidgetState extends State<Step3Widget> {
   String? selectedCategoryId;
   Job? selectedJob;
   String? selectedJobId;
-  String description = ""; // Champ de description
+  final TextEditingController descriptionController = TextEditingController();
   int experienceYears = 0; // Valeur initiale du curseur
 
   List<Category> categories = [];
@@ -74,7 +75,7 @@ class _Step3WidgetState extends State<Step3Widget> {
       final response =
           await http.post(Uri.parse('$routeAPI/api/users/me/job'), body: {
         "profession_id": selectedJobId,
-        "description": description,
+        "description": descriptionController.text,
         "experience_years": experienceYears.toString(),
       }, headers: {
         'Authorization': 'Bearer $userToken'
@@ -97,153 +98,162 @@ class _Step3WidgetState extends State<Step3Widget> {
   Widget build(BuildContext context) {
     final translationService = context.read<TranslationService>();
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Container(
-            color: Colors.white,
-            padding: const EdgeInsets.all(
-                10.0), // Ajoute 8 points de marge intérieure
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                //add image
-                const Image(
-                  image: AssetImage('assets/registerJob.jpg'),
-                  // width: 100,
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  translationService.translate('STEP3_TITLE'),
-                  style: const TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 10.0),
-                Text(translationService.translate('STEP3_DESCRIPTION')),
-              ],
-            )),
-        const SizedBox(height: 20.0),
-        TextField(
-          enabled: !isLoading,
-          onTap: () {
-            _showCategoryPicker(context);
-          },
-          readOnly: true,
-          decoration: InputDecoration(
-            hintText: translationService.translate('HINT_TEXT_SELECT_CATEGORY'),
-          ),
-          controller: TextEditingController(
-            text: translationService.translate(categories
-                .firstWhere(
-                  (category) => category.id == selectedCategoryId,
-                  orElse: () => Category(id: '', name: ''),
-                )
-                .name),
-          ),
-        ),
-        const SizedBox(height: 20), // Ajoute un espacement
-        TextField(
-          onTap: () {
-            // Utilisez onTap pour ouvrir la liste des emplois lorsqu'il est cliqué
-            if (isJobTextFieldEnabled) {
-              _showJobPicker(context);
-            }
-          },
-          readOnly: true,
-          enabled: isJobTextFieldEnabled,
-          decoration: InputDecoration(
-            hintText: translationService.translate('HINT_TEXT_SELECT_JOB'),
-          ),
-          controller: TextEditingController(
-            text: translationService.translate(jobs
-                .firstWhere(
-                  (job) => job.id == selectedJobId,
-                  orElse: () => Job(id: '', name: ''),
-                )
-                .name),
-          ),
-        ),
-        const SizedBox(height: 20),
-        TextField(
-          onChanged: (value) {
-            setState(() {
-              description = value; // Mettre à jour la description
-            });
-          },
-          decoration: InputDecoration(
-            hintText: translationService.translate('HINT_TEXT_ADD_DESCRIPTION'),
-          ),
-          enabled: selectedJobId != null,
-        ),
-        const SizedBox(height: 20),
-        Row(children: <Widget>[
+        Column(children: [
           Text(
-              '${translationService.translate("EXPERIENCE")}: ${experienceYears == 10 ? '10+' : experienceYears.toString()} ${translationService.translate("YEARS")}'),
-          Expanded(
-            child: Slider(
-              value: experienceYears.toDouble(),
-              onChanged: (value) {
-                if (selectedJobId != null) {
-                  setState(() {
-                    experienceYears = value.toInt();
-                  });
-                }
-              },
-              min: 0,
-              max: 10,
-              divisions: 10,
+            translationService.translate('STEP3_TITLE'),
+            style: const TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF50B498),
+            ),
+          ),
+          const SizedBox(height: 10.0),
+          Text(
+            translationService.translate('STEP3_DESCRIPTION'),
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 15.0,
+              color: Color(0xFF696969),
             ),
           ),
         ]),
-        const SizedBox(height: 20.0),
-        MaterialButton(
-          onPressed: () {
-            if (selectedJobId != null) {
-              saveUserJobData();
-            }
-          },
-          color: selectedJobId != null ? Colors.blue : Colors.grey,
-          textColor: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Container(
-            width: double.infinity,
-            height: 50.0,
-            alignment: Alignment.center,
-            child: Text(
-              translationService.translate('ADD_THIS_JOB'),
-              style: const TextStyle(
-                fontSize: 18.0,
+        Column(
+          children: [
+            buildTextField(
+              enabled: !isLoading,
+              onTap: () {
+                _showCategoryPicker(context);
+              },
+              readOnly: true,
+              controller: TextEditingController(
+                text: translationService.translate(categories
+                    .firstWhere(
+                      (category) => category.id == selectedCategoryId,
+                      orElse: () => Category(id: '', name: ''),
+                    )
+                    .name),
+              ),
+              hintText:
+                  translationService.translate('HINT_TEXT_SELECT_CATEGORY'),
+              key: "selectCategoryField",
+            ),
+
+            const SizedBox(height: 20), // Ajoute un espacement
+            buildTextField(
+              enabled: isJobTextFieldEnabled,
+              onTap: () {
+                // Utilisez onTap pour ouvrir la liste des emplois lorsqu'il est cliqué
+                if (isJobTextFieldEnabled) {
+                  _showJobPicker(context);
+                }
+              },
+              readOnly: true,
+              controller: TextEditingController(
+                text: translationService.translate(jobs
+                    .firstWhere(
+                      (job) => job.id == selectedJobId,
+                      orElse: () => Job(id: '', name: ''),
+                    )
+                    .name),
+              ),
+              hintText: translationService.translate('HINT_TEXT_SELECT_JOB'),
+              key: "selectJobField",
+            ),
+
+            const SizedBox(height: 20),
+            buildTextField(
+              enabled: selectedJobId != null,
+              controller: descriptionController,
+              maxLine: 2,
+              hintText:
+                  translationService.translate('HINT_TEXT_ADD_DESCRIPTION'),
+              key: "descriptionField",
+            ),
+            const SizedBox(height: 20),
+            Row(children: <Widget>[
+              Text(
+                '${translationService.translate("EXPERIENCE")}: ${experienceYears == 10 ? '10+' : experienceYears.toString()} ${translationService.translate("YEARS")}',
+                style: const TextStyle(
+                  color: Color(0xFF696969),
+                ),
+              ),
+              Expanded(
+                child: Slider(
+                  value: experienceYears.toDouble(),
+                  onChanged: (value) {
+                    if (selectedJobId != null) {
+                      setState(() {
+                        experienceYears = value.toInt();
+                      });
+                    }
+                  },
+                  min: 0,
+                  max: 10,
+                  divisions: 10,
+                ),
+              ),
+            ]),
+          ],
+        ),
+        Column(
+          children: [
+            MaterialButton(
+              onPressed: () {
+                if (selectedJobId != null) {
+                  saveUserJobData();
+                } else {
+                  return null;
+                }
+              },
+              textColor: Colors.white,
+              disabledColor: Colors.grey,
+              color: selectedJobId != null ? Color(0xFF102820) : Colors.grey,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Container(
+                width: double.infinity,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: Text(
+                  translationService.translate('ADD_THIS_JOB'),
+                  style: const TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-        const SizedBox(height: 20.0),
-        MaterialButton(
-          onPressed: () {
-            widget.nextStepCallback();
-          },
-          color: Colors.white,
-          textColor: Colors.black,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Container(
-            width: double.infinity,
-            height: 50.0,
-            alignment: Alignment.center,
-            child: Text(
-              translationService.translate('SKIP_BUTTON'),
-              style: const TextStyle(
-                fontSize: 18.0,
+            const SizedBox(height: 20.0),
+            MaterialButton(
+              onPressed: () {
+                widget.nextStepCallback();
+              },
+              textColor: Colors.black,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                side: const BorderSide(color: Color(0xFF102820)),
+              ),
+              child: Container(
+                width: double.infinity,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: Text(
+                  translationService.translate('SKIP_BUTTON'),
+                  style: const TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
+          ],
+        )
       ],
     );
   }

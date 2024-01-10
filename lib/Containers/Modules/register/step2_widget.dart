@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:hoodhelps/Containers/Widgets/textfield_widget.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:image/image.dart' as img;
 import 'package:firebase_storage/firebase_storage.dart'; // Importez cette bibliothèque
@@ -12,7 +13,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../constants.dart';
+import '../../../constants.dart';
 
 class Step2Widget extends StatefulWidget {
   final Function nextStepCallback; // Ajoutez ce paramètre
@@ -84,117 +85,131 @@ class _Step2WidgetState extends State<Step2Widget> {
   Widget build(BuildContext context) {
     final translationService = context.read<TranslationService>();
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Container(
-            color: Colors.white,
-            padding: const EdgeInsets.all(
-                10.0), // Ajoute 8 points de marge intérieure
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                //add image
-                Text(
-                  translationService.translate('STEP2_TITLE'),
-                  style: const TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+        Column(children: [
+          Text(
+            translationService.translate('STEP2_TITLE'),
+            style: const TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF50B498),
+            ),
+          ),
+          const SizedBox(height: 10.0),
+          Text(
+            translationService.translate('STEP2_DESCRIPTION'),
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 15.0,
+              color: Color(0xFF696969),
+            ),
+          ),
+        ]),
+        Stack(
+          children: <Widget>[
+            CircleAvatar(
+              backgroundColor: Color.fromARGB(99, 44, 195, 147),
+              radius: 50,
+              backgroundImage: _image != null ? FileImage(_image!) : null,
+              child: _image == null
+                  ? const Icon(Icons.person, size: 50, color: Color(0xFF102820))
+                  : null,
+            ),
+            Positioned(
+              right: 0,
+              top: 0,
+              child: Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  color: Color(0xFF102820),
+                  shape: BoxShape.circle,
                 ),
-                const SizedBox(height: 10.0),
-                Text(translationService.translate('STEP2_DESCRIPTION')),
-              ],
-            )),
-        const SizedBox(height: 20.0),
-        Center(
-          child: CircleAvatar(
-            radius: 50,
-            backgroundImage: _image != null ? FileImage(_image!) : null,
-            child: _image == null ? const Icon(Icons.person, size: 50) : null,
-          ),
-        ),
-        Center(
-          child: ElevatedButton(
-            onPressed: () async {
-              await _pickImage();
-              await _uploadImageToFirebase();
-            },
-            child: Text(translationService.translate('UPDATE_MY_PICTURE')),
-          ),
-        ),
-        const SizedBox(height: 10.0),
-        Row(
-          children: [
-            Expanded(
-                child: TextField(
-              controller: firstNameController,
-              decoration: InputDecoration(
-                  labelText:
-                      translationService.translate('LABEL_TEXT_FIRSTNAME')),
-            )),
-            const SizedBox(width: 20.0),
-            Expanded(
-                child: TextField(
-              controller: lastNameController,
-              decoration: InputDecoration(
-                  labelText:
-                      translationService.translate('LABEL_TEXT_LASTNAME')),
-            )),
+                child: IconButton(
+                  icon: Icon(Icons.camera_alt_rounded,
+                      size: 15, color: Colors.white),
+                  onPressed: () async {
+                    await _pickImage();
+                    await _uploadImageToFirebase();
+                  },
+                ),
+              ),
+            ),
           ],
         ),
-        // const SizedBox(height: 10.0),
-        TextField(
-          controller: phoneController,
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(
-              labelText: translationService.translate('LABEL_TEXT_PHONE')),
-        ),
-        const SizedBox(height: 20.0),
-        MaterialButton(
-          onPressed: () {
-            saveUserInfoData();
-          },
-          color: Colors.blue,
-          textColor: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+
+        Column(children: [
+          buildTextField(
+            controller: firstNameController,
+            hintText: translationService.translate('LABEL_TEXT_FIRSTNAME'),
+            key: "firstNameField",
           ),
-          child: Container(
-            width: double.infinity,
-            height: 50.0,
-            alignment: Alignment.center,
-            child: Text(
-              translationService.translate('SAVE_MY_DATA'),
-              style: const TextStyle(
-                fontSize: 18.0,
+          const SizedBox(height: 10.0),
+          buildTextField(
+            controller: lastNameController,
+            hintText: translationService.translate('LABEL_TEXT_LASTNAME'),
+            key: "lastNameField",
+          ),
+          const SizedBox(height: 10.0),
+          buildTextField(
+            controller: phoneController,
+            keyboardType: TextInputType.phone,
+            hintText: translationService.translate('LABEL_TEXT_PHONE'),
+            key: "phoneNumberField",
+          ),
+        ]),
+        // const SizedBox(height: 20.0),
+        Column(children: [
+          MaterialButton(
+            onPressed: () {
+              saveUserInfoData();
+            },
+            color: Color(0xFF102820),
+            textColor: Colors.white,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Container(
+              width: double.infinity,
+              height: 50.0,
+              alignment: Alignment.center,
+              child: Text(
+                translationService.translate('SAVE_MY_DATA'),
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
-        ),
-        const SizedBox(height: 20.0),
-        MaterialButton(
-          onPressed: () {
-            widget.nextStepCallback();
-          },
-          color: Colors.white,
-          textColor: Colors.black,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Container(
-            width: double.infinity,
-            height: 50.0,
-            alignment: Alignment.center,
-            child: Text(
-              translationService.translate('SKIP_BUTTON'),
-              style: const TextStyle(
-                fontSize: 18.0,
+          const SizedBox(height: 20.0),
+          MaterialButton(
+            onPressed: () {
+              widget.nextStepCallback();
+            },
+            textColor: Colors.black,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              side: const BorderSide(color: Color(0xFF102820)),
+            ),
+            child: Container(
+              width: double.infinity,
+              height: 50.0,
+              alignment: Alignment.center,
+              child: Text(
+                translationService.translate('SKIP_BUTTON'),
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
-        ),
+        ]),
       ],
     );
   }

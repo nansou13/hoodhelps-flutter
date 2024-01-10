@@ -1,6 +1,10 @@
 // Dart imports
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/Containers/events_page.dart';
+import 'package:hoodhelps/Containers/job_main_list.dart';
+import 'package:hoodhelps/Containers/users_list.dart';
 import 'package:hoodhelps/route_constants.dart';
+import 'package:hoodhelps/services/navigation_provider.dart';
 
 // Package imports
 import 'package:provider/provider.dart';
@@ -23,6 +27,7 @@ import 'package:hoodhelps/Containers/splash_page.dart';
 // Local imports
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
+import 'package:hoodhelps/services/firebase_messaging_service.dart';
 import 'package:flutter/services.dart';
 
 Future<void> main() async {
@@ -42,11 +47,16 @@ Future<void> main() async {
   // Initialisez Firebase
   await Firebase.initializeApp();
 
+  // Initialisez le service FCM
+  var firebaseMessagingService = FirebaseMessagingService();
+  await firebaseMessagingService.initFirebaseMessaging();
+
   runApp(
     MultiProvider(
       providers: [
         Provider<UserService>(create: (_) => UserService()),
         Provider<TranslationService>.value(value: translationService),
+        Provider<NavigationProvider>(create: (_) => NavigationProvider()),
       ],
       child: const MyApp(),
     ),
@@ -60,20 +70,29 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'HoodHelps',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(
+        // primarySwatch: Colors.blue,
+        colorSchemeSeed: const Color(0xFF2CC394),
+        useMaterial3: true,
+      ),
       initialRoute: RouteConstants.splash,
       routes: {
         RouteConstants.splash: (context) => const SplashScreen(),
         RouteConstants.login: (context) => const LoginPage(),
         RouteConstants.lobby: (context) => const LobbyPage(),
+        RouteConstants.jobMainList: (context) => const JobMainListPage(),
+        RouteConstants.userMainList: (context) => const UsersList(),
         RouteConstants.register: (context) => const RegisterPage(),
         RouteConstants.userList: (context) => const JobUsers(),
         RouteConstants.userInfo: (context) => const ProfilePage(),
         RouteConstants.editUser: (context) => const EditPage(),
         RouteConstants.joinGroup: (context) => const JoinGroup(),
         RouteConstants.forgotPassword: (context) => const ForgotPassword(),
-        RouteConstants.forgotPasswordResetCode: (context) => const ForgotPasswordResetCode(),
-        RouteConstants.forgotPasswordResetSuccess: (context) => const ForgotPasswordResetSuccess(),
+        RouteConstants.forgotPasswordResetCode: (context) =>
+            const ForgotPasswordResetCode(),
+        RouteConstants.forgotPasswordResetSuccess: (context) =>
+            const ForgotPasswordResetSuccess(),
+        RouteConstants.eventPage: (context) => const EventsPage(),
       },
     );
   }

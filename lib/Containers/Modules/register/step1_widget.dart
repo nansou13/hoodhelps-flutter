@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/Containers/Widgets/textfield_widget.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'dart:convert';
@@ -7,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../constants.dart';
+import '../../../constants.dart';
 
 class Step1Widget extends StatefulWidget {
   final Function nextStepCallback; // Ajoutez ce paramètre
@@ -58,95 +59,113 @@ class _Step1WidgetState extends State<Step1Widget> {
   @override
   Widget build(BuildContext context) {
     final translationService = context.read<TranslationService>();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return 
+    Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Container(
-            color: Colors.white,
-            padding: const EdgeInsets.all(
-                10.0), // Ajoute 8 points de marge intérieure
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                //add image
-                const Image(
-                  image: AssetImage('assets/register.jpg'),
-                  // width: 100,
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  translationService.translate('STEP1_TITLE'),
+        Expanded(child: const Image(
+            image: AssetImage('assets/amico.png'),
+            height: 100,
+          )),
+        
+          const SizedBox(height: 5),
+        Column(children: [
+       
+          Text(
+            translationService.translate('STEP1_TITLE'),
+            style: const TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF50B498),
+            ),
+          ),
+          const SizedBox(height: 10.0),
+          Text(
+            translationService.translate('STEP1_DESCRIPTION'),
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 15.0,
+              color: Color(0xFF696969),
+            ),
+          )
+        ]),
+        Column(children: [
+          const SizedBox(height: 20.0),
+          buildTextField(
+            controller: _usernameController,
+            hintText: translationService.translate('LABEL_TEXT_USERNAME'),
+            key: "usernameField",
+          ),
+          const SizedBox(height: 10.0),
+          buildTextField(
+            controller: _emailController,
+            keyboardType: TextInputType.emailAddress,
+            hintText: translationService.translate('LABEL_TEXT_EMAIL'),
+            key: "emailField",
+          ),
+          const SizedBox(height: 10.0),
+          buildTextField(
+            controller: _passwordController,
+            obscureText: true,
+            hintText: translationService.translate('LABEL_TEXT_PASS'),
+            key: "passwordField",
+          ),
+        ]),
+        Column(
+          children: [
+            const SizedBox(height: 20.0),
+            MaterialButton(
+              onPressed: _isButtonDisabled ? null : registerData,
+              color: Color(0xFF102820),
+              disabledColor: Colors.grey,
+              textColor: Colors.white,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Container(
+                width: double.infinity,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: Text(
+                  translationService.translate('CREATE_ACCOUNT_BUTTON'),
                   style: const TextStyle(
-                    fontSize: 18.0,
+                    fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 10.0),
-                Text(translationService.translate('STEP1_DESCRIPTION')),
-              ],
-            )),
-        const SizedBox(height: 20.0),
-        TextField(
-          controller: _usernameController,
-          decoration: InputDecoration(labelText: translationService.translate('LABEL_TEXT_USERNAME')),
-        ),
-        const SizedBox(height: 10.0),
-        TextField(
-          controller: _emailController,
-          keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration(labelText: translationService.translate('LABEL_TEXT_EMAIL')),
-        ),
-        const SizedBox(height: 10.0),
-        TextField(
-          controller: _passwordController,
-          decoration: InputDecoration(labelText: translationService.translate('LABEL_TEXT_PASS')),
-          obscureText: true,
-        ),
-        const SizedBox(height: 20.0),
-        MaterialButton(
-          onPressed: _isButtonDisabled ? null : registerData,
-          color: Colors.blue,
-          disabledColor: Colors.grey,
-          textColor: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Container(
-            width: double.infinity,
-            height: 50.0,
-            alignment: Alignment.center,
-            child: Text(
-              translationService.translate('CREATE_ACCOUNT_BUTTON'),
-              style: const TextStyle(
-                fontSize: 18.0,
               ),
             ),
-          ),
-        ),
-        const SizedBox(height: 20.0),
-        MaterialButton(
-          onPressed: () {
-            Navigator.pushNamed(context, "/login");
-          },
-          color: Colors.white,
-          textColor: Colors.black,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Container(
-            width: double.infinity,
-            height: 50.0,
-            alignment: Alignment.center,
-            child: Text(
-              translationService.translate('GO_TO_LOGIN'),
-              style: const TextStyle(
-                fontSize: 18.0,
+            const SizedBox(height: 20.0),
+            MaterialButton(
+              onPressed: () {
+                Navigator.pushNamed(context, "/login");
+              },
+              // color: Colors.white,
+              //border color
+              
+              textColor: Colors.black,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                side: const BorderSide(color: Color(0xFF102820)),
+              ),
+              child: Container(
+                width: double.infinity,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: Text(
+                  translationService.translate('GO_TO_LOGIN'),
+                  style: const TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
+          ],
+        )
       ],
     );
   }

@@ -185,7 +185,7 @@ class _AddJobWidgetState extends State<AddJobWidget> {
                 saveUserJobData();
               }
             },
-            color: selectedJobId != null ? Colors.blue : Colors.grey,
+            color: selectedJobId != null ? Color(0xFF102820) : Colors.grey,
             textColor: Colors.white,
             elevation: 0,
             shape: RoundedRectangleBorder(

@@ -10,6 +10,7 @@ class UserService {
   String? role;
   String? phoneNumber;
   List<Group> groups;
+  String currentGroupId;
 
   UserService({
     this.id,
@@ -23,6 +24,7 @@ class UserService {
     this.role,
     this.phoneNumber,
     this.groups = const [], // Par défaut, la liste des groupes est vide.
+    this.currentGroupId = '',
   });
 
   void updateUser(Map<String, dynamic> userData) {
@@ -66,6 +68,10 @@ class UserService {
               backgroundUrl: groupData['background_url'] ?? "",
             ))
         .toList();
+  }
+
+  void setCurrentGroupId(String groupId) {
+    currentGroupId = groupId;
   }
 }
 

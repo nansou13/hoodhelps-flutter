@@ -25,63 +25,63 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _loadUserData() async {
-  try {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userToken = prefs.getString('user_token');
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? userToken = prefs.getString('user_token');
 
-    if (userToken == null) {
-      _navigateToLogin();
-      return;
-    }
+      if (userToken == null) {
+        _navigateToLogin();
+        return;
+      }
 
-    // Appel API pour récupérer les données utilisateur
-    final response = await http.get(
-      Uri.parse('$routeAPI/api/users/me'),
-      headers: {'Authorization': 'Bearer $userToken'},
-    );
-
-    if (response.statusCode == 200) {
-      final userData = jsonDecode(response.body);
-      final userService = Provider.of<UserService>(context, listen: false);
-      userService.updateUser(userData);
-
-      // Appel API pour récupérer les groupes
-      final responseGroups = await http.get(
-        Uri.parse('$routeAPI/api/users/groups'),
+      // Appel API pour récupérer les données utilisateur
+      final response = await http.get(
+        Uri.parse('$routeAPI/api/users/me'),
         headers: {'Authorization': 'Bearer $userToken'},
       );
 
-      if (responseGroups.statusCode == 200) {
-        final userGroupData = jsonDecode(responseGroups.body);
-        userService.addUserGroups(userGroupData);
+      if (response.statusCode == 200) {
+        final userData = jsonDecode(response.body);
+        final userService = Provider.of<UserService>(context, listen: false);
+        userService.updateUser(userData);
 
-        if (userGroupData.isNotEmpty) {
-          Navigator.of(context, rootNavigator: true).pushNamed(
-            RouteConstants.lobby,
-            arguments: [userGroupData[0]['id']],
-          );
+        // Appel API pour récupérer les groupes
+        final responseGroups = await http.get(
+          Uri.parse('$routeAPI/api/users/groups'),
+          headers: {'Authorization': 'Bearer $userToken'},
+        );
+
+        if (responseGroups.statusCode == 200) {
+          final userGroupData = jsonDecode(responseGroups.body);
+          userService.addUserGroups(userGroupData);
+
+          if (userGroupData.isNotEmpty) {
+            userService.setCurrentGroupId(userGroupData[0]['id']);
+            Navigator.of(context, rootNavigator: true).pushNamed(
+              RouteConstants.lobby,
+              arguments: [],
+            );
+          } else {
+            Navigator.of(context).pushReplacementNamed(
+              RouteConstants.lobby,
+              arguments: [],
+            );
+          }
         } else {
-          Navigator.of(context).pushReplacementNamed(
-            RouteConstants.lobby,
-            arguments: [],
-          );
+          _navigateToLogin();
         }
       } else {
         _navigateToLogin();
       }
-    } else {
+    } catch (e) {
+      NotificationService.showError(context, "Une erreur s'est produite : $e");
       _navigateToLogin();
     }
-  } catch (e) {
-    NotificationService.showError(context, "Une erreur s'est produite : $e");
-    _navigateToLogin();
   }
-}
 
-void _navigateToLogin() {
-  Navigator.of(context).pushReplacementNamed(RouteConstants.login);
-}
-
+  void _navigateToLogin() {
+    Navigator.of(context).pushReplacementNamed(RouteConstants.login);
+  }
 
   @override
   Widget build(BuildContext context) {

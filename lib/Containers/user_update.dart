@@ -1,7 +1,7 @@
-import 'package:hoodhelps/Containers/user_update_widgets/circle_avatar_update.dart';
-import 'package:hoodhelps/Containers/user_update_widgets/tab_menu.dart';
-import 'package:hoodhelps/Containers/user_update_widgets/user_info_tab.dart';
-import 'package:hoodhelps/Containers/user_update_widgets/user_jobs_tab.dart';
+import 'package:hoodhelps/Containers/Modules/user_update/circle_avatar_update.dart';
+import 'package:hoodhelps/Containers/Modules/user_update/tab_menu.dart';
+import 'package:hoodhelps/Containers/Modules/user_update/user_info_tab.dart';
+import 'package:hoodhelps/Containers/Modules/user_update/user_jobs_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +26,7 @@ class _EditPageState extends State<EditPage> {
   Widget build(BuildContext context) {
     final translationService = context.read<TranslationService>();
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: Color(0xFF2CC394),
       body: Stack(
         children: [
           Column(
@@ -46,8 +46,9 @@ class _EditPageState extends State<EditPage> {
                     // padding: const EdgeInsets.only(top: 10),
                     children: [
                       const SizedBox(height: 20.0),
-                      buildTabMenu(_selectedTabIndex, _onNavBarTapped, translationService),
-                      const SizedBox(height: 20.0),
+                      buildTabMenu(_selectedTabIndex, _onNavBarTapped,
+                          translationService),
+                      const SizedBox(height: 10.0),
                       _selectedTabIndex == 0
                           ? const EditUserInfoPage()
                           : const EditUserJobsPage(),

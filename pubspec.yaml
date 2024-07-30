@@ -30,6 +30,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   device_preview: ^1.1.0
   firebase_core: ^2.23.0
+  firebase_messaging: ^14.7.6
   firebase_storage: ^11.5.2
   flutter:
     sdk: flutter
@@ -53,6 +54,9 @@ dev_dependencies:
   flutter_lints: ^3.0.1
   flutter_test:
     sdk: flutter
+  integration_test:
+    sdk: flutter
+  mockito: ^5.4.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -72,6 +76,8 @@ flutter:
     - assets/joinGroup.jpeg
     - assets/forgotPassword.jpg
     - assets/register.jpg
+    - assets/amico.png
+    - assets/cuate.png
     - assets/registerJob.jpg
     - assets/icon.png
     - assets/translations/

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:hoodhelps/Containers/Widgets/textfield_widget.dart';
 import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
@@ -134,40 +135,41 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    TextField(
+                    buildTextField(
                       controller: usernameController,
-                      enabled: false,
-                      decoration: InputDecoration(
-                          labelText: translationService
-                              .translate('LABEL_TEXT_USERNAME')),
+                      hintText:
+                          translationService.translate('LABEL_TEXT_USERNAME'),
+                      key: "usernameField",
                     ),
-                    const SizedBox(height: 10.0),
-                    TextField(
+                    const SizedBox(height: 15.0),
+                    buildTextField(
                       controller: emailController,
-                      decoration: InputDecoration(
-                          labelText:
-                              translationService.translate('LABEL_TEXT_EMAIL')),
+                      keyboardType: TextInputType.emailAddress,
+                      hintText:
+                          translationService.translate('LABEL_TEXT_EMAIL'),
+                      key: "emailField",
                     ),
-                    const SizedBox(height: 10.0),
-                    TextField(
+                    const SizedBox(height: 15.0),
+                    buildTextField(
                       controller: firstNameController,
-                      decoration: InputDecoration(
-                          labelText: translationService
-                              .translate('LABEL_TEXT_FIRSTNAME')),
+                      hintText:
+                          translationService.translate('LABEL_TEXT_FIRSTNAME'),
+                      key: "firstNameField",
                     ),
-                    const SizedBox(height: 10.0),
-                    TextField(
+                    const SizedBox(height: 15.0),
+                    buildTextField(
                       controller: lastNameController,
-                      decoration: InputDecoration(
-                          labelText: translationService
-                              .translate('LABEL_TEXT_LASTNAME')),
+                      hintText:
+                          translationService.translate('LABEL_TEXT_LASTNAME'),
+                      key: "lastNameField",
                     ),
-                    const SizedBox(height: 10.0),
-                    TextField(
+                    const SizedBox(height: 15.0),
+                    buildTextField(
                       controller: phoneController,
-                      decoration: InputDecoration(
-                          labelText:
-                              translationService.translate('LABEL_TEXT_PHONE')),
+                      keyboardType: TextInputType.phone,
+                      hintText:
+                          translationService.translate('LABEL_TEXT_PHONE'),
+                      key: "phoneNumberField",
                     ),
                   ],
                 )),
@@ -181,7 +183,7 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
                   updateUser();
                 }
               },
-              color: !isMiniLoading ? Colors.blue : Colors.grey,
+              color: !isMiniLoading ? Color(0xFF102820) : Colors.grey,
               textColor: Colors.white,
               elevation: 0,
               shape: RoundedRectangleBorder(

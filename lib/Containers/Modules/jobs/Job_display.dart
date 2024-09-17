@@ -34,6 +34,7 @@ class _JobDisplayState extends State<JobDisplay> {
     final user = Provider.of<UserService>(context, listen: false);
     final groupId = user.currentGroupId;
     final groups = user.groups;
+    
     Group specificGroup = groups.firstWhere(
       (group) => group.id == groupId,
       orElse: () => throw Exception('Groupe non trouvé'),

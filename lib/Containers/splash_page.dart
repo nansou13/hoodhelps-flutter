@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:hoodhelps/constants.dart';
 import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
-import 'package:hoodhelps/template.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -80,7 +79,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _navigateToLogin() {
-    Navigator.of(context).pushReplacementNamed(RouteConstants.login);
+    Navigator.of(context).pushReplacementNamed(RouteConstants.registerLogin);
   }
 
   @override
@@ -88,17 +87,29 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
         body: Stack(children: [
       // Image de fond
-      background(),
+      // background(),
       Container(
         padding: const EdgeInsets.fromLTRB(20.0, 50.0, 20.0, 20.0),
         color: Colors.white.withOpacity(0.9),
         width: double.infinity,
         height: double.infinity,
         child: const Center(
-          child:
-              CircularProgressIndicator(), // Ou un autre widget de chargement
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Image de l'application
+              Image(
+                image: AssetImage('assets/icon.png'),
+                width: 250.0,
+              ),
+              SizedBox(height: 20.0),
+              // Texte de chargement
+              CircularProgressIndicator(), 
+            ],
+          ),
+          )
+              // Ou un autre widget de chargement
         ),
-      ),
     ]));
   }
 }

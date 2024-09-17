@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hoodhelps/Containers/lobby_page.dart';
-import 'package:hoodhelps/Containers/login_page.dart';
+import 'package:hoodhelps/Containers/register_login_page.dart';
 import 'package:hoodhelps/Containers/register.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:hoodhelps/main.dart' as app; // Remplacez par le chemin correct vers votre fichier main.dart
@@ -15,7 +15,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Assurez-vous que vous êtes sur la page de connexion
-    expect(find.byType(LoginPage), findsOneWidget);
+    expect(find.byType(RegisterLoginPage), findsOneWidget);
 
     // on clique sur le register button 
     await tester.tap(find.byKey(Key('registerButton')));

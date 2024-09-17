@@ -116,11 +116,13 @@ class _ConnectedPageState extends State<ConnectedPage> {
       drawer: const MenuWidget(),
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
+          padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
           color: Color(0xFFF2F2F2),
           width: double.infinity,
           height: double.infinity,
-          child: widget.child,
+          child: SingleChildScrollView(  // Ajout du SingleChildScrollView ici
+            child: widget.child,
+          ),
         ),
       ),
       bottomNavigationBar: widget.showBottomNav
@@ -146,25 +148,25 @@ class _ConnectedPageState extends State<ConnectedPage> {
                 unselectedItemColor: Colors.grey[400],
                 items: [
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.home, size: 36),
+                    icon: Icon(Icons.maps_home_work_outlined, size: 40),
                     label: 'Lobby',
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.work, size: 36),
+                    icon: Icon(Icons.work_outline_rounded, size: 40),
                     label: 'Métiers',
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.people, size: 36),
+                    icon: Icon(Icons.people_alt_outlined, size: 40),
                     label: 'Voisins',
                   ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.event, size: 36),
-                    label: 'Evenements',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.announcement, size: 36),
-                    label: 'Annonces',
-                  ),
+                  // BottomNavigationBarItem(
+                  //   icon: Icon(Icons.event, size: 36),
+                  //   label: 'Evenements',
+                  // ),
+                  // BottomNavigationBarItem(
+                  //   icon: Icon(Icons.announcement, size: 36),
+                  //   label: 'Annonces',
+                  // ),
                 ],
                 selectedLabelStyle:
                     TextStyle(fontSize: 14), // Adjust the label size

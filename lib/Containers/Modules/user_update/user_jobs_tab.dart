@@ -40,7 +40,7 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
       String? userToken = prefs.getString('user_token');
 
       if (userToken == null) {
-        Navigator.of(context).pushReplacementNamed(RouteConstants.login);
+        Navigator.of(context).pushReplacementNamed(RouteConstants.registerLogin);
         return;
       }
       //recupere les jobs du users
@@ -57,7 +57,7 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
         });
         return;
       } else {
-        Navigator.of(context).pushReplacementNamed(RouteConstants.login);
+        Navigator.of(context).pushReplacementNamed(RouteConstants.registerLogin);
         return;
       }
     } catch (e) {

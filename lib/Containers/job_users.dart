@@ -124,6 +124,10 @@ class _JobUsers extends State<JobUsers> {
             mainAxisSpacing: 16.0, // Espace vertical entre les éléments
           ),
           itemCount: usersData.length,
+          physics:
+                const NeverScrollableScrollPhysics(), // Empêcher le GridView de défiler
+            shrinkWrap:
+                true, // Permettre au GridView de s'adapter à son contenu
           itemBuilder: (context, index) {
             final user = usersData[index];
             final userNameDisplay = displayName(

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/Containers/Widgets/button_widget.dart';
+import 'package:hoodhelps/custom_colors.dart';
 import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:provider/provider.dart';
@@ -11,77 +13,43 @@ class ForgotPasswordResetSuccess extends StatelessWidget {
     final translationService = context.read<TranslationService>();
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xFFF2F2F2),
           automaticallyImplyLeading: false,
           centerTitle: false,
-          titleTextStyle: TextStyle(
-              decoration: TextDecoration.none,
-              color: Colors.black,
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold),
+          titleTextStyle: FigmaTextStyles().headingsh3.copyWith(
+              color: FigmaColors.darkDark0,
+            ),
           leading: null,
           title: Text(translationService.translate("FORM_FORGOT_ACCOUNT_LINK")),
         ),
-        body: Stack(
-          children: [
+        body: 
             Container(
-              color: Color(0xFFF2F2F2),
               width: double.infinity,
               height: double.infinity,
               child: Padding(
-                padding: const EdgeInsets.all(40.0),
-                child: SingleChildScrollView(
-                  // Ajout de SingleChildScrollView
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                padding: const EdgeInsets.fromLTRB(20.0, 60.0, 20.0, 20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Column(children: [
-                        const Image(
-                          image: AssetImage('assets/cuate.png'),
-                          height: 200,
-                        ),
-                        const SizedBox(height: 20.0),
+                      
+                        
                         Text(
                           translationService
                               .translate('UPDATE_PASSWORD_SUCCESS'),
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 15.0,
-                            color: Color(0xFF696969),
-                          ),
+                          style: FigmaTextStyles().body16pt.copyWith(
+                      color: FigmaColors.darkDark0,
+                    ),
                         ),
-                      ]),
                       const SizedBox(height: 40.0),
-                      MaterialButton(
-                        onPressed: () {
+                      buildButton(onPressed: () {
                           Navigator.of(context)
                               .pushReplacementNamed(RouteConstants.login);
-                        },
-                        color: Color(0xFF102820),
-                        textColor: Colors.white,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: Container(
-                          width: double.infinity,
-                          height: 50.0,
-                          alignment: Alignment.center,
-                          child: Text(
-                            translationService.translate("GO_TO_LOGIN"),
-                            style: const TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                        }, text: translationService.translate("GO_TO_LOGIN")), 
+
+                      
+                  ],
                 ),
               ),
             ),
-          ],
-        ));
+        );
   }
 }

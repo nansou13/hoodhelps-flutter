@@ -63,9 +63,7 @@ class _JobCategoryDisplayGridState extends State<JobCategoryDisplayGrid> {
     var groupBackgroundUrl =
         categorieName.isNotEmpty ? 'assets/categories/$categorieName.jpg' : '';
 
-    return SingleChildScrollView(
-      // Utilisez SingleChildScrollView pour rendre tout le contenu déroulable
-      child: Column(
+    return Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
@@ -154,7 +152,6 @@ class _JobCategoryDisplayGridState extends State<JobCategoryDisplayGrid> {
             },
           ),
         ],
-      ),
     );
   }
 }

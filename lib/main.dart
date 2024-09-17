@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hoodhelps/Containers/events_page.dart';
 import 'package:hoodhelps/Containers/job_main_list.dart';
 import 'package:hoodhelps/Containers/users_list.dart';
+import 'package:hoodhelps/custom_colors.dart';
 import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/navigation_provider.dart';
 
@@ -20,6 +21,7 @@ import 'package:hoodhelps/Containers/user_info.dart';
 import 'package:hoodhelps/Containers/user_update.dart';
 import 'package:hoodhelps/Containers/job_users.dart';
 import 'package:hoodhelps/Containers/lobby_page.dart';
+import 'package:hoodhelps/Containers/register_login_page.dart';
 import 'package:hoodhelps/Containers/login_page.dart';
 import 'package:hoodhelps/Containers/register.dart';
 import 'package:hoodhelps/Containers/splash_page.dart';
@@ -72,13 +74,14 @@ class MyApp extends StatelessWidget {
       title: 'HoodHelps',
       theme: ThemeData(
         // primarySwatch: Colors.blue,
-        colorSchemeSeed: const Color(0xFF2CC394),
+        colorSchemeSeed: FigmaColors.lightLight4,
         useMaterial3: true,
       ),
       initialRoute: RouteConstants.splash,
       routes: {
         RouteConstants.splash: (context) => const SplashScreen(),
         RouteConstants.login: (context) => const LoginPage(),
+        RouteConstants.registerLogin: (context) => const RegisterLoginPage(),
         RouteConstants.lobby: (context) => const LobbyPage(),
         RouteConstants.jobMainList: (context) => const JobMainListPage(),
         RouteConstants.userMainList: (context) => const UsersList(),

@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/Containers/Modules/register/progress_bar_widget.dart';
+import 'package:hoodhelps/Containers/Widgets/button_widget.dart';
+import 'package:hoodhelps/Containers/Widgets/template_two_blocks.dart';
+import 'package:hoodhelps/Containers/Widgets/textfield_widget.dart';
+import 'package:hoodhelps/custom_colors.dart';
 import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
@@ -79,102 +84,152 @@ class _Step4WidgetState extends State<Step4Widget> {
   @override
   Widget build(BuildContext context) {
     final translationService = context.read<TranslationService>();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        const Image(
-          image: AssetImage('assets/cuate.png'),
-          height: 200,
-        ),
-        Column(children: [
-          Text(
-            translationService.translate('STEP4_TITLE'),
-            style: const TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF50B498),
-            ),
+    return genericSafeAreaTwoBlocks(
+      middleChild: Column(children: [
+          ProgressBarWithCounter(currentStep: 4, totalSteps: 4),
+            const SizedBox(height: 30.0),
+          Image.asset(
+            'assets/join_group.png',
+            fit: BoxFit.cover,
+            width: MediaQuery.of(context).size.width ,
           ),
-          const SizedBox(height: 10.0),
+          
+      
+        const SizedBox(height: 14.0),
           Text(
             translationService.translate('STEP4_DESCRIPTION'),
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 15.0,
-              color: Color(0xFF696969),
+            style: FigmaTextStyles().body14pt.copyWith(
+              color: FigmaColors.darkDark2,
             ),
           ),
-        ]),
-        TextField(
-          controller: _codeController,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight
-                  .bold), // Personnalisez la taille et le style du texte
-          decoration: InputDecoration(
-            hintText: translationService.translate('HINT_TEXT_ENTER_CODE'),
-            hintStyle: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight
-                    .bold), // Personnalisez le style du texte d'infobulle
+          const SizedBox(height: 34.0),
+          buildTextField(
+            controller: _codeController, 
+            hintText: translationService.translate('HINT_TEXT_ENTER_CODE'), 
+            labelText: translationService.translate('HINT_TEXT_ENTER_CODE'),
+            key: 'codeField',
+
           ),
-        ),
-        Column(
+      ]), 
+      bottomChild: 
+      Column(
           children: [
-            MaterialButton(
-              onPressed: () {
-                fetchGroupeInfo();
-              },
-              color: Color(0xFF102820),
-              textColor: Colors.white,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Container(
-                width: double.infinity,
-                height: 50.0,
-                alignment: Alignment.center,
-                child: Text(
-                  translationService.translate('JOIN_THE_GROUP'),
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+            buildButton(
+              onPressed: _codeController.text.isEmpty ? null : fetchGroupeInfo,
+              text: translationService.translate('JOIN_THE_GROUP'),
             ),
             const SizedBox(height: 20.0),
-            MaterialButton(
+            buildButton(
+              variant: "secondary",
               onPressed: () {
                 Navigator.of(context)
                     .pushReplacementNamed(RouteConstants.splash);
               },
-              textColor: Colors.black,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                side: const BorderSide(color: Color(0xFF102820)),
-              ),
-              child: Container(
-                width: double.infinity,
-                height: 50.0,
-                alignment: Alignment.center,
-                child: Text(
-                  translationService.translate('SKIP_BUTTON'),
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              text: translationService.translate('SKIP_BUTTON'),
             ),
           ],
         )
-      ],
+      
     );
+    
+    
+    
+    // Column(
+    //   crossAxisAlignment: CrossAxisAlignment.center,
+    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //   children: <Widget>[
+    //     const Image(
+    //       image: AssetImage('assets/joindGroup.png'),
+    //       height: 200,
+    //     ),
+    //     Column(children: [
+    //       Text(
+    //         translationService.translate('STEP4_TITLE'),
+    //         style: const TextStyle(
+    //           fontSize: 18.0,
+    //           fontWeight: FontWeight.bold,
+    //           color: Color(0xFF50B498),
+    //         ),
+    //       ),
+    //       const SizedBox(height: 10.0),
+    //       Text(
+    //         translationService.translate('STEP4_DESCRIPTION'),
+    //         textAlign: TextAlign.center,
+    //         style: const TextStyle(
+    //           fontSize: 15.0,
+    //           color: Color(0xFF696969),
+    //         ),
+    //       ),
+    //     ]),
+    //     TextField(
+    //       controller: _codeController,
+    //       textAlign: TextAlign.center,
+    //       style: const TextStyle(
+    //           fontSize: 32,
+    //           fontWeight: FontWeight
+    //               .bold), // Personnalisez la taille et le style du texte
+    //       decoration: InputDecoration(
+    //         hintText: translationService.translate('HINT_TEXT_ENTER_CODE'),
+    //         hintStyle: const TextStyle(
+    //             fontSize: 24,
+    //             fontWeight: FontWeight
+    //                 .bold), // Personnalisez le style du texte d'infobulle
+    //       ),
+    //     ),
+    //     Column(
+    //       children: [
+    //         MaterialButton(
+    //           onPressed: () {
+    //             fetchGroupeInfo();
+    //           },
+    //           color: Color(0xFF102820),
+    //           textColor: Colors.white,
+    //           elevation: 0,
+    //           shape: RoundedRectangleBorder(
+    //             borderRadius: BorderRadius.circular(10.0),
+    //           ),
+    //           child: Container(
+    //             width: double.infinity,
+    //             height: 50.0,
+    //             alignment: Alignment.center,
+    //             child: Text(
+    //               translationService.translate('JOIN_THE_GROUP'),
+    //               style: const TextStyle(
+    //                 fontSize: 16.0,
+    //                 fontWeight: FontWeight.bold,
+    //               ),
+    //             ),
+    //           ),
+    //         ),
+    //         const SizedBox(height: 20.0),
+    //         MaterialButton(
+    //           onPressed: () {
+    //             Navigator.of(context)
+    //                 .pushReplacementNamed(RouteConstants.splash);
+    //           },
+    //           textColor: Colors.black,
+    //           elevation: 0,
+    //           shape: RoundedRectangleBorder(
+    //             borderRadius: BorderRadius.circular(10.0),
+    //             side: const BorderSide(color: Color(0xFF102820)),
+    //           ),
+    //           child: Container(
+    //             width: double.infinity,
+    //             height: 50.0,
+    //             alignment: Alignment.center,
+    //             child: Text(
+    //               translationService.translate('SKIP_BUTTON'),
+    //               style: const TextStyle(
+    //                 fontSize: 16.0,
+    //                 fontWeight: FontWeight.bold,
+    //               ),
+    //             ),
+    //           ),
+    //         ),
+    //       ],
+    //     )
+    //   ],
+    // );
   }
 }
 

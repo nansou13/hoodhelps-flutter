@@ -11,7 +11,7 @@ class FunctionUtils {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool success = await prefs.setString(userTokenKey, '');
     if (success) {
-      Navigator.of(context, rootNavigator: true).pushReplacementNamed(RouteConstants.login);
+      Navigator.of(context, rootNavigator: true).pushReplacementNamed(RouteConstants.registerLogin);
     } else {
       // Gérez l'erreur comme vous le souhaitez, peut-être en affichant un message d'erreur
     }

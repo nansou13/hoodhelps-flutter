@@ -33,16 +33,20 @@ class _LobbyPage extends State<LobbyPage> {
     final translationService = context.read<TranslationService>();
     final user = Provider.of<UserService>(context, listen: false);
     final groups = user.groups;
+    
     var groupId = user.currentGroupId;
     var categoryId = '';
     var groupBackgroundUrl = '';
 
-    Group specificGroup = groups.firstWhere(
+    if(groupId != '') {
+      Group specificGroup = groups.firstWhere(
       (group) => group.id == groupId,
       orElse: () => throw Exception('Groupe non trouvé'),
-    );
-    groupBackgroundUrl = specificGroup.backgroundUrl;
-    updateAppBarTitle(specificGroup.name);
+      );
+      groupBackgroundUrl = specificGroup.backgroundUrl;
+      updateAppBarTitle(specificGroup.name);
+    }
+    
     // if (arguments.length >= 2) {
     //   categoryId = arguments[1].toString();
     // }

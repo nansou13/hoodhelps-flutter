@@ -127,7 +127,6 @@ class _Step1WidgetState extends State<Step1Widget> {
 
         widget.nextStepCallback();
       } else {
-        print(response.body);
         final errorData = jsonDecode(response.body);
 
         NotificationService.showError(

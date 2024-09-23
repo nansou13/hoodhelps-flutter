@@ -176,7 +176,6 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
                           direction: DismissDirection.endToStart,
                           onDismissed: (direction) {
                             // Appelez votre fonction de suppression ici
-                            //print(job['id']);
                             deleteJob(job['id']);
                             setState(() {
                               userJob.removeAt(index);

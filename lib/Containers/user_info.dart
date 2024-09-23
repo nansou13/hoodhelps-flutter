@@ -1,11 +1,13 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/Containers/Widgets/job_badge_widget.dart';
+import 'package:hoodhelps/Containers/Widgets/template_two_blocks.dart';
+import 'package:hoodhelps/Containers/Widgets/user_avatar_box.dart';
 import 'package:hoodhelps/constants.dart';
-import 'package:hoodhelps/route_constants.dart';
-import 'package:hoodhelps/services/icons_service.dart';
+import 'package:hoodhelps/custom_colors.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
+import 'package:hoodhelps/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
@@ -18,308 +20,179 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  Map<String, dynamic> userInfo = {};
+  String userID = '';
   String jobID = '';
-  String jobName = '';
-
-  bool isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    loadData();
+    final List arguments = ModalRoute.of(context)!.settings.arguments as List;
+    if (arguments.isNotEmpty) userID = arguments[0].toString();
+    if (arguments.length >= 2) jobID = arguments[1].toString();
   }
 
-  Future<void> loadData() async {
-    final List arguments = ModalRoute.of(context)!.settings.arguments as List;
-
-    var userID = '';
-    if (arguments.isNotEmpty) {
-      userID = arguments[0].toString();
-    }
-    if (arguments.length >= 2) {
-      setState(() {
-        jobID = arguments[1].toString();
-      });
-    }
-
-    //get user info
+  // Fetch user info and jobs asynchronously
+  Future<Map<String, dynamic>> _fetchUserData() async {
     try {
       final response = await http.get(Uri.parse('$routeAPI/api/users/$userID'));
-
-      final userData = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        //recupere les jobs du users
-
-        setState(() {
-          userInfo = userData;
-          isLoading = false;
-        });
-        return;
+        return jsonDecode(response.body);
       } else {
-        // En cas d'échec de la requête, afficher un message d'erreur
-        NotificationService.showError(context, "Erreur User $userData");
+        throw Exception("Failed to load user data");
       }
     } catch (e) {
-      // En cas d'erreur lors de la requête
       NotificationService.showError(context, "Erreur: ${e.toString()}");
+      throw Exception(e);
     }
   }
 
-  // Extrait en une fonction séparée pour réutilisation
+  // Helper function to reorder jobs
+  List<dynamic> _reorderJobs(List<dynamic> jobs, String jobID) {
+    var currentJob = jobs.firstWhere((job) => job['id'].toString() == jobID,
+        orElse: () => null);
+    var otherJobs = jobs.where((job) => job['id'].toString() != jobID).toList();
+    return currentJob != null ? [currentJob, ...otherJobs] : otherJobs;
+  }
+
+  // Generic launcher function
   Future<void> _launchUri(Uri uri) async {
-    final translationService = context.read<TranslationService>();
     if (!await canLaunchUrl(uri)) {
-      // Remplacer par une gestion d'erreur appropriée.
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-              "${translationService.translate("ERROR_ERROR_ON_ACTION")} : $uri"),
-        ),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Error launching $uri")));
     } else {
       await launchUrl(uri);
     }
   }
 
-  // Les méthodes _makePhoneCall, _sendSMS, _sendEmail peuvent maintenant être simplifiées
-  Future<void> _makePhoneCall(String phoneNumber) async =>
-      _launchUri(Uri(scheme: 'tel', path: phoneNumber));
-  Future<void> _sendSMS(String phoneNumber) async =>
-      _launchUri(Uri(scheme: 'sms', path: phoneNumber));
-  Future<void> _sendEmail(String emailAddress) async =>
-      _launchUri(Uri(scheme: 'mailto', path: emailAddress));
+  // Helper widgets for contact actions
+  Widget _buildContactActionRow(IconData icon, String label, Function onTap) {
+    return InkWell(
+      onTap: () => onTap(),
+      child: Row(
+        children: [
+          Icon(icon, color: FigmaColors.darkDark0, size: 20),
+          SizedBox(width: 5.0),
+          Text(label,
+              style: FigmaTextStyles()
+                  .body16pt
+                  .copyWith(color: FigmaColors.darkDark2)),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    } else {
-      final translationService = context.read<TranslationService>();
+    return Scaffold(
+      backgroundColor: FigmaColors.lightLight4, // Background color
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: _fetchUserData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError || !snapshot.hasData) {
+            return const Center(
+                child: Text("Erreur de chargement des données"));
+          }
 
-      var userUrl = userInfo['image_url'] ?? '';
-      var allJobs = userInfo['jobs'] ?? [];
+          final userInfo = snapshot.data!;
+          final translationService = context.read<TranslationService>();
+          final reorderedJobs = _reorderJobs(userInfo['jobs'] ?? [], jobID);
 
-      dynamic currentJob;
-      List<dynamic> otherJobs;
-
-      if (allJobs.isNotEmpty) {
-        currentJob = allJobs.firstWhere(
-          (job) => job['id'].toString() == jobID,
-          orElse: () => null,
-        );
-
-        // Filtrez le tableau pour obtenir les jobs qui n'ont pas l'id égal à jobID
-        otherJobs =
-            allJobs.where((job) => job['id'].toString() != jobID).toList();
-      } else {
-        // Gérez le cas où il n'y a pas de jobs ou la liste est vide
-        currentJob = null;
-        otherJobs = [];
-      }
-
-      return Scaffold(
-        backgroundColor: Color(0xFF2CC394),
-        body: Stack(
-          children: [
-            Column(
-              children: [
-                const SizedBox(height: 35.0),
-                Container(
-                  height: 300,
-                  width: double.infinity,
-                  color: Color(0xFF2CC394),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color.fromARGB(255, 0, 0, 0)
-                                  .withOpacity(0.5),
-                              blurRadius: 10,
-                            ),
-                          ],
-                        ),
-                        child: CircleAvatar(
-                          backgroundImage:
-                              userUrl.isNotEmpty ? NetworkImage(userUrl) : null,
-                          backgroundColor: Colors.blueGrey,
-                          radius: 80.0,
-                          child: Text(
-                            userUrl.isEmpty
-                                ? '${userInfo['first_name'].isNotEmpty ? userInfo['first_name'][0] : ''}${userInfo['last_name'].isNotEmpty ? userInfo['last_name'][0] : ''}'
-                                    .toUpperCase()
-                                : '',
-                            style: const TextStyle(
-                              fontSize: 70,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        '${userInfo['first_name']} ${userInfo['last_name']}',
-                        style:
-                            const TextStyle(fontSize: 24, color: Colors.white),
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          if (userInfo['phone_number']?.isNotEmpty ??
-                              false) ...[
-                            IconButton(
-                              icon: const Icon(Icons.sms, color: Colors.white),
-                              iconSize: 35,
-                              onPressed: () =>
-                                  _sendSMS(userInfo['phone_number']),
-                            ),
-                            IconButton(
-                              icon:
-                                  const Icon(Icons.phone, color: Colors.white),
-                              iconSize: 35,
-                              onPressed: () =>
-                                  _makePhoneCall(userInfo['phone_number']),
-                            ),
-                          ],
-                          if (userInfo['email']?.isNotEmpty ?? false)
-                            IconButton(
-                              icon:
-                                  const Icon(Icons.email, color: Colors.white),
-                              iconSize: 35,
-                              onPressed: () => _sendEmail(userInfo['email']),
-                            ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
-                      ),
-                    ),
-                    child: ListView(
-                      padding: const EdgeInsets.only(top: 10),
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                translationService
-                                    .translate(currentJob['name']),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 25),
-                              ),
-                              Text(
-                                  '${translationService.translate('EXPERIENCE')} : ${currentJob['experience_years']} ${translationService.translate('YEARS')}',
-                                  style: const TextStyle(fontSize: 16)),
-                              const SizedBox(height: 20.0),
-                              Text(translationService.translate('DESCRIPTION'),
-                                  style: const TextStyle(fontSize: 16)),
-                              const SizedBox(height: 10.0),
-                              Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 24, vertical: 24),
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[
-                                      100], // Couleur de fond de la boîte de citation
-                                  borderRadius: BorderRadius.circular(12),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey[300]!,
-                                      blurRadius: 6,
-                                      offset: const Offset(0, 3),
-                                    ),
-                                  ],
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment
-                                      .start, // Assurez-vous que les enfants sont alignés au début de la croix
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8),
-                                      child: Text(
-                                        currentJob[
-                                            'description'], // Description du job
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontStyle: FontStyle.italic,
-                                        ),
-                                        textAlign: TextAlign.justify,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        otherJobs.isNotEmpty
-                            ? ExpansionTile(
-                                title: Text(
-                                    translationService.translate('OTHER_JOBS')),
-                                children: otherJobs.map<Widget>((job) {
-                                  return ListTile(
-                                    leading: Icon(IconsExtension.getIconData(job[
-                                        'name'])), // Remplacer par une icône pertinente ou retirer si non nécessaire.
-                                    title: Text(translationService
-                                        .translate(job['name'])),
-                                    onTap: () {
-                                      // Code pour naviguer vers une nouvelle page.
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pushNamed(
-                                        RouteConstants.userInfo,
-                                        arguments: [userInfo['id'], job['id']],
-                                      );
-                                    }, // Assurez-vous que 'name' est la clé correcte pour le nom du métier.
-                                  );
-                                }).toList(),
-                              )
-                            : Container(), // ou bien SizedBox.shrink() pour un widget vide.
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+          return Scaffold(
+            backgroundColor: FigmaColors.lightLight4,
+            appBar: genericAppBar(
+              appTitle: FunctionUtils.getUserName(userInfo), // Affiche le username
+              context: context,
             ),
-            Positioned(
-              top: 40,
-              left: 10,
-              child: IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.white),
-                onPressed: () => Navigator.pop(context),
+            body: Padding(
+              padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildProfileHeader(userInfo),
+                  const SizedBox(height: 23.0),
+                  Divider(color: FigmaColors.lightLight2, thickness: 1),
+                  const SizedBox(height: 23.0),
+                  Text('${translationService.translate("HINT_TEXT_JOB")}(s) :',
+                      style: FigmaTextStyles()
+                          .headingsh5
+                          .copyWith(color: FigmaColors.darkDark0)),
+                  const SizedBox(height: 10.0),
+                  _buildJobList(reorderedJobs),
+                ],
               ),
             ),
-          ],
+          );
+        },
+      ),
+    );
+  }
+
+  // Profile header with contact options
+  Widget _buildProfileHeader(Map<String, dynamic> userInfo) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        UserAvatarBox(user: userInfo, size: 92.0),
+        SizedBox(height: 15.0),
+        _buildContactActionRow(Icons.email, userInfo['email'] ?? '',
+            () => _launchUri(Uri(scheme: 'mailto', path: userInfo['email']))),
+        SizedBox(height: 7.0),
+        _buildContactActionRow(
+            Icons.phone,
+            FunctionUtils.formatPhoneNumber(userInfo['phone_number'] ?? ''),
+            () =>
+                _launchUri(Uri(scheme: 'tel', path: userInfo['phone_number']))),
+        SizedBox(height: 7.0),
+        _buildContactActionRow(
+            Icons.sms,
+            "Envoyer un SMS",
+            () =>
+                _launchUri(Uri(scheme: 'sms', path: userInfo['phone_number']))),
+      ],
+    );
+  }
+
+  // Job list with details
+  Widget _buildJobList(List<dynamic> jobs) {
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Column(
+          children: jobs.map((job) {
+            return Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(14.0),
+              margin: const EdgeInsets.only(bottom: 12.0),
+              decoration: BoxDecoration(
+                color: FigmaColors.lightLight3,
+                borderRadius: BorderRadius.circular(12.0),
+                border: Border.all(color: FigmaColors.lightLight2, width: 2.0),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  JobBadge(job_id: job['id']),
+                  const SizedBox(height: 6),
+                  Text(
+                    '${job['experience_years']} année${job['experience_years'] > 1 ? 's' : ''} d\'expérience',
+                    style: FigmaTextStyles()
+                        .body14pt
+                        .copyWith(color: FigmaColors.darkDark2),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    job['description'] ?? '',
+                    style: FigmaTextStyles()
+                        .body16pt
+                        .copyWith(color: FigmaColors.darkDark0),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
         ),
-      );
-    }
+      ),
+    );
   }
 }

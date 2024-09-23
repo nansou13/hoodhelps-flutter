@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/Containers/ads_page.dart';
 import 'package:hoodhelps/Containers/events_page.dart';
-import 'package:hoodhelps/Containers/job_main_list.dart';
-import 'package:hoodhelps/Containers/users_list.dart';
+import 'package:hoodhelps/Containers/categories_main_list.dart';
+import 'package:hoodhelps/Containers/category_job_users_list.dart';
 import 'package:hoodhelps/Containers/lobby_page.dart';
 import 'package:hoodhelps/Containers/Widgets/menu_widget.dart';
 import 'package:hoodhelps/route_constants.dart';
@@ -75,9 +75,9 @@ class _ConnectedPageState extends State<ConnectedPage> {
       case RouteConstants.lobby:
         return LobbyPage();
       case RouteConstants.jobMainList:
-        return JobMainListPage();
+        return CategoriesMainListPage();
       case RouteConstants.userMainList:
-        return UsersList();
+        return CategoryJobUsersMainListPage();
       case RouteConstants.eventPage:
         return EventsPage();
       case RouteConstants.adsPage:

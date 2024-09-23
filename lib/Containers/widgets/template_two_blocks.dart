@@ -18,10 +18,11 @@ class TemplateTwoBlocks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: genericAppBar(appTitle: appTitle, context: context, showLeading: showLeading),
+      appBar: genericAppBar(
+          appTitle: appTitle, context: context, showLeading: showLeading),
       body: genericSafeAreaTwoBlocks(
         middleChild: middleChild,
-        bottomChild: bottomChild, 
+        bottomChild: bottomChild,
       ),
     );
   }
@@ -30,11 +31,12 @@ class TemplateTwoBlocks extends StatelessWidget {
 AppBar genericAppBar({
   required BuildContext context,
   required String appTitle,
-  bool showLeading = true,         // Valeur par défaut à `true`
-  void Function()? leadingAction,  // Fonction optionnelle avec valeur par défaut à `null`
+  bool showLeading = true, // Valeur par défaut à `true`
+  void Function()? leadingAction,
 }) {
   return AppBar(
     automaticallyImplyLeading: false,
+    backgroundColor: FigmaColors.lightLight4,
     centerTitle: false,
     titleTextStyle: FigmaTextStyles().headingsh3.copyWith(
           color: FigmaColors.darkDark0,
@@ -42,14 +44,20 @@ AppBar genericAppBar({
     leading: showLeading && (leadingAction != null || Navigator.canPop(context))
         ? IconButton(
             icon: const Icon(Icons.arrow_back),
-            onPressed: leadingAction ?? () {
-              // Utiliser l'action de navigation par défaut si leadingAction est null
-              Navigator.of(context).pop();
-            },
+            onPressed: leadingAction ??
+                () {
+                  // Utiliser l'action de navigation par défaut si leadingAction est null
+                  Navigator.of(context).pop();
+                },
           )
         : null,
     title: Text(
       appTitle,
+      style: FigmaTextStyles().headingsh3.copyWith(
+            color: FigmaColors.darkDark0,
+          ),
+      maxLines: 1, // Limite à 2 lignes
+      overflow: TextOverflow.ellipsis,
     ),
   );
 }
@@ -57,21 +65,22 @@ AppBar genericAppBar({
 SafeArea genericSafeAreaTwoBlocks({
   required Widget middleChild,
   required Widget bottomChild,
-   // Fonction optionnelle avec valeur par défaut à `null`
+  // Fonction optionnelle avec valeur par défaut à `null`
 }) {
   return SafeArea(
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          width: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(child: SingleChildScrollView(child: middleChild)),
-              Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                  child: bottomChild),
-            ],
-          ),
-        ),
-      );
+    child: Container(
+      color: FigmaColors.lightLight4,
+      padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(child: SingleChildScrollView(child: middleChild)),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+              child: bottomChild),
+        ],
+      ),
+    ),
+  );
 }

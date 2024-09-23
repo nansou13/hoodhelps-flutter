@@ -135,5 +135,8 @@
     "HINT_TEXT_SELECT_CATEGORY": "Sélectionnez une catégorie",
     "HINT_TEXT_SELECT_JOB": "Sélectionnez un emploi",
     "HINT_TEXT_ADD_DESCRIPTION": "Ajouter une description",
-    "HINT_TEXT_JOB": "Métier"
+    "HINT_TEXT_JOB": "Métier",
+    "FIND_PRO": "Rechercher un professionnel",
+    "NO_CATEGORY_SELECTED": "Aucune catégorie sélectionnée"
+    
 }

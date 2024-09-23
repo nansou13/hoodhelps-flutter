@@ -134,6 +134,8 @@
     "HINT_TEXT_SELECT_CATEGORY": "Select a category",
     "HINT_TEXT_SELECT_JOB": "Select a job",
     "HINT_TEXT_ADD_DESCRIPTION": "Add a description",
-    "HINT_TEXT_JOB": "Job"
+    "HINT_TEXT_JOB": "Job",
+    "FIND_PRO": "Find a professional",
+    "NO_CATEGORY_SELECTED": "No category selected"
 }
   

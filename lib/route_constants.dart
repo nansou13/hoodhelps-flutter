@@ -5,6 +5,7 @@ class RouteConstants {
   static const String registerLogin = '/registerlogin';
   static const String lobby = '/lobby';
   static const String jobMainList = '/jobs';
+  static const String categoriesMainList = '/categories';
   static const String userMainList = '/users';
   static const String register = '/register';
   static const String userList = '/userlist';

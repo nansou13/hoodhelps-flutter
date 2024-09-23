@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/custom_colors.dart';
 
-//function return colors object from buildButton variant with switch case
 Map<String, Color> getButtonColors(String variant) {
   switch (variant) {
     case 'primary':
@@ -13,6 +12,11 @@ Map<String, Color> getButtonColors(String variant) {
       return {
         'color': FigmaColors.lightLight2,
         'textColor': FigmaColors.darkDark0,
+      };
+    case 'tertiary':
+      return {
+        'color': FigmaColors.primaryPrimary1,
+        'textColor': FigmaColors.lightLight4,
       };
     default:
       return {
@@ -28,7 +32,6 @@ MaterialButton buildButton({
   Color? color,
   Color? textColor,
   String text = '',
-  bool disabled = false,
 }) {
   Map<String, Color> colorTheme = getButtonColors(variant);
   return MaterialButton(
@@ -42,7 +45,8 @@ MaterialButton buildButton({
           }
         : null,
     color: color ?? colorTheme['color'],
-    disabledColor: FigmaColors.darkDark3,
+    disabledColor:
+        color?.withOpacity(0.7) ?? colorTheme['color']?.withOpacity(0.7),
     textColor: textColor ?? colorTheme['textColor'],
     elevation: 0,
     shape: RoundedRectangleBorder(

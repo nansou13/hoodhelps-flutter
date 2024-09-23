@@ -24,4 +24,25 @@ class FunctionUtils {
     }
     return input[0].toUpperCase() + input.substring(1);
   }
+
+  static String getUserName(Map<String, dynamic> user) {
+    String firstName = user['first_name'] ?? '';
+      String lastName = user['last_name'] ?? '';
+      String username = user['username'] ?? '';
+
+      if (firstName.isNotEmpty) {
+        return '$firstName $lastName'; // Concatène le prénom et le nom
+      } else {
+        return username; // Utilise le username si pas de first_name
+      }
+  }
+
+  static String formatPhoneNumber(String phoneNumber) {
+  // Supprimez les espaces existants ou autres caractères non numériques
+  phoneNumber = phoneNumber.replaceAll(RegExp(r'\D'), '');
+
+  // Utilisez une expression régulière pour ajouter un espace tous les deux chiffres
+  return phoneNumber.replaceAllMapped(RegExp(r'(\d{2})(?=\d)'), (Match match) => '${match.group(1)} ');
+}
+
 }

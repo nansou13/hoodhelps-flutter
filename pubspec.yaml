@@ -87,17 +87,6 @@ flutter:
     - assets/registerJob.jpg
     - assets/icon.png
     - assets/translations/
-    - assets/categories/LEGAL_FINANCIAL.jpg
-    - assets/categories/ANIMAL_SERVICES.jpg
-    - assets/categories/GASTRONOMY.jpg
-    - assets/categories/REAL_ESTATE.jpg
-    - assets/categories/HEALTH_WELLBEING.jpg
-    - assets/categories/EDUCATION_TRAINING.jpg
-    - assets/categories/MAINTENANCE_REPAIR.jpg
-    - assets/categories/CRAFTSMANSHIP_CONSTRUCTION.jpg
-    - assets/categories/TRANSPORT_LOGISTICS.jpg
-    - assets/categories/BEAUTY_STYLE.jpg
-    - assets/categories/TECHNOLOGY_IT.jpg
   # supportedLocales:
   #   - const Locale('fr', 'FR')
   #   - const Locale('en', 'US')

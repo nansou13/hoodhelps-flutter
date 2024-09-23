@@ -60,11 +60,6 @@ class _CategoryJobUsersMainListPage
 
       final categoryData = await _getCategoryData(categoriesService, groupId);
 
-      List<dynamic> professions = [];
-      if (categoryData != null) {
-        professions = categoryData['professions'];
-      }
-
       if (categoryData == null) {
         _showError('Category data not found');
         return;
@@ -77,7 +72,7 @@ class _CategoryJobUsersMainListPage
         return;
       }
 
-      final response = await http.get(
+      await http.get(
           Uri.parse('$routeAPI/api/categories/$groupId/jobs/$jobId/users'));
 
       await _fetchUsersData(groupId, jobId!);

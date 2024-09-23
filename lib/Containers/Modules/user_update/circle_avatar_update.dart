@@ -140,7 +140,7 @@ class _EditAvatarState extends State<EditAvatar> {
         FirebaseStorage.instanceFor(bucket: 'gs://hoodhelps.appspot.com');
 
     final fileName =
-        'profile_image_${userID ?? DateTime.now().millisecondsSinceEpoch}.jpg';
+        'profile_image_${userID}.jpg';
 
     final profileImageRef = storage.ref().child('users').child(fileName);
     final uploadTask = profileImageRef.putFile(resizedFile);

@@ -15,7 +15,6 @@ import 'package:hoodhelps/Containers/forgot_password_reset_code.dart';
 import 'package:hoodhelps/Containers/forgot_password_reset_success.dart';
 import 'package:hoodhelps/Containers/join_group.dart';
 import 'package:hoodhelps/Containers/categories_main_list.dart';
-import 'package:hoodhelps/Containers/job_users.dart';
 import 'package:hoodhelps/Containers/lobby_page.dart';
 import 'package:hoodhelps/Containers/login_page.dart';
 import 'package:hoodhelps/Containers/register.dart';
@@ -24,7 +23,6 @@ import 'package:hoodhelps/Containers/splash_page.dart';
 import 'package:hoodhelps/Containers/user_info.dart';
 import 'package:hoodhelps/Containers/user_update.dart';
 import 'package:hoodhelps/Containers/category_job_users_list.dart';
-import 'package:hoodhelps/Containers/events_page.dart';
 
 // Services
 import 'package:hoodhelps/services/translation_service.dart';
@@ -92,7 +90,6 @@ class MyApp extends StatelessWidget {
       RouteConstants.categoriesMainList: (context) => const CategoriesMainListPage(),
       RouteConstants.userMainList: (context) => const CategoryJobUsersMainListPage(),
       RouteConstants.register: (context) => const RegisterPage(),
-      RouteConstants.userList: (context) => const JobUsers(),
       RouteConstants.userInfo: (context) => const ProfilePage(),
       RouteConstants.editUser: (context) => const EditPage(),
       RouteConstants.joinGroup: (context) => const JoinGroup(),
@@ -101,7 +98,6 @@ class MyApp extends StatelessWidget {
           const ForgotPasswordResetCode(),
       RouteConstants.forgotPasswordResetSuccess: (context) =>
           const ForgotPasswordResetSuccess(),
-      RouteConstants.eventPage: (context) => const EventsPage(),
     };
   }
 }

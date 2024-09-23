@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/Containers/Widgets/template_two_blocks.dart';
-import 'package:hoodhelps/color_mapping.dart';
 import 'package:hoodhelps/custom_colors.dart';
 import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/categories_service.dart';
-import 'package:hoodhelps/services/icons_service.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
@@ -189,27 +187,6 @@ class _CategoryJobsMainListPage extends State<CategoryJobsMainListPage> {
                                 }).toList(),
                               ],
                             )))));
-  }
-
-  Widget _buildCategoryIcon(
-      String categoryName, String categoryID, int categoryUsers) {
-    return Container(
-      width: 51,
-      height: 51,
-      decoration: BoxDecoration(
-        color: categoryUsers > 0
-            ? getColorByCategoryId(categoryID)
-            : FigmaColors.lightLight1,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Center(
-        child: Icon(
-          IconsExtension.getIconData(categoryName),
-          color: categoryUsers > 0 ? FigmaColors.lightLight4 : Colors.grey[400],
-          size: 31,
-        ),
-      ),
-    );
   }
 
   List<dynamic> reorderProfessionsByUserCount(List<dynamic> professionData) {

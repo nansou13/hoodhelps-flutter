@@ -23,6 +23,12 @@ linter:
   # producing the lint.
   rules:
     use_build_context_synchronously
+    - avoid_unused_constructor_parameters
+    - avoid_unused_imports
+    - avoid_unused_labels
+    - unused_element
+    - unused_field
+    - unused_local_variable
     # avoid_print: false  # Uncomment to disable the `avoid_print` rule
     # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
 

@@ -40,7 +40,7 @@ class UserService {
     phoneNumber = userData['phone_number'];
   }
 
-  getUser() {
+  Map<String, dynamic> getUser() {
     return {
       'id': id,
       'username': username,
@@ -56,18 +56,7 @@ class UserService {
   }
 
   void addUserGroups(List<dynamic> groupData) {
-    groups = groupData
-        .map((groupData) => Group(
-              id: groupData['id'],
-              name: groupData['name'] ?? "",
-              code: groupData['code'] ?? "",
-              address: groupData['address'] ?? "",
-              cp: groupData['cp'] ?? "",
-              city: groupData['city'] ?? "",
-              description: groupData['description'] ?? "",
-              backgroundUrl: groupData['background_url'] ?? "",
-            ))
-        .toList();
+    groups = groupData.map((data) => Group.fromJson(data)).toList();
   }
 
   void setCurrentGroupId(String groupId) {
@@ -84,6 +73,7 @@ class Group {
   String city;
   String description;
   String backgroundUrl;
+  List<dynamic> users;
 
   Group({
     required this.id,
@@ -94,5 +84,20 @@ class Group {
     required this.city,
     required this.description,
     required this.backgroundUrl,
+    required this.users,
   });
+
+  factory Group.fromJson(Map<String, dynamic> json) {
+    return Group(
+      id: json['id'],
+      name: json['name'] ?? '',
+      code: json['code'] ?? '',
+      address: json['address'] ?? '',
+      cp: json['cp'] ?? '',
+      city: json['city'] ?? '',
+      description: json['description'] ?? '',
+      backgroundUrl: json['background_url'] ?? '',
+      users: json['users'] ?? [],
+    );
+  }
 }

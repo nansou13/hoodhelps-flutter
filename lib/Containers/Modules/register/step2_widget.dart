@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'package:hoodhelps/Containers/Modules/register/progress_bar_widget.dart';
+import 'package:hoodhelps/Containers/Widgets/button_widget.dart';
+import 'package:hoodhelps/Containers/Widgets/template_two_blocks.dart';
 import 'package:hoodhelps/Containers/Widgets/textfield_widget.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:image/image.dart' as img;
@@ -84,29 +87,10 @@ class _Step2WidgetState extends State<Step2Widget> {
   @override
   Widget build(BuildContext context) {
     final translationService = context.read<TranslationService>();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Column(children: [
-          Text(
-            translationService.translate('STEP2_TITLE'),
-            style: const TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF50B498),
-            ),
-          ),
-          const SizedBox(height: 10.0),
-          Text(
-            translationService.translate('STEP2_DESCRIPTION'),
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 15.0,
-              color: Color(0xFF696969),
-            ),
-          ),
-        ]),
+    return genericSafeAreaTwoBlocks(
+      middleChild: Column(children: [
+        ProgressBarWithCounter(currentStep: 2, totalSteps: 4),
+        const SizedBox(height: 30.0),
         Stack(
           children: <Widget>[
             CircleAvatar(
@@ -139,78 +123,45 @@ class _Step2WidgetState extends State<Step2Widget> {
             ),
           ],
         ),
-
-        Column(children: [
-          buildTextField(
-            controller: firstNameController,
-            hintText: translationService.translate('LABEL_TEXT_FIRSTNAME'),
-            key: "firstNameField",
-          ),
-          const SizedBox(height: 10.0),
-          buildTextField(
-            controller: lastNameController,
-            hintText: translationService.translate('LABEL_TEXT_LASTNAME'),
-            key: "lastNameField",
-          ),
-          const SizedBox(height: 10.0),
-          buildTextField(
-            controller: phoneController,
-            keyboardType: TextInputType.phone,
-            hintText: translationService.translate('LABEL_TEXT_PHONE'),
-            key: "phoneNumberField",
-          ),
-        ]),
-        // const SizedBox(height: 20.0),
-        Column(children: [
-          MaterialButton(
-            onPressed: () {
-              saveUserInfoData();
-            },
-            color: Color(0xFF102820),
-            textColor: Colors.white,
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Container(
-              width: double.infinity,
-              height: 50.0,
-              alignment: Alignment.center,
-              child: Text(
-                translationService.translate('SAVE_MY_DATA'),
-                style: const TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 20.0),
-          MaterialButton(
-            onPressed: () {
-              widget.nextStepCallback();
-            },
-            textColor: Colors.black,
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              side: const BorderSide(color: Color(0xFF102820)),
-            ),
-            child: Container(
-              width: double.infinity,
-              height: 50.0,
-              alignment: Alignment.center,
-              child: Text(
-                translationService.translate('SKIP_BUTTON'),
-                style: const TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ]),
-      ],
+        const SizedBox(height: 20.0),
+        buildTextField(
+          controller: firstNameController,
+          hintText: translationService.translate('LABEL_TEXT_FIRSTNAME'),
+          labelText: translationService.translate('LABEL_TEXT_FIRSTNAME'),
+          key: 'firstNameField',
+        ),
+        const SizedBox(height: 10.0),
+        buildTextField(
+          controller: lastNameController,
+          hintText: translationService.translate('LABEL_TEXT_LASTNAME'),
+          labelText: translationService.translate('LABEL_TEXT_LASTNAME'),
+          key: 'lastNameField',
+        ),
+        const SizedBox(height: 10.0),
+        buildTextField(
+          controller: phoneController,
+          keyboardType: TextInputType.phone,
+          hintText: translationService.translate('LABEL_TEXT_PHONE'),
+          labelText: translationService.translate('LABEL_TEXT_PHONE'),
+          key: 'phoneField',
+        ),
+      ]),
+      bottomChild: Column(children: [
+        buildButton(
+          onPressed: () {
+            saveUserInfoData();
+          },
+          text: translationService.translate('SAVE_MY_DATA'),
+        ),
+        const SizedBox(height: 20.0),
+        buildButton(
+          variant: 'secondary',
+          onPressed: () {
+            widget.nextStepCallback();
+          },
+          text: translationService.translate('SKIP_BUTTON'),
+        ),
+      ]),
     );
   }
 

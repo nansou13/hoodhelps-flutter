@@ -30,3 +30,10 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.group == 'org.jetbrains.kotlin') {
+            details.useVersion "$kotlin_version"  // La version que vous avez choisie
+        }
+    }
+}

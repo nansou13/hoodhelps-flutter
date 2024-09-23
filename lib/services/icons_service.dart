@@ -19,6 +19,8 @@ extension IconsExtension on Icons {
         return Icons.face;
       case "ANIMAL_SERVICES":
         return Icons.pets;
+      case "PERSONAL_SERVICES":
+        return Icons.home;
       case "GASTRONOMY":
         return Icons.restaurant;
       case "TRANSPORT_LOGISTICS":
@@ -81,6 +83,10 @@ extension IconsExtension on Icons {
         return Icons.nature_people;
       case "CLEANER":
         return Icons.cleaning_services;
+      case "BABYSITTER":
+        return Icons.child_care;
+      case "NANNY":
+        return Icons.family_restroom;
       case "WEB_DEVELOPER":
         return Icons.code;
       case "NETWORK_ADMINISTRATOR":

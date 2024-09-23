@@ -47,7 +47,7 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
       String? userToken = prefs.getString('user_token');
 
       if (userToken == null) {
-        Navigator.of(context).pushReplacementNamed(RouteConstants.login);
+        Navigator.of(context).pushReplacementNamed(RouteConstants.registerLogin);
         return;
       }
 

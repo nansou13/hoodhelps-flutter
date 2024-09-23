@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/Containers/Widgets/button_widget.dart';
+import 'package:hoodhelps/Containers/Widgets/template_two_blocks.dart';
 import 'package:hoodhelps/Containers/Widgets/textfield_widget.dart';
 import 'package:hoodhelps/constants.dart';
+import 'package:hoodhelps/custom_colors.dart';
 import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
@@ -56,126 +59,40 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     final translationService = context.read<TranslationService>();
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color(0xFFF2F2F2),
-          automaticallyImplyLeading: false,
-          centerTitle: false,
-          titleTextStyle: TextStyle(
-              decoration: TextDecoration.none,
-              color: Colors.black,
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+    return TemplateTwoBlocks(
+        appTitle: translationService.translate("FORGOT_PASSWORD_TITLE"),
+        middleChild: Column(children: [
+          Text(
+            translationService.translate('FORGOT_PASSWORD_DESCRIPTION'),
+            // textAlign: TextAlign.center,
+            style: FigmaTextStyles().body16pt.copyWith(
+                  color: FigmaColors.darkDark0,
+                ),
           ),
-          title: Text(translationService.translate("FORM_FORGOT_ACCOUNT_LINK")),
-        ),
-        body: Stack(
+          const SizedBox(height: 32.0),
+          buildTextField(
+            controller: _mailController,
+            hintText: translationService.translate('PLACEHOLDER_TEXT_EMAIL'),
+            labelText: translationService.translate('LABEL_TEXT_EMAIL'),
+            key: "emailLostPasswordField",
+          ),
+        ]),
+        bottomChild: Column(
           children: [
-            Container(
-              color: Color(0xFFF2F2F2),
-              width: double.infinity,
-              height: double.infinity,
-              padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 20.0),
-              child: LayoutBuilder(builder:
-                  (BuildContext context, BoxConstraints viewportConstraints) {
-                return SingleChildScrollView(
-                    // Ajoutez le SingleChildScrollView ici
-                    child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          minHeight: viewportConstraints.maxHeight,
-                        ),
-                        child: IntrinsicHeight(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Column(children: [
-                                const Image(
-                                  image: AssetImage('assets/cuate.png'),
-                                  height: 200,
-                                ),
-                                const SizedBox(height: 20.0),
-                                Text(
-                                  translationService
-                                      .translate('FORGOT_PASSWORD_DESCRIPTION'),
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontSize: 15.0,
-                                    color: Color(0xFF696969),
-                                  ),
-                                ),
-                              ]),
-                              buildTextField(
-                                controller: _mailController,
-                                hintText: translationService
-                                    .translate('LABEL_TEXT_EMAIL'),
-                                key: "emailLostPasswordField",
-                              ),
-                              Column(
-                                children: [
-                                  MaterialButton(
-                                    onPressed: () {
-                                      sendMailForgotAccount();
-                                    },
-                                    color: Color(0xFF102820),
-                                    textColor: Colors.white,
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: 50.0,
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        translationService
-                                            .translate("SEND_THE_CODE"),
-                                        style: const TextStyle(
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 20.0),
-                                  MaterialButton(
-                                    onPressed: () {
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pushNamed(RouteConstants
-                                              .forgotPasswordResetCode);
-                                    },
-                                    textColor: Colors.black,
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      side: const BorderSide(
-                                          color: Color(0xFF102820)),
-                                    ),
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: 50.0,
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        translationService
-                                            .translate("ALREADY_HAVE_A_CODE"),
-                                        style: const TextStyle(
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        )));
-              }),
+            buildButton(
+              onPressed: () {
+                sendMailForgotAccount();
+              },
+              text: translationService.translate("SEND_THE_CODE"),
+            ),
+            const SizedBox(height: 20.0),
+            buildButton(
+              variant: 'secondary',
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true)
+                    .pushNamed(RouteConstants.forgotPasswordResetCode);
+              },
+              text: translationService.translate("ALREADY_HAVE_A_CODE"),
             ),
           ],
         ));

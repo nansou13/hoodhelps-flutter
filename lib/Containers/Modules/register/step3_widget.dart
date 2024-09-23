@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/Containers/Modules/register/progress_bar_widget.dart';
+import 'package:hoodhelps/Containers/Widgets/button_widget.dart';
+import 'package:hoodhelps/Containers/Widgets/template_two_blocks.dart';
 import 'package:hoodhelps/Containers/Widgets/textfield_widget.dart';
+import 'package:hoodhelps/custom_colors.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'dart:convert';
@@ -97,31 +101,11 @@ class _Step3WidgetState extends State<Step3Widget> {
   @override
   Widget build(BuildContext context) {
     final translationService = context.read<TranslationService>();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Column(children: [
-          Text(
-            translationService.translate('STEP3_TITLE'),
-            style: const TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF50B498),
-            ),
-          ),
-          const SizedBox(height: 10.0),
-          Text(
-            translationService.translate('STEP3_DESCRIPTION'),
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 15.0,
-              color: Color(0xFF696969),
-            ),
-          ),
-        ]),
-        Column(
+    return genericSafeAreaTwoBlocks(
+        middleChild: Column(
           children: [
+            ProgressBarWithCounter(currentStep: 3, totalSteps: 4),
+            const SizedBox(height: 30.0),
             buildTextField(
               enabled: !isLoading,
               onTap: () {
@@ -138,124 +122,86 @@ class _Step3WidgetState extends State<Step3Widget> {
               ),
               hintText:
                   translationService.translate('HINT_TEXT_SELECT_CATEGORY'),
+              labelText:
+                  translationService.translate('HINT_TEXT_SELECT_CATEGORY'),
               key: "selectCategoryField",
             ),
 
-            const SizedBox(height: 20), // Ajoute un espacement
-            buildTextField(
-              enabled: isJobTextFieldEnabled,
-              onTap: () {
-                // Utilisez onTap pour ouvrir la liste des emplois lorsqu'il est cliqué
-                if (isJobTextFieldEnabled) {
-                  _showJobPicker(context);
-                }
-              },
-              readOnly: true,
-              controller: TextEditingController(
-                text: translationService.translate(jobs
-                    .firstWhere(
-                      (job) => job.id == selectedJobId,
-                      orElse: () => Job(id: '', name: ''),
-                    )
-                    .name),
+            const SizedBox(height: 10), // Ajoute un espacement
+            if (isJobTextFieldEnabled)
+              buildTextField(
+                enabled: isJobTextFieldEnabled,
+                onTap: () {
+                  // Utilisez onTap pour ouvrir la liste des emplois lorsqu'il est cliqué
+                  if (isJobTextFieldEnabled) {
+                    _showJobPicker(context);
+                  }
+                },
+                readOnly: true,
+                controller: TextEditingController(
+                  text: translationService.translate(jobs
+                      .firstWhere(
+                        (job) => job.id == selectedJobId,
+                        orElse: () => Job(id: '', name: ''),
+                      )
+                      .name),
+                ),
+                hintText: translationService.translate('HINT_TEXT_SELECT_JOB'),
+                labelText: translationService.translate('HINT_TEXT_SELECT_JOB'),
+                key: "selectJobField",
               ),
-              hintText: translationService.translate('HINT_TEXT_SELECT_JOB'),
-              key: "selectJobField",
-            ),
 
-            const SizedBox(height: 20),
-            buildTextField(
-              enabled: selectedJobId != null,
-              controller: descriptionController,
-              maxLine: 2,
-              hintText:
-                  translationService.translate('HINT_TEXT_ADD_DESCRIPTION'),
-              key: "descriptionField",
-            ),
-            const SizedBox(height: 20),
-            Row(children: <Widget>[
-              Text(
-                '${translationService.translate("EXPERIENCE")}: ${experienceYears == 10 ? '10+' : experienceYears.toString()} ${translationService.translate("YEARS")}',
-                style: const TextStyle(
-                  color: Color(0xFF696969),
-                ),
+            const SizedBox(height: 10),
+            if (selectedJobId != null)
+              buildTextField(
+                enabled: selectedJobId != null,
+                controller: descriptionController,
+                maxLine: 2,
+                hintText:
+                    translationService.translate('HINT_TEXT_ADD_DESCRIPTION'),
+                labelText:
+                    translationService.translate('HINT_TEXT_ADD_DESCRIPTION'),
+                key: "descriptionField",
               ),
-              Expanded(
-                child: Slider(
-                  value: experienceYears.toDouble(),
-                  onChanged: (value) {
-                    if (selectedJobId != null) {
-                      setState(() {
-                        experienceYears = value.toInt();
-                      });
-                    }
-                  },
-                  min: 0,
-                  max: 10,
-                  divisions: 10,
+            const SizedBox(height: 20),
+            if (selectedJobId != null)
+              Row(children: <Widget>[
+                Text(
+                  '${translationService.translate("EXPERIENCE")}: ${experienceYears == 10 ? '10+' : experienceYears.toString()} ${translationService.translate("YEARS")}',
+                  style: const TextStyle(color: FigmaColors.primaryPrimary0),
                 ),
-              ),
-            ]),
+                Expanded(
+                  child: Slider(
+                    value: experienceYears.toDouble(),
+                    onChanged: (value) {
+                      if (selectedJobId != null) {
+                        setState(() {
+                          experienceYears = value.toInt();
+                        });
+                      }
+                    },
+                    min: 0,
+                    max: 10,
+                    divisions: 10,
+                  ),
+                ),
+              ]),
           ],
         ),
-        Column(
+        bottomChild: Column(
           children: [
-            MaterialButton(
-              onPressed: () {
-                if (selectedJobId != null) {
-                  saveUserJobData();
-                } else {
-                  return null;
-                }
-              },
-              textColor: Colors.white,
-              disabledColor: Colors.grey,
-              color: selectedJobId != null ? Color(0xFF102820) : Colors.grey,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Container(
-                width: double.infinity,
-                height: 50.0,
-                alignment: Alignment.center,
-                child: Text(
-                  translationService.translate('ADD_THIS_JOB'),
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+            buildButton(
+              onPressed: selectedJobId != null ? saveUserJobData : null,
+              text: translationService.translate('ADD_THIS_JOB'),
             ),
             const SizedBox(height: 20.0),
-            MaterialButton(
-              onPressed: () {
-                widget.nextStepCallback();
-              },
-              textColor: Colors.black,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                side: const BorderSide(color: Color(0xFF102820)),
-              ),
-              child: Container(
-                width: double.infinity,
-                height: 50.0,
-                alignment: Alignment.center,
-                child: Text(
-                  translationService.translate('SKIP_BUTTON'),
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+            buildButton(
+              variant: 'secondary',
+              onPressed: () => widget.nextStepCallback(),
+              text: translationService.translate('SKIP_BUTTON'),
             ),
           ],
-        )
-      ],
-    );
+        ));
   }
 
   Future<void> _showCategoryPicker(BuildContext context) async {

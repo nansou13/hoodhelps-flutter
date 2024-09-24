@@ -1,4 +1,5 @@
 import 'package:hoodhelps/route_constants.dart';
+import 'package:hoodhelps/services/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 
@@ -25,16 +26,23 @@ class FunctionUtils {
     return input[0].toUpperCase() + input.substring(1);
   }
 
-  static String getUserName(Map<String, dynamic> user) {
-    String firstName = user['first_name'] ?? '';
-      String lastName = user['last_name'] ?? '';
-      String username = user['username'] ?? '';
+  static String getUserName(dynamic user) {
+    String firstName = '';
+    String lastName = '';
+    String username = '';
 
-      if (firstName.isNotEmpty) {
-        return '$firstName $lastName'; // Concatène le prénom et le nom
-      } else {
-        return username; // Utilise le username si pas de first_name
-      }
+    if (user is Map<String, dynamic>) {
+      firstName = user['first_name'] ?? '';
+      lastName = user['last_name'] ?? '';
+      username = user['username'] ?? '';
+    } else if (user is UserService) {
+      firstName = user.firstName ?? '';
+      lastName = user.lastName ?? '';
+      username = user.username ?? '';
+    }
+
+    // Si le prénom est présent, retourner "prénom nom", sinon retourner le username
+    return firstName.isNotEmpty ? '$firstName $lastName' : username.isNotEmpty ? username : 'Utilisateur inconnu';
   }
 
   static String formatPhoneNumber(String phoneNumber) {

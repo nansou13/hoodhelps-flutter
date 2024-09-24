@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:hoodhelps/custom_colors.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
 import 'package:image/image.dart' as img;
@@ -159,21 +160,15 @@ class _EditAvatarState extends State<EditAvatar> {
     var firstName = userService.firstName ?? '';
     var lastname = userService.lastName ?? '';
     return Container(
-      height: 150,
+      height: 100,
       width: double.infinity,
-      color: Color(0xFF2CC394),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.5),
-                    blurRadius: 10,
-                  ),
-                ],
+                
               ),
               child: Stack(children: <Widget>[
                 CircleAvatar(
@@ -183,7 +178,7 @@ class _EditAvatarState extends State<EditAvatar> {
                           ? FileImage(_image!) as ImageProvider<Object>
                           : null,
                   backgroundColor: Colors.blueGrey,
-                  radius: 60.0,
+                  radius: 50.0,
                   child: Text(
                     userUrl.isEmpty && _image == null
                         ? '${firstName.isNotEmpty ? firstName[0] : ''}${lastname.isNotEmpty ? lastname[0] : ''}'
@@ -197,17 +192,17 @@ class _EditAvatarState extends State<EditAvatar> {
                 ),
                 Positioned(
                   right: 0,
-                  top: 0,
+                  bottom: 0,
                   child: Container(
                     width: 30,
                     height: 30,
                     decoration: BoxDecoration(
-                      color: Color(0xFF102820),
+                      color: FigmaColors.primaryPrimary0,
                       shape: BoxShape.circle,
                     ),
                     child: IconButton(
-                      icon: Icon(Icons.camera_alt_rounded,
-                          size: 15, color: Colors.white),
+                      icon: Icon(Icons.edit,
+                          size: 15, color: FigmaColors.lightLight4),
                       onPressed: () async {
                         await _pickImage();
                         await _uploadImageToFirebase();

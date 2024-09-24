@@ -272,7 +272,7 @@ class _LobbyPage extends State<LobbyPage> {
     return GestureDetector(
       onTap: () {
         Navigator.of(context, rootNavigator: true)
-            .pushNamed(RouteConstants.editUser);
+            .pushNamed(RouteConstants.userMenu);
       },
       child: Container(
         width: 50,

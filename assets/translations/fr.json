@@ -137,6 +137,7 @@
     "HINT_TEXT_ADD_DESCRIPTION": "Ajouter une description",
     "HINT_TEXT_JOB": "Métier",
     "FIND_PRO": "Rechercher un professionnel",
-    "NO_CATEGORY_SELECTED": "Aucune catégorie sélectionnée"
+    "NO_CATEGORY_SELECTED": "Aucune catégorie sélectionnée",
+    "MY_ACCOUNT": "Mon compte"
     
 }

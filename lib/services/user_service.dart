@@ -55,6 +55,18 @@ class UserService {
     };
   }
 
+  String getUserName() {
+    String currentFirstName = firstName ?? '';
+      String currentLastName = lastName ?? '';
+      String currentUsername = username ?? '';
+
+      if (currentFirstName.isNotEmpty) {
+        return '$currentFirstName $currentLastName'; // Concatène le prénom et le nom
+      } else {
+        return currentUsername; // Utilise le username si pas de first_name
+      }
+  }
+
   void addUserGroups(List<dynamic> groupData) {
     groups = groupData.map((data) => Group.fromJson(data)).toList();
   }

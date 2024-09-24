@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hoodhelps/Containers/category_jobs_list.dart';
+import 'package:hoodhelps/Containers/user_account.dart';
 import 'package:hoodhelps/custom_colors.dart';
 import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/jobs_provider.dart';
@@ -23,6 +23,8 @@ import 'package:hoodhelps/Containers/splash_page.dart';
 import 'package:hoodhelps/Containers/user_info.dart';
 import 'package:hoodhelps/Containers/user_update.dart';
 import 'package:hoodhelps/Containers/category_job_users_list.dart';
+import 'package:hoodhelps/Containers/category_jobs_list.dart';
+import 'package:hoodhelps/Containers/user_menu.dart';
 
 // Services
 import 'package:hoodhelps/services/translation_service.dart';
@@ -86,6 +88,8 @@ class MyApp extends StatelessWidget {
       RouteConstants.login: (context) => const LoginPage(),
       RouteConstants.registerLogin: (context) => const RegisterLoginPage(),
       RouteConstants.lobby: (context) => const LobbyPage(),
+      RouteConstants.userMenu: (context) => const UserMenu(),
+      RouteConstants.userAccount: (context) => const UserAccount(),
       RouteConstants.jobMainList: (context) => const CategoryJobsMainListPage(),
       RouteConstants.categoriesMainList: (context) => const CategoriesMainListPage(),
       RouteConstants.userMainList: (context) => const CategoryJobUsersMainListPage(),

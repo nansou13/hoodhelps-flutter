@@ -71,6 +71,10 @@ class UserService {
     groups = groupData.map((data) => Group.fromJson(data)).toList();
   }
 
+  void removeUserGroup(String groupId) {
+    groups.removeWhere((group) => group.id == groupId);
+  }
+
   void setCurrentGroupId(String groupId) {
     currentGroupId = groupId;
   }

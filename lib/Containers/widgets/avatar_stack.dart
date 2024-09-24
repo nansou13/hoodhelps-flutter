@@ -10,9 +10,10 @@ class UserAvatar {
 
 class AvatarStack extends StatelessWidget {
   final List<UserAvatar> users; // Liste des utilisateurs (image URL et nom)
+  final Color TextColor; // Couleur du texte
   final int maxAvatars = 4; // Limite d'avatars à afficher
 
-  AvatarStack({required this.users});
+  AvatarStack({required this.users, this.TextColor = FigmaColors.lightLight0});
 
   // Fonction pour obtenir les initiales d'un utilisateur
   String getInitials(String name) {
@@ -73,7 +74,7 @@ class AvatarStack extends StatelessWidget {
             child: Text(
               '+$remainingUsers',
               style: FigmaTextStyles().body14pt.copyWith(
-                    color: FigmaColors.lightLight0,
+                    color: TextColor,
                     // fontWeight: FontWeight.bold,
                   ),
             ),

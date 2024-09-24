@@ -61,7 +61,7 @@ class _UserMenu extends State<UserMenu> {
                                       onTap: () {
                                         Navigator.of(context,
                                                 rootNavigator: true)
-                                            .pushNamed(RouteConstants.userInfo);
+                                            .pushNamed(RouteConstants.userAccountGroups);
                                       }),
                                   SizedBox(height: 14),
                                   Divider(

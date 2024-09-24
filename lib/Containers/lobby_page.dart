@@ -217,17 +217,8 @@ class _LobbyPage extends State<LobbyPage> {
   List<UserAvatar> buildUserAvatarList(List<dynamic> users) {
     return users.map((user) {
       // Récupère le nom complet ou utilise le username si first_name est null ou vide
-      String firstName = user['first_name'] ?? '';
-      String lastName = user['last_name'] ?? '';
-      String username = user['username'] ?? '';
       String image = user['image_url'] ?? '';
-
-      String name;
-      if (firstName.isNotEmpty) {
-        name = '$firstName $lastName'; // Concatène le prénom et le nom
-      } else {
-        name = username; // Utilise le username si pas de first_name
-      }
+      final name = FunctionUtils.getUserName(user);
 
       // Crée l'objet UserAvatar
       return UserAvatar(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/Containers/user_account.dart';
+import 'package:hoodhelps/Containers/user_account_groups.dart';
 import 'package:hoodhelps/custom_colors.dart';
 import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/jobs_provider.dart';
@@ -90,6 +91,7 @@ class MyApp extends StatelessWidget {
       RouteConstants.lobby: (context) => const LobbyPage(),
       RouteConstants.userMenu: (context) => const UserMenu(),
       RouteConstants.userAccount: (context) => const UserAccount(),
+      RouteConstants.userAccountGroups: (context) => const UserAccountGroups(),
       RouteConstants.jobMainList: (context) => const CategoryJobsMainListPage(),
       RouteConstants.categoriesMainList: (context) => const CategoriesMainListPage(),
       RouteConstants.userMainList: (context) => const CategoryJobUsersMainListPage(),

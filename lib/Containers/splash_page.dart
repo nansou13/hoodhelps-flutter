@@ -53,6 +53,9 @@ class _SplashScreenState extends State<SplashScreen> {
         userService.updateUser(userData);
 
         await _fetchUserGroups(userToken, userService);
+        await _fetchUserJobs(userToken, userService);
+
+        _navigateToLobby();
       } else {
         _navigateToLogin();
       }
@@ -81,7 +84,18 @@ class _SplashScreenState extends State<SplashScreen> {
       if (userGroupData.isNotEmpty) {
         userService.setCurrentGroupId(userGroupData[0]['id']);
       }
-      _navigateToLobby();
+    } else {
+      throw Exception("Erreur lors du chargement des groupes");
+    }
+  }
+  Future<void> _fetchUserJobs(String token, UserService userService) async {
+      final responseJob = await http.get(
+        Uri.parse('$routeAPI/api/users/me/job'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      if (responseJob.statusCode == 200) {
+        final userJobData = jsonDecode(responseJob.body);
+      userService.addUserJobs(userJobData);
     } else {
       throw Exception("Erreur lors du chargement des groupes");
     }

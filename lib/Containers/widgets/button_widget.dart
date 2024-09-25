@@ -18,6 +18,11 @@ Map<String, Color> getButtonColors(String variant) {
         'color': FigmaColors.primaryPrimary1,
         'textColor': FigmaColors.lightLight4,
       };
+    case 'delete':
+      return {
+        'color': FigmaColors.redRed0,
+        'textColor': FigmaColors.lightLight4,
+      };
     default:
       return {
         'color': FigmaColors.darkDark0,

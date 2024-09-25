@@ -4,6 +4,8 @@ import 'package:hoodhelps/Containers/Widgets/button_widget.dart';
 import 'package:hoodhelps/Containers/Widgets/template_two_blocks.dart';
 import 'package:hoodhelps/Containers/Widgets/textfield_widget.dart';
 import 'package:hoodhelps/custom_colors.dart';
+import 'package:hoodhelps/services/categories_service.dart';
+import 'package:hoodhelps/services/job_service.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'dart:convert';
@@ -313,27 +315,5 @@ class _Step3WidgetState extends State<Step3Widget> {
             selectedJob.id; // Mettez à jour l'ID de l'emploi sélectionné
       });
     }
-  }
-}
-
-class Category {
-  final String id;
-  final String name;
-
-  Category({required this.id, required this.name});
-
-  factory Category.fromJson(Map<String, dynamic> json) {
-    return Category(id: json['id'], name: json['name']);
-  }
-}
-
-class Job {
-  final String id;
-  final String name;
-
-  Job({required this.id, required this.name});
-
-  factory Job.fromJson(Map<String, dynamic> json) {
-    return Job(id: json['id'], name: json['name']);
   }
 }

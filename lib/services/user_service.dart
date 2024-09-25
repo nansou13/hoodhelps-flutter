@@ -1,3 +1,5 @@
+import 'package:hoodhelps/services/job_service.dart';
+
 class UserService {
   String? id;
   String? username;
@@ -10,6 +12,7 @@ class UserService {
   String? role;
   String? phoneNumber;
   List<Group> groups;
+  List<Job> jobs;
   String currentGroupId;
 
   UserService({
@@ -24,6 +27,7 @@ class UserService {
     this.role,
     this.phoneNumber,
     this.groups = const [], // Par défaut, la liste des groupes est vide.
+    this.jobs = const [], // Par défaut, la liste des jobs est vide.
     this.currentGroupId = '',
   });
 
@@ -73,6 +77,36 @@ class UserService {
 
   void removeUserGroup(String groupId) {
     groups.removeWhere((group) => group.id == groupId);
+  }
+  void addUserJobs(List<dynamic> jobData) {
+    jobs = jobData.map((data) => Job.fromJson(data)).toList();
+  }
+  void addNewJob(String jobId, String jobName, String? description, int? experienceYears) {
+  final newJob = Job(
+    id: jobId,
+    name: jobName,
+    description: description ?? '', // Valeur par défaut si la description est null
+    experience_years: experienceYears ?? 0, // Valeur par défaut si les années d'expérience sont null
+  );
+
+  jobs.add(newJob); // Ajoute le nouveau job à la liste
+}
+
+  void updateUserJob(String jobId, String? newDescription, int? newExperienceYears) {
+    for (var i = 0; i < jobs.length; i++) {
+      if (jobs[i].id == jobId) {
+        jobs[i] = Job(
+          id: jobs[i].id, 
+          name: jobs[i].name, 
+          description: newDescription ?? jobs[i].description, 
+          experience_years: newExperienceYears ?? jobs[i].experience_years,
+        );
+        break;
+      }
+    }
+  }
+  void removeUserJobs(String jobId) {
+    jobs.removeWhere((job) => job.id == jobId);
   }
 
   void setCurrentGroupId(String groupId) {

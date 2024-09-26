@@ -1,13 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:hoodhelps/constants.dart';
 import 'package:hoodhelps/route_constants.dart';
+import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/jobs_provider.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hoodhelps/services/user_service.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -29,31 +28,30 @@ class _SplashScreenState extends State<SplashScreen> {
       final jobsProvider = Provider.of<JobsProvider>(context, listen: false);
       await jobsProvider.fetchJobs();
 
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? userToken = prefs.getString('user_token');
+      final userToken = await ApiService().getToken();
 
       if (userToken == null) {
         _navigateToLogin();
         return;
       }
 
-      await _fetchUserData(userToken);
+      await _fetchUserData();
     } catch (e) {
       NotificationService.showError(context, "Une erreur s'est produite : $e");
       _navigateToLogin();
     }
   }
 
-  Future<void> _fetchUserData(String userToken) async {
+  Future<void> _fetchUserData() async {
     try {
-      final userResponse = await _getUserData(userToken);
+      final userResponse = await _getUserData();
       if (userResponse.statusCode == 200) {
         final userData = jsonDecode(userResponse.body);
         final userService = Provider.of<UserService>(context, listen: false);
         userService.updateUser(userData);
 
-        await _fetchUserGroups(userToken, userService);
-        await _fetchUserJobs(userToken, userService);
+        await _fetchUserGroups(userService);
+        await _fetchUserJobs(userService);
 
         _navigateToLobby();
       } else {
@@ -64,17 +62,15 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
-  Future<http.Response> _getUserData(String token) {
-    return http.get(
-      Uri.parse('$routeAPI/api/users/me'),
-      headers: {'Authorization': 'Bearer $token'},
-    );
+  Future<http.Response> _getUserData() {
+    return ApiService().get('/users/me', useToken: true, context: context);
   }
 
-  Future<void> _fetchUserGroups(String token, UserService userService) async {
-    final responseGroups = await http.get(
-      Uri.parse('$routeAPI/api/users/groups'),
-      headers: {'Authorization': 'Bearer $token'},
+  Future<void> _fetchUserGroups(UserService userService) async {
+    final responseGroups = await ApiService().get(
+      '/users/groups',
+      useToken: true,
+      context: context,
     );
 
     if (responseGroups.statusCode == 200) {
@@ -88,13 +84,13 @@ class _SplashScreenState extends State<SplashScreen> {
       throw Exception("Erreur lors du chargement des groupes");
     }
   }
-  Future<void> _fetchUserJobs(String token, UserService userService) async {
-      final responseJob = await http.get(
-        Uri.parse('$routeAPI/api/users/me/job'),
-        headers: {'Authorization': 'Bearer $token'},
-      );
-      if (responseJob.statusCode == 200) {
-        final userJobData = jsonDecode(responseJob.body);
+
+  Future<void> _fetchUserJobs(UserService userService) async {
+    final responseJob = await ApiService()
+        .get('/users/me/job', useToken: true, context: context);
+
+    if (responseJob.statusCode == 200) {
+      final userJobData = jsonDecode(responseJob.body);
       userService.addUserJobs(userJobData);
     } else {
       throw Exception("Erreur lors du chargement des groupes");
@@ -102,15 +98,18 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _navigateToLogin() {
+  WidgetsBinding.instance.addPostFrameCallback((_) {
     Navigator.of(context).pushReplacementNamed(RouteConstants.registerLogin);
-  }
+  });
+}
 
-  void _navigateToLobby() {
-    Navigator.of(context, rootNavigator: true).pushNamed(
-      RouteConstants.lobby,
-      arguments: [],
-    );
-  }
+void _navigateToLobby() {
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    Navigator.of(context).pushReplacementNamed(RouteConstants.lobby);
+  });
+}
+
+  
 
   @override
   Widget build(BuildContext context) {

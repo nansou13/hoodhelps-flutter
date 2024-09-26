@@ -2,17 +2,16 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:hoodhelps/custom_colors.dart';
+import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
 import 'package:image/image.dart' as img;
 import 'package:firebase_storage/firebase_storage.dart'; // Importez cette bibliothèque
 import 'package:image_picker/image_picker.dart'; // Importez cette bibliothèque
 import 'package:flutter/material.dart';
-import 'package:hoodhelps/constants.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 class EditAvatar extends StatefulWidget {
   const EditAvatar({Key? key}) : super(key: key);
@@ -34,16 +33,14 @@ class _EditAvatarState extends State<EditAvatar> {
   }
 
   Future<void> updateImage() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userToken = prefs.getString('user_token');
-
     try {
-      final response =
-          await http.put(Uri.parse('$routeAPI/api/users/me'), body: {
-        'image_url': imageUrl,
-      }, headers: {
-        'Authorization': 'Bearer $userToken'
-      });
+      final response = await ApiService().put(
+        '/users/me',
+        body: {
+          'image_url': imageUrl,
+        },
+        useToken: true,
+      );
 
       final data = jsonDecode(response.body);
       if (response.statusCode == 200) {
@@ -140,8 +137,7 @@ class _EditAvatarState extends State<EditAvatar> {
     FirebaseStorage storage =
         FirebaseStorage.instanceFor(bucket: 'gs://hoodhelps.appspot.com');
 
-    final fileName =
-        'profile_image_${userID}.jpg';
+    final fileName = 'profile_image_${userID}.jpg';
 
     final profileImageRef = storage.ref().child('users').child(fileName);
     final uploadTask = profileImageRef.putFile(resizedFile);
@@ -168,7 +164,6 @@ class _EditAvatarState extends State<EditAvatar> {
           Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                
               ),
               child: Stack(children: <Widget>[
                 CircleAvatar(
@@ -211,16 +206,6 @@ class _EditAvatarState extends State<EditAvatar> {
                   ),
                 ),
               ])),
-          // const SizedBox(height: 10),
-          // Center(
-          //   child: ElevatedButton(
-          //     onPressed: () async {
-          //       await _pickImage();
-          //       await _uploadImageToFirebase();
-          //     },
-          //     child: Text(translationService.translate('UPDATE_MY_PICTURE')),
-          //   ),
-          // ),
         ],
       ),
     );

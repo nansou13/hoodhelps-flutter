@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:hoodhelps/Containers/Widgets/job_badge_widget.dart';
 import 'package:hoodhelps/Containers/Widgets/template_two_blocks.dart';
 import 'package:hoodhelps/Containers/Widgets/user_avatar_box.dart';
-import 'package:hoodhelps/constants.dart';
 import 'package:hoodhelps/custom_colors.dart';
+import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -34,7 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
   // Fetch user info and jobs asynchronously
   Future<Map<String, dynamic>> _fetchUserData() async {
     try {
-      final response = await http.get(Uri.parse('$routeAPI/api/users/$userID'));
+      final response = await ApiService().get('/users/$userID');
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
@@ -102,7 +101,8 @@ class _ProfilePageState extends State<ProfilePage> {
           return Scaffold(
             backgroundColor: FigmaColors.lightLight4,
             appBar: genericAppBar(
-              appTitle: FunctionUtils.getUserName(userInfo), // Affiche le username
+              appTitle:
+                  FunctionUtils.getUserName(userInfo), // Affiche le username
               context: context,
             ),
             body: Padding(

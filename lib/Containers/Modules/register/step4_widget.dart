@@ -5,14 +5,12 @@ import 'package:hoodhelps/Containers/Widgets/template_two_blocks.dart';
 import 'package:hoodhelps/Containers/Widgets/textfield_widget.dart';
 import 'package:hoodhelps/custom_colors.dart';
 import 'package:hoodhelps/route_constants.dart';
+import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../constants.dart';
 
 class Step4Widget extends StatefulWidget {
   final Function nextStepCallback;
@@ -42,16 +40,16 @@ class _Step4WidgetState extends State<Step4Widget> {
       return;
     }
     try {
-      final response =
-          await http.get(Uri.parse('$routeAPI/api/groups/code/$groupeCode'));
+      final response = await ApiService().get('/groups/code/$groupeCode');
       switch (response.statusCode) {
         case 200:
           final codeID = json.decode(response.body)['id'];
           try {
-            final addUserInGroup = await http
-                .post(Uri.parse('$routeAPI/api/groups/$codeID/user'), body: {
-              "user_id": userID,
-            });
+            final addUserInGroup = await ApiService().post(
+              '/groups/$codeID/user',
+              body: {"user_id": userID},
+            );
+
             final data = jsonDecode(response.body);
 
             if (addUserInGroup.statusCode == 201) {
@@ -85,34 +83,30 @@ class _Step4WidgetState extends State<Step4Widget> {
   Widget build(BuildContext context) {
     final translationService = context.read<TranslationService>();
     return genericSafeAreaTwoBlocks(
-      middleChild: Column(children: [
+        middleChild: Column(children: [
           ProgressBarWithCounter(currentStep: 4, totalSteps: 4),
-            const SizedBox(height: 30.0),
+          const SizedBox(height: 30.0),
           Image.asset(
             'assets/join_group.png',
             fit: BoxFit.cover,
-            width: MediaQuery.of(context).size.width ,
+            width: MediaQuery.of(context).size.width,
           ),
-          
-      
-        const SizedBox(height: 14.0),
+          const SizedBox(height: 14.0),
           Text(
             translationService.translate('STEP4_DESCRIPTION'),
             style: FigmaTextStyles().body14pt.copyWith(
-              color: FigmaColors.darkDark2,
-            ),
+                  color: FigmaColors.darkDark2,
+                ),
           ),
           const SizedBox(height: 34.0),
           buildTextField(
-            controller: _codeController, 
-            hintText: translationService.translate('HINT_TEXT_ENTER_CODE'), 
+            controller: _codeController,
+            hintText: translationService.translate('HINT_TEXT_ENTER_CODE'),
             labelText: translationService.translate('HINT_TEXT_ENTER_CODE'),
             key: 'codeField',
-
           ),
-      ]), 
-      bottomChild: 
-      Column(
+        ]),
+        bottomChild: Column(
           children: [
             buildButton(
               onPressed: _codeController.text.isEmpty ? null : fetchGroupeInfo,
@@ -128,12 +122,8 @@ class _Step4WidgetState extends State<Step4Widget> {
               text: translationService.translate('SKIP_BUTTON'),
             ),
           ],
-        )
-      
-    );
-    
-    
-    
+        ));
+
     // Column(
     //   crossAxisAlignment: CrossAxisAlignment.center,
     //   mainAxisAlignment: MainAxisAlignment.spaceBetween,

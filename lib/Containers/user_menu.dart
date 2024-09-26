@@ -73,6 +73,7 @@ class _UserMenu extends State<UserMenu> {
                                       context: context,
                                       icon: Icons.card_travel,
                                       text: 'Mes métiers',
+                                      hasNotification: user.jobs.length == 0,
                                       onTap: () {
                                         Navigator.of(context,
                                                 rootNavigator: true)
@@ -158,6 +159,7 @@ class _UserMenu extends State<UserMenu> {
     required String text,
     required VoidCallback onTap,
     Color? iconColor,
+    bool hasNotification = false,
   }) {
     return InkWell(
       onTap: onTap,
@@ -176,6 +178,21 @@ class _UserMenu extends State<UserMenu> {
                   style: FigmaTextStyles()
                       .body16pt
                       .copyWith(color: FigmaColors.darkDark0)),
+
+              if(hasNotification)
+              Row(
+                  children: [
+                    SizedBox(width: 10),
+                     Container(
+                    width: 12, // Taille du cercle rouge
+                    height: 12,
+                    decoration: BoxDecoration(
+                      color: FigmaColors.primaryPrimary0, // Couleur du cercle
+                      shape: BoxShape.circle, // Forme du badge
+                    ),
+                  ),
+                  ]
+                )
             ],
           ),
           Icon(

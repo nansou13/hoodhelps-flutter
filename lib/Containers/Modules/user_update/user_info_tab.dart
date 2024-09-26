@@ -2,15 +2,14 @@ import 'dart:convert';
 
 import 'package:hoodhelps/Containers/Widgets/textfield_widget.dart';
 import 'package:hoodhelps/route_constants.dart';
+import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
 import 'package:hoodhelps/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:hoodhelps/constants.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 class EditUserInfoPage extends StatefulWidget {
   const EditUserInfoPage({Key? key}) : super(key: key);
@@ -47,7 +46,8 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
       String? userToken = prefs.getString('user_token');
 
       if (userToken == null) {
-        Navigator.of(context).pushReplacementNamed(RouteConstants.registerLogin);
+        Navigator.of(context)
+            .pushReplacementNamed(RouteConstants.registerLogin);
         return;
       }
 
@@ -81,19 +81,16 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
     final phone = phoneController.text;
     final email = emailController.text;
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userToken = prefs.getString('user_token');
-
     try {
-      final response =
-          await http.put(Uri.parse('$routeAPI/api/users/me'), body: {
-        'first_name': firstname,
-        'last_name': lastname,
-        'email': email,
-        'phone_number': phone,
-      }, headers: {
-        'Authorization': 'Bearer $userToken'
-      });
+      final response = await ApiService().put('/users/me',
+          useToken: true,
+          body: {
+            'first_name': firstname,
+            'last_name': lastname,
+            'email': email,
+            'phone_number': phone,
+          },
+          context: context);
 
       final data = jsonDecode(response.body);
       if (response.statusCode == 200) {

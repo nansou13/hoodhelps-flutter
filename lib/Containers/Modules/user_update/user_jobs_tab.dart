@@ -2,14 +2,12 @@ import 'dart:convert';
 
 import 'package:hoodhelps/Containers/Widgets/add_job_widget.dart';
 import 'package:hoodhelps/route_constants.dart';
+import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/icons_service.dart';
 import 'package:flutter/material.dart';
-import 'package:hoodhelps/constants.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 class EditUserJobsPage extends StatefulWidget {
   const EditUserJobsPage({Key? key}) : super(key: key);
@@ -36,17 +34,17 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
 
   Future<void> loadData() async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? userToken = prefs.getString('user_token');
+      final userToken = await ApiService().getToken();
 
       if (userToken == null) {
-        Navigator.of(context).pushReplacementNamed(RouteConstants.registerLogin);
+        Navigator.of(context)
+            .pushReplacementNamed(RouteConstants.registerLogin);
         return;
       }
       //recupere les jobs du users
-      final responseJob = await http.get(
-        Uri.parse('$routeAPI/api/users/me/job'),
-        headers: {'Authorization': 'Bearer $userToken'},
+      final responseJob = await ApiService().get(
+        '/users/me/job',
+        useToken: true,
       );
       if (responseJob.statusCode == 200) {
         final userJobData = jsonDecode(responseJob.body);
@@ -57,7 +55,8 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
         });
         return;
       } else {
-        Navigator.of(context).pushReplacementNamed(RouteConstants.registerLogin);
+        Navigator.of(context)
+            .pushReplacementNamed(RouteConstants.registerLogin);
         return;
       }
     } catch (e) {
@@ -67,16 +66,11 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
   }
 
   Future<void> updateJob(jobID, description, experience_years) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userToken = prefs.getString('user_token');
-
     try {
       final response =
-          await http.put(Uri.parse('$routeAPI/api/users/me/job/$jobID'), body: {
+          await ApiService().put('/users/me/job/$jobID', useToken: true, body: {
         'description': description,
         'experience_years': experience_years.toString(),
-      }, headers: {
-        'Authorization': 'Bearer $userToken'
       });
 
       final data = jsonDecode(response.body);
@@ -113,14 +107,9 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
   }
 
   Future<void> deleteJob(jobID) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userToken = prefs.getString('user_token');
-
     try {
-      final response = await http.delete(
-          Uri.parse('$routeAPI/api/users/me/job/$jobID'),
-          headers: {'Authorization': 'Bearer $userToken'});
-
+      final response = await ApiService()
+          .delete('/users/me/job/$jobID', useToken: true, context: context);
       if (response.statusCode == 204) {
         // Si la requête réussit (statut 200), analyser la réponse JSON
 

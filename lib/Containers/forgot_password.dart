@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:hoodhelps/Containers/Widgets/button_widget.dart';
 import 'package:hoodhelps/Containers/Widgets/template_two_blocks.dart';
 import 'package:hoodhelps/Containers/Widgets/textfield_widget.dart';
-import 'package:hoodhelps/constants.dart';
 import 'package:hoodhelps/custom_colors.dart';
 import 'package:hoodhelps/route_constants.dart';
+import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class ForgotPassword extends StatefulWidget {
@@ -35,10 +34,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       return;
     }
     try {
-      final response = await http
-          .post(Uri.parse('$routeAPI/api/users/request-password-reset'), body: {
-        'email': userEmail,
-      });
+      final response = await ApiService().post('/users/request-password-reset',
+          body: {'email': userEmail}, context: context);
+
       switch (response.statusCode) {
         case 200:
           Navigator.of(context, rootNavigator: true)

@@ -5,14 +5,12 @@ import 'package:hoodhelps/Containers/Widgets/template_two_blocks.dart';
 import 'package:hoodhelps/Containers/Widgets/textfield_widget.dart';
 import 'package:hoodhelps/custom_colors.dart';
 import 'package:hoodhelps/route_constants.dart';
+import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/firebase_messaging_service.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../constants.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -36,14 +34,11 @@ class _LoginPageState extends State<LoginPage> {
       var firebaseMessagingService = FirebaseMessagingService();
       String? fcmToken = await firebaseMessagingService.getToken();
 
-      final response = await http.post(
-        Uri.parse('$routeAPI/api/users/login'),
-        body: {
-          'username': _usernameController.text,
-          'password': _passwordController.text,
-          'token_notification': fcmToken,
-        },
-      );
+      final response = await ApiService().post('/users/login', body: {
+        'username': _usernameController.text,
+        'password': _passwordController.text,
+        'token_notification': fcmToken,
+      });
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

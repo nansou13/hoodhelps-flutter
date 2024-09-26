@@ -48,7 +48,6 @@ class _LobbyPage extends State<LobbyPage> {
     try {
       return groups.firstWhere((group) => group.id == groupId);
     } catch (e) {
-      print("Groupe non trouvé");
       return null;
     }
   }
@@ -63,7 +62,7 @@ class _LobbyPage extends State<LobbyPage> {
         getGroupById(groupId, groups); // Obtenir le groupId mis à jour
 
     return Scaffold(
-      backgroundColor: FigmaColors.darkDark0, // Fond noir pour toute la page
+      backgroundColor: FigmaColors.darkDark0,// Fond noir pour toute la page
       body: Stack(
         children: [
           // Image en arrière-plan en haut
@@ -242,6 +241,9 @@ class _LobbyPage extends State<LobbyPage> {
   }
 
   Widget _buildLobbyTop(BuildContext context, String userName) {
+    final user = Provider.of<UserService>(context, listen: false);
+    final jobs = user.jobs;
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
       child: Row(
@@ -253,35 +255,53 @@ class _LobbyPage extends State<LobbyPage> {
                   color: FigmaColors.lightLight4,
                 ),
           ),
-          _buildProfileIcon(context),
+          _buildProfileIcon(context, hasNotification: jobs.length == 0),
         ],
       ),
     );
   }
 
-  Widget _buildProfileIcon(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.of(context, rootNavigator: true)
-            .pushNamed(RouteConstants.userMenu);
-      },
-      child: Container(
-        width: 50,
-        height: 50,
-        decoration: BoxDecoration(
-          color: FigmaColors.darkDark1,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Center(
-          child: Icon(
-            Icons.person,
-            color: Colors.white,
-            size: 25,
+  Widget _buildProfileIcon(BuildContext context, {bool hasNotification = true}) {
+  return GestureDetector(
+    onTap: () {
+      Navigator.of(context, rootNavigator: true)
+          .pushNamed(RouteConstants.userMenu);
+    },
+    child: Stack(
+      clipBehavior: Clip.none, // Permet d'afficher la notification hors du Container si besoin
+      children: [
+        Container(
+          width: 50,
+          height: 50,
+          decoration: BoxDecoration(
+            color: FigmaColors.darkDark1,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Center(
+            child: Icon(
+              Icons.person,
+              color: Colors.white,
+              size: 25,
+            ),
           ),
         ),
-      ),
-    );
-  }
+        if (hasNotification) // Ajout de la condition pour afficher ou non la notification
+          Positioned(
+            top: -2,
+            right: -2,
+            child: Container(
+              width: 12, // Taille du cercle rouge
+              height: 12,
+              decoration: BoxDecoration(
+                color: FigmaColors.primaryPrimary0, // Couleur du cercle
+                shape: BoxShape.circle, // Forme du badge
+              ),
+            ),
+          ),
+      ],
+    ),
+  );
+}
 
   Widget _buildGroupCarousel(List<Group> groups) {
     return SizedBox(

@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:hoodhelps/constants.dart';
+import 'package:hoodhelps/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 const String jobsCacheKey = 'jobs_cache';
 const String jobsCacheTimeKey = 'jobs_cache_time';
@@ -38,8 +37,7 @@ class JobsProvider extends ChangeNotifier {
 
   Future<List<dynamic>?> _fetchJobsFromApi() async {
     try {
-      final response =
-          await http.get(Uri.parse('$routeAPI/api/categories/jobs'));
+      final response = await ApiService().get('/categories/jobs');
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         return data;

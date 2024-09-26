@@ -1,7 +1,6 @@
 import 'dart:convert';
-import 'package:hoodhelps/constants.dart';
+import 'package:hoodhelps/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 const String categoryDataKey = 'categoryData';
 const String cacheTimeKey = 'cacheTime';
@@ -30,7 +29,7 @@ class CategoriesService {
 
     try {
       final responseCategory =
-          await http.get(Uri.parse('$routeAPI/api/categories/group/$groupId'));
+          await ApiService().get('/categories/group/$groupId');
       if (responseCategory.statusCode == 200) {
         final data = jsonDecode(responseCategory.body);
         await cacheCategoryData(data, groupId);
@@ -65,7 +64,7 @@ class CategoriesService {
 
     try {
       final responseCategory =
-          await http.get(Uri.parse('$routeAPI/api/categories/$groupId/users'));
+          await ApiService().get('/categories/$groupId/users');
       if (responseCategory.statusCode == 200) {
         final usersData = jsonDecode(responseCategory.body);
         var processedUsers = <String, Map<String, dynamic>>{};
@@ -89,7 +88,7 @@ class CategoriesService {
         }
 
         var usersList = processedUsers.values.toList();
-        
+
         await cacheCategoryDataList(usersList, groupId);
         return usersList;
       }

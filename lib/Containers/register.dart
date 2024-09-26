@@ -16,7 +16,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  int _currentStep = 2; // Étape actuelle du registre
+  int _currentStep = 1; // Étape actuelle du registre
   String appBarTitle = 'Création de compte';
   void _nextStep() {
     setState(() {

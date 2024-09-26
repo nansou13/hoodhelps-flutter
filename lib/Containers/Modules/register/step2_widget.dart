@@ -3,6 +3,7 @@ import 'package:hoodhelps/Containers/Modules/register/progress_bar_widget.dart';
 import 'package:hoodhelps/Containers/Widgets/button_widget.dart';
 import 'package:hoodhelps/Containers/Widgets/template_two_blocks.dart';
 import 'package:hoodhelps/Containers/Widgets/textfield_widget.dart';
+import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:image/image.dart' as img;
 import 'package:firebase_storage/firebase_storage.dart'; // Importez cette bibliothèque
@@ -12,11 +13,8 @@ import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:intl/intl.dart';
 import 'package:hoodhelps/utils.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../constants.dart';
 
 class Step2Widget extends StatefulWidget {
   final Function nextStepCallback; // Ajoutez ce paramètre
@@ -172,19 +170,16 @@ class _Step2WidgetState extends State<Step2Widget> {
         FunctionUtils.capitalizeFirstLetter(lastNameController.text);
     final phone = phoneController.text;
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userToken = prefs.getString('user_token');
-
     try {
-      final response =
-          await http.put(Uri.parse('$routeAPI/api/users/me'), body: {
-        'first_name': firstname,
-        'last_name': lastname,
-        'phone_number': phone,
-        'image_url': imageUrl,
-      }, headers: {
-        'Authorization': 'Bearer $userToken'
-      });
+      final response = await ApiService().put('/users/me',
+          useToken: true,
+          body: {
+            'first_name': firstname,
+            'last_name': lastname,
+            'phone_number': phone,
+            'image_url': imageUrl,
+          },
+          context: context);
 
       final data = jsonDecode(response.body);
       if (response.statusCode == 200) {

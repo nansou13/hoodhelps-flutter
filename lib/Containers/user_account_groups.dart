@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:hoodhelps/Containers/Widgets/avatar_stack.dart';
 import 'package:hoodhelps/Containers/Widgets/button_widget.dart';
 import 'package:hoodhelps/Containers/Widgets/template_two_blocks.dart';
-import 'package:hoodhelps/constants.dart';
 import 'package:hoodhelps/custom_colors.dart';
 import 'package:hoodhelps/route_constants.dart';
+import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
 import 'package:hoodhelps/utils.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 class UserAccountGroups extends StatefulWidget {
   const UserAccountGroups({Key? key}) : super(key: key);
@@ -22,7 +20,7 @@ class UserAccountGroups extends StatefulWidget {
 
 class _UserAccountGroupsState extends State<UserAccountGroups> {
   bool isMiniLoading = false;
-  
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserService>(context, listen: false);
@@ -37,7 +35,9 @@ class _UserAccountGroupsState extends State<UserAccountGroups> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                ...groups.map((group) => _buildGroupBlock(context, group)).toList(),
+                ...groups
+                    .map((group) => _buildGroupBlock(context, group))
+                    .toList(),
                 SizedBox(height: 25),
                 buildButton(
                     text: translationService.translate('JOIN_A_GROUP'),
@@ -77,23 +77,27 @@ class _UserAccountGroupsState extends State<UserAccountGroups> {
                       .stylizedMedium
                       .copyWith(color: FigmaColors.darkDark0),
                   maxLines: 1, // Limite à 2 lignes
-                  overflow:
-                      TextOverflow.ellipsis, // Affiche "..." si le texte dépasse
+                  overflow: TextOverflow
+                      .ellipsis, // Affiche "..." si le texte dépasse
                 ),
               ),
               SizedBox(width: 50),
-              IconButton(onPressed: () async {
-                await deleteGroup(group.id);
-              }, 
-              icon: Icon(Icons.delete, color: FigmaColors.darkDark0, size: 20))
-              
+              IconButton(
+                  onPressed: () async {
+                    await deleteGroup(group.id);
+                  },
+                  icon: Icon(Icons.delete,
+                      color: FigmaColors.darkDark0, size: 20))
             ],
           ),
           SizedBox(height: 12),
           Row(
             children: [
               Expanded(
-                child: AvatarStack(users: buildUserAvatarList(group.users), TextColor: FigmaColors.darkDark2,),
+                child: AvatarStack(
+                  users: buildUserAvatarList(group.users),
+                  TextColor: FigmaColors.darkDark2,
+                ),
               ),
               Text("${group.users.length} membres",
                   style: FigmaTextStyles()
@@ -122,16 +126,13 @@ class _UserAccountGroupsState extends State<UserAccountGroups> {
 
   Future<void> deleteGroup(groupID) async {
     final user = Provider.of<UserService>(context, listen: false);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userToken = prefs.getString('user_token');
     setState(() {
       isMiniLoading = true;
     });
 
     try {
-      final response = await http.delete(
-          Uri.parse('$routeAPI/api/users/me/group/$groupID'),
-          headers: {'Authorization': 'Bearer $userToken'});
+      final response = await ApiService()
+          .delete('/users/me/group/$groupID', useToken: true, context: context);
 
       if (response.statusCode == 204) {
         // Si la requête réussit (statut 200), analyser la réponse JSON

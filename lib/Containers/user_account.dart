@@ -4,15 +4,14 @@ import 'package:hoodhelps/Containers/Modules/user_update/circle_avatar_update.da
 import 'package:hoodhelps/Containers/Widgets/button_widget.dart';
 import 'package:hoodhelps/Containers/Widgets/template_two_blocks.dart';
 import 'package:hoodhelps/Containers/Widgets/textfield_widget.dart';
-import 'package:hoodhelps/constants.dart';
 import 'package:hoodhelps/custom_colors.dart';
 import 'package:hoodhelps/route_constants.dart';
+import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
 import 'package:hoodhelps/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 class UserAccount extends StatefulWidget {
   const UserAccount({Key? key}) : super(key: key);
@@ -77,19 +76,16 @@ class _UserAccountState extends State<UserAccount> {
     final phone = phoneController.text;
     final email = emailController.text;
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userToken = prefs.getString('user_token');
-
     try {
-      final response =
-          await http.put(Uri.parse('$routeAPI/api/users/me'), body: {
-        'first_name': firstname,
-        'last_name': lastname,
-        'email': email,
-        'phone_number': phone,
-      }, headers: {
-        'Authorization': 'Bearer $userToken'
-      });
+      final response = await ApiService().put('/users/me',
+          useToken: true,
+          body: {
+            'first_name': firstname,
+            'last_name': lastname,
+            'email': email,
+            'phone_number': phone,
+          },
+          context: context);
 
       final data = jsonDecode(response.body);
       if (response.statusCode == 200) {

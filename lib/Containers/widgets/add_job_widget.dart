@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:hoodhelps/services/icons_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../constants.dart';
 
 class AddJobWidget extends StatefulWidget {
   final Function saveJobCallback;
@@ -39,7 +36,7 @@ class _AddJobWidgetState extends State<AddJobWidget> {
   }
 
   Future<void> loadCategories() async {
-    final response = await http.get(Uri.parse('$routeAPI/api/categories/'));
+    final response = await ApiService().get('/categories/');
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = json.decode(response.body);
       setState(() {
@@ -53,8 +50,7 @@ class _AddJobWidgetState extends State<AddJobWidget> {
   }
 
   Future<void> loadJobsForCategory(String categoryId) async {
-    final response =
-        await http.get(Uri.parse('$routeAPI/api/categories/$categoryId'));
+    final response = await ApiService().get('/categories/$categoryId');
     if (response.statusCode == 200) {
       final resultJson = json.decode(response.body);
       final List<dynamic> jsonData = resultJson['professions_list'];
@@ -67,18 +63,16 @@ class _AddJobWidgetState extends State<AddJobWidget> {
   }
 
   Future<void> saveUserJobData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userToken = prefs.getString('user_token');
-
     try {
-      final response =
-          await http.post(Uri.parse('$routeAPI/api/users/me/job'), body: {
-        "profession_id": selectedJobId,
-        "description": description,
-        "experience_years": experienceYears.toString(),
-      }, headers: {
-        'Authorization': 'Bearer $userToken'
-      });
+      final response = await ApiService().post(
+        '/users/me/job',
+        body: {
+          "profession_id": selectedJobId,
+          "description": description,
+          "experience_years": experienceYears.toString(),
+        },
+        useToken: true,
+      );
       final data = jsonDecode(response.body);
       if (response.statusCode == 201) {
         // Si la requête réussit (statut 200), analyser la réponse JSON
@@ -113,7 +107,8 @@ class _AddJobWidgetState extends State<AddJobWidget> {
             },
             readOnly: true,
             decoration: InputDecoration(
-              hintText: translationService.translate('HINT_TEXT_SELECT_CATEGORY'),
+              hintText:
+                  translationService.translate('HINT_TEXT_SELECT_CATEGORY'),
             ),
             controller: TextEditingController(
               text: translationService.translate(categories
@@ -154,7 +149,8 @@ class _AddJobWidgetState extends State<AddJobWidget> {
               });
             },
             decoration: InputDecoration(
-              hintText: translationService.translate('HINT_TEXT_ADD_DESCRIPTION'),
+              hintText:
+                  translationService.translate('HINT_TEXT_ADD_DESCRIPTION'),
             ),
             enabled: selectedJobId != null,
           ),

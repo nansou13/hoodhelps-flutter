@@ -3,18 +3,16 @@ import 'package:hoodhelps/Containers/Modules/register/progress_bar_widget.dart';
 import 'package:hoodhelps/Containers/Widgets/button_widget.dart';
 import 'package:hoodhelps/Containers/Widgets/template_two_blocks.dart';
 import 'package:hoodhelps/Containers/Widgets/textfield_widget.dart';
+import 'package:hoodhelps/color_mapping.dart';
 import 'package:hoodhelps/custom_colors.dart';
+import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/categories_service.dart';
 import 'package:hoodhelps/services/job_service.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:hoodhelps/services/icons_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../constants.dart';
 
 class Step3Widget extends StatefulWidget {
   final Function nextStepCallback;
@@ -46,7 +44,7 @@ class _Step3WidgetState extends State<Step3Widget> {
   }
 
   Future<void> loadCategories() async {
-    final response = await http.get(Uri.parse('$routeAPI/api/categories/'));
+    final response = await ApiService().get('/categories');
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = json.decode(response.body);
       setState(() {
@@ -60,8 +58,7 @@ class _Step3WidgetState extends State<Step3Widget> {
   }
 
   Future<void> loadJobsForCategory(String categoryId) async {
-    final response =
-        await http.get(Uri.parse('$routeAPI/api/categories/$categoryId'));
+    final response = await ApiService().get('/categories/$categoryId');
     if (response.statusCode == 200) {
       final resultJson = json.decode(response.body);
       final List<dynamic> jsonData = resultJson['professions_list'];
@@ -74,18 +71,18 @@ class _Step3WidgetState extends State<Step3Widget> {
   }
 
   Future<void> saveUserJobData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userToken = prefs.getString('user_token');
-
     try {
-      final response =
-          await http.post(Uri.parse('$routeAPI/api/users/me/job'), body: {
-        "profession_id": selectedJobId,
-        "description": descriptionController.text,
-        "experience_years": experienceYears.toString(),
-      }, headers: {
-        'Authorization': 'Bearer $userToken'
-      });
+      final response = await ApiService().post(
+        '/users/me/job',
+        body: {
+          "profession_id": selectedJobId,
+          "description": descriptionController.text,
+          "experience_years": experienceYears.toString(),
+        },
+        useToken: true,
+        context: context,
+      );
+
       final data = jsonDecode(response.body);
       if (response.statusCode == 201) {
         // Si la requête réussit (statut 200), analyser la réponse JSON
@@ -213,42 +210,70 @@ class _Step3WidgetState extends State<Step3Widget> {
       builder: (BuildContext context) {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: categories.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      title: Row(
-                        children: [
-                          Icon(IconsExtension.getIconData(categories[index]
-                              .name)), // Affichez l'icône ici à gauche
-                          const SizedBox(
-                              width:
-                                  10), // Ajoutez un espace entre l'icône et le texte
-                          Expanded(
-                            child: Text(
-                              translationService
-                                  .translate(categories[index].name),
-                              softWrap:
-                                  true, // Permet au texte de passer à la ligne si nécessaire
-                            ),
-                          ),
-                        ],
-                      ),
-                      onTap: () async {
-                        Navigator.of(context).pop(categories[index]);
-                        await loadJobsForCategory(categories[index].id);
-                        setState(() {
-                          isJobTextFieldEnabled = true;
-                        });
-                      },
-                    );
-                  },
-                ),
+          child: Container(
+            padding: const EdgeInsets.all(12.0),
+            decoration: const BoxDecoration(
+              color: FigmaColors.lightLight4,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15.0),
+                topRight: Radius.circular(15.0),
               ),
-            ],
+            ),
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: categories.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                        title: Row(
+                          children: [
+                            Container(
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color:
+                                    getColorByCategoryId(categories[index].id),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  IconsExtension.getIconData(
+                                      categories[index].name),
+                                  color: FigmaColors.lightLight4,
+                                  size: 18,
+                                ),
+                              ),
+                            ), // Affichez l'icône ici à gauche
+                            const SizedBox(
+                                width:
+                                    10), // Ajoutez un espace entre l'icône et le texte
+                            Expanded(
+                              child: Text(
+                                translationService
+                                    .translate(categories[index].name),
+                                style: FigmaTextStyles()
+                                    .body16pt
+                                    .copyWith(color: FigmaColors.darkDark0),
+                                softWrap:
+                                    true, // Permet au texte de passer à la ligne si nécessaire
+                              ),
+                            ),
+                          ],
+                        ),
+                        onTap: () async {
+                          Navigator.of(context).pop(categories[index]);
+                          await loadJobsForCategory(categories[index].id);
+                          setState(() {
+                            isJobTextFieldEnabled = true;
+                          });
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -271,39 +296,67 @@ class _Step3WidgetState extends State<Step3Widget> {
       builder: (BuildContext context) {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: jobs.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      title: Row(
-                        children: [
-                          Icon(IconsExtension.getIconData(jobs[index]
-                              .name)), // Affichez l'icône ici à gauche
-                          const SizedBox(
-                              width:
-                                  10), // Ajoutez un espace entre l'icône et le texte
-                          Expanded(
-                            child: Text(
-                              translationService.translate(jobs[index].name),
-                              softWrap:
-                                  true, // Permet au texte de passer à la ligne si nécessaire
-                            ),
-                          ),
-                        ],
-                      ),
-                      // title: Text(translationService.translate(jobs[index].name)),
-                      onTap: () {
-                        Navigator.of(context)
-                            .pop(jobs[index]); // Sélection de l'emploi
-                      },
-                    );
-                  },
-                ),
+          child: Container(
+            padding: const EdgeInsets.all(12.0),
+            decoration: const BoxDecoration(
+              color: FigmaColors.lightLight4,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15.0),
+                topRight: Radius.circular(15.0),
               ),
-            ],
+            ),
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: jobs.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                        title: Row(
+                          children: [
+                            Container(
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: getColorByJobId(jobs[index].id),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  IconsExtension.getIconData(jobs[index].name),
+                                  color: FigmaColors.lightLight4,
+                                  size: 18,
+                                ),
+                              ),
+                            ),
+
+                            // Affichez l'icône ici à gauche
+                            const SizedBox(
+                                width:
+                                    10), // Ajoutez un espace entre l'icône et le texte
+                            Expanded(
+                              child: Text(
+                                translationService.translate(jobs[index].name),
+                                style: FigmaTextStyles()
+                                    .body16pt
+                                    .copyWith(color: FigmaColors.darkDark0),
+                                softWrap:
+                                    true, // Permet au texte de passer à la ligne si nécessaire
+                              ),
+                            ),
+                          ],
+                        ),
+                        // title: Text(translationService.translate(jobs[index].name)),
+                        onTap: () {
+                          Navigator.of(context)
+                              .pop(jobs[index]); // Sélection de l'emploi
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

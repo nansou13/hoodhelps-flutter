@@ -4,16 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:hoodhelps/Containers/Widgets/job_badge_widget.dart';
 import 'package:hoodhelps/Containers/Widgets/template_two_blocks.dart';
 import 'package:hoodhelps/Containers/Widgets/user_avatar_box.dart';
-import 'package:hoodhelps/constants.dart';
 import 'package:hoodhelps/custom_colors.dart';
 import 'package:hoodhelps/route_constants.dart';
+import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/categories_service.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
 import 'package:hoodhelps/utils.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 
 class CategoryJobUsersMainListPage extends StatefulWidget {
   const CategoryJobUsersMainListPage({Key? key}) : super(key: key);
@@ -51,10 +50,10 @@ class _CategoryJobUsersMainListPage
       final user = context.read<UserService>();
       final CategoriesService categoriesService = CategoriesService();
 
-        setState(() {
-          categoryId = arguments[0].toString();
-          jobId = arguments[1].toString();
-        });
+      setState(() {
+        categoryId = arguments[0].toString();
+        jobId = arguments[1].toString();
+      });
 
       final groupId = user.currentGroupId;
 
@@ -71,9 +70,6 @@ class _CategoryJobUsersMainListPage
         _showError('Job data not found');
         return;
       }
-
-      await http.get(
-          Uri.parse('$routeAPI/api/categories/$groupId/jobs/$jobId/users'));
 
       await _fetchUsersData(groupId, jobId!);
       setState(() {
@@ -122,7 +118,8 @@ class _CategoryJobUsersMainListPage
       child: SingleChildScrollView(
         child: Column(
           children: usersData.map<Widget>((user) {
-            final reorderedJobs = _reorderJobIds(user['profession_ids'] as List<dynamic>, jobId!);
+            final reorderedJobs =
+                _reorderJobIds(user['profession_ids'] as List<dynamic>, jobId!);
             return _buildUserCard(user, reorderedJobs);
           }).toList(),
         ),
@@ -171,11 +168,15 @@ class _CategoryJobUsersMainListPage
           children: [
             Text(
               FunctionUtils.getUserName(user),
-              style: FigmaTextStyles().body16pt.copyWith(color: FigmaColors.darkDark0),
+              style: FigmaTextStyles()
+                  .body16pt
+                  .copyWith(color: FigmaColors.darkDark0),
             ),
             Text(
               '${user['experience_years']} année${user['experience_years'] > 1 ? 's' : ''} d\'expérience',
-              style: FigmaTextStyles().body14pt.copyWith(color: FigmaColors.darkDark2),
+              style: FigmaTextStyles()
+                  .body14pt
+                  .copyWith(color: FigmaColors.darkDark2),
             ),
           ],
         ),
@@ -201,7 +202,8 @@ class _CategoryJobUsersMainListPage
     );
   }
 
-  Future<Map<String, dynamic>?> _getCategoryData(CategoriesService categoriesService, String groupId) async {
+  Future<Map<String, dynamic>?> _getCategoryData(
+      CategoriesService categoriesService, String groupId) async {
     final data = await categoriesService.getCacheCategoryData(groupId);
     return data.firstWhere(
       (category) => category['id'] == categoryId,
@@ -209,7 +211,8 @@ class _CategoryJobUsersMainListPage
     );
   }
 
-  Map<String, dynamic>? _getJobDataFromCategory(Map<String, dynamic> categoryData) {
+  Map<String, dynamic>? _getJobDataFromCategory(
+      Map<String, dynamic> categoryData) {
     final professions = categoryData['professions'] as List<dynamic>?;
     return professions?.firstWhere(
       (job) => job['profession_id'] == jobId,
@@ -218,7 +221,10 @@ class _CategoryJobUsersMainListPage
   }
 
   Future<void> _fetchUsersData(String groupId, String jobId) async {
-    final response = await http.get(Uri.parse('$routeAPI/api/categories/$groupId/jobs/$jobId/users'));
+    final response = await ApiService().get(
+      '/categories/$groupId/jobs/$jobId/users',
+      context: context,
+    );
 
     if (response.statusCode == 200) {
       setState(() {

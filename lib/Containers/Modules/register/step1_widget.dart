@@ -3,15 +3,13 @@ import 'package:hoodhelps/Containers/Modules/register/progress_bar_widget.dart';
 import 'package:hoodhelps/Containers/Widgets/button_widget.dart';
 import 'package:hoodhelps/Containers/Widgets/template_two_blocks.dart';
 import 'package:hoodhelps/Containers/Widgets/textfield_widget.dart';
+import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'dart:convert';
 import 'dart:core';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../constants.dart';
 
 class Step1Widget extends StatefulWidget {
   final Function nextStepCallback; // Ajoutez ce paramètre
@@ -110,14 +108,11 @@ class _Step1WidgetState extends State<Step1Widget> {
     }
 
     try {
-      final response = await http.post(
-        Uri.parse('$routeAPI/api/users/register'),
-        body: {
-          'username': username,
-          'email': email,
-          'password': password,
-        },
-      );
+      final response = await ApiService().post('/users/register', body: {
+        'username': username,
+        'email': email,
+        'password': password,
+      });
 
       if (response.statusCode == 201) {
         final data = jsonDecode(response.body);

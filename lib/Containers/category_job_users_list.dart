@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hoodhelps/Containers/Widgets/job_badge_widget.dart';
 import 'package:hoodhelps/Containers/Widgets/template_two_blocks.dart';
 import 'package:hoodhelps/Containers/Widgets/user_avatar_box.dart';
@@ -119,7 +120,7 @@ class _CategoryJobUsersMainListPage
         child: Column(
           children: usersData.map<Widget>((user) {
             final reorderedJobs =
-                _reorderJobIds(user['profession_ids'] as List<dynamic>, jobId!);
+                _reorderJobs(user['professions'] as List<dynamic>, jobId!);
             return _buildUserCard(user, reorderedJobs);
           }).toList(),
         ),
@@ -149,7 +150,7 @@ class _CategoryJobUsersMainListPage
           children: <Widget>[
             _buildUserInfoRow(user),
             const SizedBox(height: 12),
-            _buildJobBadges(jobs),
+            _buildJobBadges(jobs, isPro: user['pro'] ?? false),
             const SizedBox(height: 12),
             _buildUserDescription(user),
           ],
@@ -178,20 +179,45 @@ class _CategoryJobUsersMainListPage
                   .body14pt
                   .copyWith(color: FigmaColors.darkDark2),
             ),
+            if(user['pro'] == true)
+            Row(
+              children: [
+                SvgPicture.asset(
+            'assets/icons/building.svg',
+                  width: 15,
+                  height: 15,
+                  semanticsLabel: 'Pro',
+                  colorFilter: ColorFilter.mode(
+                    FigmaColors.darkDark2,
+                    BlendMode.srcIn,
+                  ),
+                ),
+                const SizedBox(width: 4),
+              Text(
+                '${user['company_name']}',
+                style: FigmaTextStyles()
+                    .body14pt
+                    .copyWith(color: FigmaColors.darkDark2),
+              ),
+              ],
+            ),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildJobBadges(List<dynamic> jobs) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: jobs.map((job) => JobBadge(job_id: job)).toList(),
-      ),
-    );
-  }
+  Widget _buildJobBadges(List<dynamic> jobs, {bool isPro = false}) {
+  return SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: Row(
+      children: jobs.map((job) => JobBadge(
+        job_id: job['profession_id'], // Accéder à l'ID de la profession
+        isPro: job['pro'], // Accéder à la valeur pro
+      )).toList(),
+    ),
+  );
+}
 
   Widget _buildUserDescription(Map<String, dynamic> user) {
     return Text(
@@ -235,7 +261,10 @@ class _CategoryJobUsersMainListPage
     }
   }
 
-  List<dynamic> _reorderJobIds(List<dynamic> professionIds, String jobId) {
-    return [jobId, ...professionIds.where((id) => id != jobId)];
-  }
+  List<dynamic> _reorderJobs(List<dynamic> professions, String jobId) {
+  return [
+    professions.firstWhere((job) => job['profession_id'] == jobId, orElse: () => null),
+    ...professions.where((job) => job['profession_id'] != jobId)
+  ].where((job) => job != null).toList();
+}
 }

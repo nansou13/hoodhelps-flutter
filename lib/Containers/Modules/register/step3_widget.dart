@@ -29,7 +29,9 @@ class _Step3WidgetState extends State<Step3Widget> {
   Job? selectedJob;
   String? selectedJobId;
   final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController companyNameController = TextEditingController();
   int experienceYears = 0; // Valeur initiale du curseur
+  bool isPro = false;
 
   List<Category> categories = [];
   List<Job> jobs = [];
@@ -78,6 +80,8 @@ class _Step3WidgetState extends State<Step3Widget> {
           "profession_id": selectedJobId,
           "description": descriptionController.text,
           "experience_years": experienceYears.toString(),
+          "pro": isPro,
+          "company_name": companyNameController.text,
         },
         useToken: true,
         context: context,
@@ -149,7 +153,66 @@ class _Step3WidgetState extends State<Step3Widget> {
                 labelText: translationService.translate('HINT_TEXT_SELECT_JOB'),
                 key: "selectJobField",
               ),
-
+            // Années d'expérience
+                if (selectedJobId != null)
+                  Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Text(
+                          '${translationService.translate("EXPERIENCE")}: ${experienceYears == 10 ? '10+' : experienceYears.toString()} ${translationService.translate("YEARS")}',
+                          style: FigmaTextStyles()
+                              .body16pt
+                              .copyWith(color: FigmaColors.darkDark0),
+                        ),
+                      ),
+                      Expanded(
+                        child: Slider(
+                          value: experienceYears.toDouble(),
+                          onChanged: (value) {
+                            if (selectedJobId != null) {
+                              setState(() {
+                                experienceYears = value.toInt();
+                              });
+                            }
+                          },
+                          min: 0,
+                          max: 10,
+                          divisions: 10,
+                        ),
+                      ),
+                    ],
+                  ),
+                  if(selectedJobId != null)
+                  Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 15),
+                        child: Text(
+                          'Je suis à mon compte :',
+                          style: FigmaTextStyles()
+                              .body16pt
+                              .copyWith(color: FigmaColors.darkDark0),
+                        ),
+                      ),
+                      SizedBox(width: 12),
+                      Switch(
+                        value: isPro,
+                        onChanged: (value) {
+                          setState(() {
+                            isPro = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  if (isPro)
+                  buildTextField(
+                    controller: companyNameController,
+                    hintText: 'Nom de l\'entreprise',
+                    labelText: 'Nom de l\'entreprise',
+                    key: 'companyNameField',
+                  ),
             const SizedBox(height: 10),
             if (selectedJobId != null)
               buildTextField(
@@ -162,29 +225,6 @@ class _Step3WidgetState extends State<Step3Widget> {
                     translationService.translate('HINT_TEXT_ADD_DESCRIPTION'),
                 key: "descriptionField",
               ),
-            const SizedBox(height: 20),
-            if (selectedJobId != null)
-              Row(children: <Widget>[
-                Text(
-                  '${translationService.translate("EXPERIENCE")}: ${experienceYears == 10 ? '10+' : experienceYears.toString()} ${translationService.translate("YEARS")}',
-                  style: const TextStyle(color: FigmaColors.primaryPrimary0),
-                ),
-                Expanded(
-                  child: Slider(
-                    value: experienceYears.toDouble(),
-                    onChanged: (value) {
-                      if (selectedJobId != null) {
-                        setState(() {
-                          experienceYears = value.toInt();
-                        });
-                      }
-                    },
-                    min: 0,
-                    max: 10,
-                    divisions: 10,
-                  ),
-                ),
-              ]),
           ],
         ),
         bottomChild: Column(

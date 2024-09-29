@@ -94,7 +94,7 @@ class UserListDisplay extends StatelessWidget {
               child: Row(
                 children: [
                   ...(user['jobs'] ?? []).map((job) {
-                    return JobBadge(job_id: job);
+                    return JobBadge(job_id: job['profession_id'], isPro: job['pro']);
                   }).toList(),
                 ],
               ),

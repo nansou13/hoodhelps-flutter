@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hoodhelps/Containers/Widgets/job_badge_widget.dart';
 import 'package:hoodhelps/Containers/Widgets/template_two_blocks.dart';
 import 'package:hoodhelps/Containers/Widgets/user_avatar_box.dart';
@@ -172,7 +173,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  JobBadge(job_id: job['id']),
+                  JobBadge(job_id: job['id'], isPro: job['pro'] ?? false),
                   const SizedBox(height: 6),
                   Text(
                     '${job['experience_years']} année${job['experience_years'] > 1 ? 's' : ''} d\'expérience',
@@ -180,6 +181,28 @@ class _ProfilePageState extends State<ProfilePage> {
                         .body14pt
                         .copyWith(color: FigmaColors.darkDark2),
                   ),
+                  if(job['pro'] == true)
+            Row(
+              children: [
+                SvgPicture.asset(
+            'assets/icons/building.svg',
+                  width: 15,
+                  height: 15,
+                  semanticsLabel: 'Pro',
+                  colorFilter: ColorFilter.mode(
+                    FigmaColors.darkDark2,
+                    BlendMode.srcIn,
+                  ),
+                ),
+                const SizedBox(width: 4),
+              Text(
+                '${job['company_name']}',
+                style: FigmaTextStyles()
+                    .body14pt
+                    .copyWith(color: FigmaColors.darkDark2),
+              ),
+              ],
+            ),
                   const SizedBox(height: 12),
                   Text(
                     job['description'] ?? '',

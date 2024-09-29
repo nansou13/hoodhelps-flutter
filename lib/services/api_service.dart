@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/constants.dart';
 import 'package:hoodhelps/route_constants.dart';
@@ -11,12 +13,14 @@ class ApiService {
       {Map<String, String>? headers,
       BuildContext? context = null,
       bool? useToken = false}) async {
+    headers = headers ?? {};
+    headers.putIfAbsent('Content-Type', () => 'application/json');
+
     if (useToken == true) {
       String? token = await getToken();
-      headers = (headers ?? {})
-        ..addAll({
-          'Authorization': 'Bearer $token',
-        });
+      if (token != null) {
+        headers['Authorization'] = 'Bearer $token';
+      }
     }
     final response =
         await http.get(Uri.parse('$_baseUrl$endpoint'), headers: headers);
@@ -28,18 +32,21 @@ class ApiService {
       {Map<String, String>? headers,
       Object? body,
       BuildContext? context = null,
-      bool? useToken = false}) async {
-    if (useToken == true) {
+      bool useToken = false}) async {
+    headers = headers ?? {};
+    headers.putIfAbsent('Content-Type', () => 'application/json');
+
+    if (useToken) {
       String? token = await getToken();
-      headers = (headers ?? {})
-        ..addAll({
-          'Authorization': 'Bearer $token',
-        });
+      if (token != null) {
+        headers['Authorization'] = 'Bearer $token';
+      }
     }
+    
     final response = await http.post(
       Uri.parse('$_baseUrl$endpoint'),
       headers: headers,
-      body: body,
+      body: jsonEncode(body),
     );
     _checkForErrors(response, context);
     return response;
@@ -49,18 +56,28 @@ class ApiService {
       {Map<String, String>? headers,
       Object? body,
       BuildContext? context = null,
-      bool? useToken = false}) async {
-    if (useToken == true) {
+      bool useToken = false}) async {
+    // if (useToken == true) {
+    //   String? token = await getToken();
+    //   headers = (headers ?? {})
+    //     ..addAll({
+    //       'Authorization': 'Bearer $token',
+    //     });
+    // }
+    headers = headers ?? {};
+    headers.putIfAbsent('Content-Type', () => 'application/json');
+
+    if (useToken) {
       String? token = await getToken();
-      headers = (headers ?? {})
-        ..addAll({
-          'Authorization': 'Bearer $token',
-        });
+      if (token != null) {
+        headers['Authorization'] = 'Bearer $token';
+      }
     }
+
     final response = await http.put(
       Uri.parse('$_baseUrl$endpoint'),
       headers: headers,
-      body: body,
+      body: jsonEncode(body),
     );
     _checkForErrors(response, context);
     return response;
@@ -70,12 +87,14 @@ class ApiService {
       {Map<String, String>? headers,
       BuildContext? context,
       bool? useToken = false}) async {
+    headers = headers ?? {};
+    headers.putIfAbsent('Content-Type', () => 'application/json');
+
     if (useToken == true) {
       String? token = await getToken();
-      headers = (headers ?? {})
-        ..addAll({
-          'Authorization': 'Bearer $token',
-        });
+      if (token != null) {
+        headers['Authorization'] = 'Bearer $token';
+      }
     }
     final response = await http.delete(
       Uri.parse('$_baseUrl$endpoint'),

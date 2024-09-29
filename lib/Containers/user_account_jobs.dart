@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hoodhelps/Containers/Widgets/button_widget.dart';
 import 'package:hoodhelps/Containers/Widgets/job_badge_widget.dart';
 import 'package:hoodhelps/Containers/Widgets/template_two_blocks.dart';
@@ -80,7 +81,7 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
                 fit: FlexFit.loose,
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  child: JobBadge(job_id: job.id),
+                  child: JobBadge(job_id: job.id, isPro: job.isPro),
                 ),
               ),
               IconButton(
@@ -98,6 +99,28 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
                 .body14pt
                 .copyWith(color: FigmaColors.darkDark2),
           ),
+          if(job.isPro == true)
+            Row(
+              children: [
+                SvgPicture.asset(
+            'assets/icons/building.svg',
+                  width: 15,
+                  height: 15,
+                  semanticsLabel: 'Pro',
+                  colorFilter: ColorFilter.mode(
+                    FigmaColors.darkDark2,
+                    BlendMode.srcIn,
+                  ),
+                ),
+                const SizedBox(width: 4),
+              Text(
+                '${job.company_name}',
+                style: FigmaTextStyles()
+                    .body14pt
+                    .copyWith(color: FigmaColors.darkDark2),
+              ),
+              ],
+            ),
           SizedBox(height: 12),
           Text(
             job.description,
@@ -124,7 +147,7 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {
             return FractionallySizedBox(
-              heightFactor: 0.85,
+              heightFactor: 0.90,
               child: Container(
                 padding: const EdgeInsets.all(12.0),
                 decoration: const BoxDecoration(
@@ -163,6 +186,10 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
   void _showAddJobModal(BuildContext context) {
     final translationService = context.read<TranslationService>();
     TextEditingController descriptionController = TextEditingController();
+      TextEditingController companyNameController =
+      TextEditingController();
+      bool isPro = false;
+
     String? selectedCategoryId;
     String? selectedJobId;
     int experienceYears = 0; // Valeur initiale du curseur
@@ -200,7 +227,9 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
         return Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
+            Expanded(child: 
+              SingleChildScrollView(
+                child:     Column(
               children: [
                 // Sélection de catégorie
                 buildTextField(
@@ -264,21 +293,7 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
                         translationService.translate('HINT_TEXT_SELECT_JOB'),
                     key: "selectJobField",
                   ),
-                const SizedBox(height: 10),
-
-                // Description du métier
-                if (selectedJobId != null)
-                  buildTextField(
-                    controller: descriptionController,
-                    maxLine: 5,
-                    minLine: 2,
-                    hintText: translationService
-                        .translate('HINT_TEXT_ADD_DESCRIPTION'),
-                    labelText: translationService
-                        .translate('HINT_TEXT_ADD_DESCRIPTION'),
-                    key: "descriptionField",
-                  ),
-                const SizedBox(height: 10),
+                   const SizedBox(height: 10),
 
                 // Années d'expérience
                 if (selectedJobId != null)
@@ -308,9 +323,57 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
                       ),
                     ],
                   ),
+                  if(selectedJobId != null)
+                  Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 15),
+                        child: Text(
+                          'Je suis à mon compte :',
+                          style: FigmaTextStyles()
+                              .body16pt
+                              .copyWith(color: FigmaColors.darkDark0),
+                        ),
+                      ),
+                      SizedBox(width: 12),
+                      Switch(
+                        value: isPro,
+                        onChanged: (value) {
+                          setModalState(() {
+                            isPro = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  if (isPro)
+                  buildTextField(
+                    controller: companyNameController,
+                    hintText: 'Nom de l\'entreprise',
+                    labelText: 'Nom de l\'entreprise',
+                    key: 'companyNameField',
+                  ),
+                const SizedBox(height: 10),
+
+                // Description du métier
+                if (selectedJobId != null)
+                  buildTextField(
+                    controller: descriptionController,
+                    maxLine: 5,
+                    minLine: 2,
+                    hintText: translationService
+                        .translate('HINT_TEXT_ADD_DESCRIPTION'),
+                    labelText: translationService
+                        .translate('HINT_TEXT_ADD_DESCRIPTION'),
+                    key: "descriptionField",
+                  ),
+               
               ],
             ),
 
+              )
+            ),
+        
             // Boutons d'action
             Column(
               children: [
@@ -318,20 +381,13 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
                   onPressed: selectedJobId != null
                       ? () async {
                           await saveUserJobData(selectedJobId,
-                              descriptionController.text, experienceYears);
+                              descriptionController.text, experienceYears, isPro, companyNameController.text);
                           Navigator.pop(context);
                         }
                       : null,
                   text: 'Ajouter',
                 ),
-                const SizedBox(height: 12),
-                buildButton(
-                  variant: 'secondary',
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  text: 'Annuler',
-                ),
+               
               ],
             )
           ],
@@ -341,7 +397,7 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
   }
 
   Future<void> saveUserJobData(
-      String? selectedJobId, String description, int experienceYears) async {
+      String? selectedJobId, String description, int experienceYears, isPro, company_name) async {
     final jobsProvider = Provider.of<JobsProvider>(context, listen: false);
 
     final user = Provider.of<UserService>(context, listen: false);
@@ -353,6 +409,8 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
             "profession_id": selectedJobId,
             "description": description,
             "experience_years": experienceYears.toString(),
+            "pro": isPro,
+            "company_name": company_name,
           },
           context: context);
 
@@ -366,7 +424,7 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
 
         if (selectedJobId != null) {
           user.addNewJob(
-              selectedJobId, jobName['name'], description, experienceYears);
+              selectedJobId, jobName['name'], description, experienceYears, isPro, company_name);
         }
         setState(() {});
 
@@ -523,102 +581,141 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
   }
 
   void _showEditModal(BuildContext context, Job job) {
-    final translationService = context.read<TranslationService>();
+  final translationService = context.read<TranslationService>();
 
-    // Variables locales
-    int experienceYears = job.experience_years;
-    TextEditingController jobNameController =
-        TextEditingController(text: translationService.translate(job.name));
-    TextEditingController descriptionController =
-        TextEditingController(text: job.description);
+  // Variables locales
+  int experienceYears = job.experience_years;
+  TextEditingController jobNameController =
+      TextEditingController(text: translationService.translate(job.name));
+  TextEditingController descriptionController =
+      TextEditingController(text: job.description);
+  TextEditingController companyNameController =
+      TextEditingController(text: job.company_name);
+  bool isPro = job.isPro;
 
-    _mainModalBottomSheet(
-      context: context,
-      title: 'Modifier ${translationService.translate(job.name)}',
-      builder: (StateSetter setModalState) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                buildTextField(
-                  controller: jobNameController,
-                  readOnly: true,
-                  hintText: job.name,
-                  labelText: 'Votre métier',
-                  key: 'jobNameField',
-                ),
-                SizedBox(height: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(left: 15),
-                      child: Text(
-                        '${translationService.translate("EXPERIENCE")}: ${experienceYears == 10 ? '10+' : experienceYears.toString()} ${translationService.translate("YEARS")}',
-                        style: FigmaTextStyles()
-                            .body16pt
-                            .copyWith(color: FigmaColors.darkDark0),
+  _mainModalBottomSheet(
+    context: context,
+    title: 'Modifier ${translationService.translate(job.name)}',
+    builder: (StateSetter setModalState) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                children: [
+                  buildTextField(
+                    controller: jobNameController,
+                    readOnly: true,
+                    hintText: job.name,
+                    labelText: 'Votre métier',
+                    key: 'jobNameField',
+                  ),
+                  SizedBox(height: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(left: 15),
+                        child: Text(
+                          '${translationService.translate("EXPERIENCE")}: ${experienceYears == 10 ? '10+' : experienceYears.toString()} ${translationService.translate("YEARS")}',
+                          style: FigmaTextStyles()
+                              .body16pt
+                              .copyWith(color: FigmaColors.darkDark0),
+                        ),
                       ),
+                      Slider(
+                        value: experienceYears.toDouble(),
+                        onChanged: (value) {
+                          setModalState(() {
+                            experienceYears = value.toInt();
+                          });
+                        },
+                        min: 0,
+                        max: 10,
+                        divisions: 10,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 15),
+                        child: Text(
+                          'Je suis à mon compte :',
+                          style: FigmaTextStyles()
+                              .body16pt
+                              .copyWith(color: FigmaColors.darkDark0),
+                        ),
+                      ),
+                      SizedBox(width: 12),
+                      Switch(
+                        value: isPro,
+                        onChanged: (value) {
+                          setModalState(() {
+                            isPro = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  if (isPro)
+                    buildTextField(
+                      controller: companyNameController,
+                      hintText: 'Nom de l\'entreprise',
+                      labelText: 'Nom de l\'entreprise',
+                      key: 'companyNameField',
                     ),
-                    Slider(
-                      value: experienceYears.toDouble(),
-                      onChanged: (value) {
-                        setModalState(() {
-                          experienceYears = value.toInt();
-                        });
-                      },
-                      min: 0,
-                      max: 10,
-                      divisions: 10,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 12),
-                buildTextField(
-                  controller: descriptionController,
-                  maxLine: 5,
-                  minLine: 5,
-                  hintText:
-                      translationService.translate('HINT_TEXT_ADD_DESCRIPTION'),
-                  labelText:
-                      translationService.translate('HINT_TEXT_ADD_DESCRIPTION'),
-                  key: "descriptionField",
-                ),
-              ],
+                  SizedBox(height: 12),
+                  buildTextField(
+                    controller: descriptionController,
+                    maxLine: 5,
+                    minLine: 2,
+                    hintText: translationService
+                        .translate('HINT_TEXT_ADD_DESCRIPTION'),
+                    labelText: translationService
+                        .translate('HINT_TEXT_ADD_DESCRIPTION'),
+                    key: "descriptionField",
+                  ),
+                ],
+              ),
             ),
-            Column(
-              children: [
-                buildButton(
-                  onPressed: () async {
-                    // Logique de mise à jour ici
-                    await updateJob(
-                      job.id,
-                      descriptionController.text,
-                      experienceYears,
-                    );
-                    Navigator.pop(context);
-                  },
-                  text: 'Modifier',
-                ),
-                SizedBox(height: 12),
-                buildButton(
-                  variant: 'delete',
-                  onPressed: () async {
-                    await deleteJob(job.id);
-                    Navigator.pop(context);
-                  },
-                  text: 'Supprimer',
-                ),
-              ],
-            )
-          ],
-        );
-      },
-    );
-  }
+          ),
+          Column(
+            children: [
+              buildButton(
+                onPressed: () async {
+                  // Logique de mise à jour ici
+                  await updateJob(
+                    job.id,
+                    descriptionController.text,
+                    experienceYears,
+                    isPro,
+                    companyNameController.text,
+                  );
+                  Navigator.pop(context);
+                },
+                text: 'Modifier',
+              ),
+              SizedBox(height: 12),
+              buildButton(
+                variant: 'delete',
+                onPressed: () async {
+                  await deleteJob(job.id);
+                  Navigator.pop(context);
+                },
+                text: 'Supprimer',
+              ),
+            ],
+          )
+        ],
+      );
+    },
+  );
+}
 
-  Future<void> updateJob(jobID, description, experience_years) async {
+  Future<void> updateJob(jobID, description, experience_years, isPro, company_name) async {
     final user = Provider.of<UserService>(context, listen: false);
 
     try {
@@ -628,6 +725,8 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
         body: {
           'description': description,
           'experience_years': experience_years.toString(),
+          'pro': isPro,
+          'company_name': company_name,
         },
         context: context,
       );
@@ -635,7 +734,8 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
       final data = jsonDecode(response.body);
       if (response.statusCode == 200) {
         if (jobID != null) {
-          user.updateUserJob(jobID, description, experience_years);
+          user.updateUserJob(jobID, description, experience_years, isPro,
+              company_name);
         }
 
         NotificationService.showInfo(context, 'Mis à jour avec succès');

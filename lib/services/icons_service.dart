@@ -132,10 +132,3 @@ extension IconsExtension on Icons {
       }
   }
 }
-
-
-// Icon(
-//       IconsExtension.getIconData(iconName), // Utilisez une extension pour obtenir l'icône correspondante
-//       color: Colors.green,
-//       size: 30.0,
-//     ),

@@ -54,7 +54,7 @@ class _LobbyPage extends State<LobbyPage> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserService>(context, listen: false);
+    final user = Provider.of<UserService>(context, listen: true);
     final translationService = context.read<TranslationService>();
     final groups = user.groups;
     var groupId = user.currentGroupId;

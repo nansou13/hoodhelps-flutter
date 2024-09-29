@@ -22,7 +22,7 @@ class CategoriesService {
 
     if (cachedData != null && cacheTime != null) {
       final now = DateTime.now().millisecondsSinceEpoch;
-      if (now - cacheTime <= const Duration(minutes: 10).inMilliseconds) {
+      if (now - cacheTime <= const Duration(minutes: 1).inMilliseconds) {
         return jsonDecode(cachedData);
       }
     }
@@ -57,7 +57,7 @@ class CategoriesService {
 
     if (cachedData != null && cacheTime != null) {
       final now = DateTime.now().millisecondsSinceEpoch;
-      if (now - cacheTime <= const Duration(minutes: 10).inMilliseconds) {
+      if (now - cacheTime <= const Duration(minutes: 1).inMilliseconds) {
         return jsonDecode(cachedData);
       }
     }

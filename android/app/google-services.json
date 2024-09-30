@@ -9,13 +9,60 @@
       "client_info": {
         "mobilesdk_app_id": "1:790389788852:android:731466604327f4d31787e1",
         "android_client_info": {
-          "package_name": "com.example.hoodhelps"
+          "package_name": "com.nans.hoodhelps"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
           "current_key": "AIzaSyDozvbz46ieF5Bn-6cigemaSZ35_uxkDRc"
+        },
+        {
+          "current_key": "AIzaSyAK2OhA0__hvX-NDg8T107K-9iASRG96XQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:790389788852:android:4acd4309a09488381787e1",
+        "android_client_info": {
+          "package_name": "com.hoodhelps.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDozvbz46ieF5Bn-6cigemaSZ35_uxkDRc"
+        },
+        {
+          "current_key": "AIzaSyAK2OhA0__hvX-NDg8T107K-9iASRG96XQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:790389788852:android:5c71634ffa21e8cd1787e1",
+        "android_client_info": {
+          "package_name": "com.nans.hoodhelps"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDozvbz46ieF5Bn-6cigemaSZ35_uxkDRc"
+        },
+        {
+          "current_key": "AIzaSyAK2OhA0__hvX-NDg8T107K-9iASRG96XQ"
         }
       ],
       "services": {

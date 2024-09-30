@@ -1,3 +1,5 @@
+
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,13 +15,13 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({super.key});
 
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  ProfilePageState createState() => ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class ProfilePageState extends State<ProfilePage> {
   String userID = '';
   String jobID = '';
 
@@ -41,7 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
         throw Exception("Failed to load user data");
       }
     } catch (e) {
-      NotificationService.showError(context, "Erreur: ${e.toString()}");
+      NotificationService.showError( "Erreur: ${e.toString()}");
       throw Exception(e);
     }
   }
@@ -57,7 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
   // Generic launcher function
   Future<void> _launchUri(Uri uri) async {
     if (!await canLaunchUrl(uri)) {
-      ScaffoldMessenger.of(context)
+      ScaffoldMessenger.of(navigatorKey.currentContext!)
           .showSnackBar(SnackBar(content: Text("Error launching $uri")));
     } else {
       await launchUrl(uri);
@@ -71,9 +73,9 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Row(
         children: [
           Icon(icon, color: FigmaColors.darkDark0, size: 20),
-          SizedBox(width: 5.0),
+          const SizedBox(width: 5.0),
           Text(label,
-              style: FigmaTextStyles()
+              style: const FigmaTextStyles()
                   .body16pt
                   .copyWith(color: FigmaColors.darkDark2)),
         ],
@@ -113,10 +115,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   _buildProfileHeader(userInfo),
                   const SizedBox(height: 23.0),
-                  Divider(color: FigmaColors.lightLight2, thickness: 1),
+                  const Divider(color: FigmaColors.lightLight2, thickness: 1),
                   const SizedBox(height: 23.0),
                   Text('${translationService.translate("HINT_TEXT_JOB")}(s) :',
-                      style: FigmaTextStyles()
+                      style: const FigmaTextStyles()
                           .headingsh5
                           .copyWith(color: FigmaColors.darkDark0)),
                   const SizedBox(height: 10.0),
@@ -136,16 +138,16 @@ class _ProfilePageState extends State<ProfilePage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         UserAvatarBox(user: userInfo, size: 92.0),
-        SizedBox(height: 15.0),
+        const SizedBox(height: 15.0),
         _buildContactActionRow(Icons.email, userInfo['email'] ?? '',
             () => _launchUri(Uri(scheme: 'mailto', path: userInfo['email']))),
-        SizedBox(height: 7.0),
+        const SizedBox(height: 7.0),
         _buildContactActionRow(
             Icons.phone,
             FunctionUtils.formatPhoneNumber(userInfo['phone_number'] ?? ''),
             () =>
                 _launchUri(Uri(scheme: 'tel', path: userInfo['phone_number']))),
-        SizedBox(height: 7.0),
+        const SizedBox(height: 7.0),
         _buildContactActionRow(
             Icons.sms,
             "Envoyer un SMS",
@@ -173,11 +175,11 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  JobBadge(job_id: job['id'], isPro: job['pro'] ?? false),
+                  JobBadge(jobId: job['id'], isPro: job['pro'] ?? false),
                   const SizedBox(height: 6),
                   Text(
                     '${job['experience_years']} année${job['experience_years'] > 1 ? 's' : ''} d\'expérience',
-                    style: FigmaTextStyles()
+                    style: const FigmaTextStyles()
                         .body14pt
                         .copyWith(color: FigmaColors.darkDark2),
                   ),
@@ -189,7 +191,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   width: 15,
                   height: 15,
                   semanticsLabel: 'Pro',
-                  colorFilter: ColorFilter.mode(
+                  colorFilter: const ColorFilter.mode(
                     FigmaColors.darkDark2,
                     BlendMode.srcIn,
                   ),
@@ -197,7 +199,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(width: 4),
               Text(
                 '${job['company_name']}',
-                style: FigmaTextStyles()
+                style: const FigmaTextStyles()
                     .body14pt
                     .copyWith(color: FigmaColors.darkDark2),
               ),
@@ -206,7 +208,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SizedBox(height: 12),
                   Text(
                     job['description'] ?? '',
-                    style: FigmaTextStyles()
+                    style: const FigmaTextStyles()
                         .body16pt
                         .copyWith(color: FigmaColors.darkDark0),
                   ),

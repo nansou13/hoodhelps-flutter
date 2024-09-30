@@ -81,29 +81,29 @@ class UserService {
   void addUserJobs(List<dynamic> jobData) {
     jobs = jobData.map((data) => Job.fromJson(data)).toList();
   }
-  void addNewJob(String jobId, String jobName, String? description, int? experienceYears, bool? isPro, String? company_name) {
+  void addNewJob(String jobId, String jobName, String? description, int? experienceYears, bool? isPro, String? companyName) {
   final newJob = Job(
     id: jobId,
     name: jobName,
     description: description ?? '', // Valeur par défaut si la description est null
-    experience_years: experienceYears ?? 0, // Valeur par défaut si les années d'expérience sont null
+    experienceYears: experienceYears ?? 0, // Valeur par défaut si les années d'expérience sont null
     isPro: isPro ?? false, // Valeur par défaut si le booléen est null
-    company_name: company_name ?? '', // Valeur par défaut si le nom de l'entreprise est null
+    companyName: companyName ?? '', // Valeur par défaut si le nom de l'entreprise est null
   );
 
   jobs.add(newJob); // Ajoute le nouveau job à la liste
 }
 
-  void updateUserJob(String jobId, String? newDescription, int? newExperienceYears, bool? isPro, String? company_name) {
+  void updateUserJob(String jobId, String? newDescription, int? newExperienceYears, bool? isPro, String? companyName) {
     for (var i = 0; i < jobs.length; i++) {
       if (jobs[i].id == jobId) {
         jobs[i] = Job(
           id: jobs[i].id, 
           name: jobs[i].name, 
           description: newDescription ?? jobs[i].description, 
-          experience_years: newExperienceYears ?? jobs[i].experience_years,
+          experienceYears: newExperienceYears ?? jobs[i].experienceYears,
           isPro: isPro ?? jobs[i].isPro,
-          company_name: company_name ?? jobs[i].company_name,
+          companyName: companyName ?? jobs[i].companyName,
         );
         break;
       }

@@ -8,6 +8,7 @@ import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
+import 'package:hoodhelps/utils.dart';
 import 'dart:convert';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,14 +16,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Step4Widget extends StatefulWidget {
   final Function nextStepCallback;
 
-  const Step4Widget({Key? key, required this.nextStepCallback})
-      : super(key: key);
+  const Step4Widget({super.key, required this.nextStepCallback});
 
   @override
-  _Step4WidgetState createState() => _Step4WidgetState();
+  Step4WidgetState createState() => Step4WidgetState();
 }
 
-class _Step4WidgetState extends State<Step4Widget> {
+class Step4WidgetState extends State<Step4Widget> {
   final TextEditingController _codeController = CodeInputController();
 
   @override
@@ -36,7 +36,7 @@ class _Step4WidgetState extends State<Step4Widget> {
     final groupeCode = _codeController.text.toLowerCase();
     if (groupeCode.isEmpty) {
       NotificationService.showError(
-          context, "Veuillez saisir un code de groupe");
+          "Veuillez saisir un code de groupe");
       return;
     }
     try {
@@ -55,26 +55,26 @@ class _Step4WidgetState extends State<Step4Widget> {
             if (addUserInGroup.statusCode == 201) {
               // Si la requête réussit (statut 200), analyser la réponse JSON
 
-              Navigator.of(context).pushReplacementNamed(RouteConstants.splash);
+              Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(RouteConstants.splash);
             } else {
               // En cas d'échec de la requête, afficher un message d'erreur
               NotificationService.showError(
-                  context, "Échec ajout du user dans le groupe $data");
+                  "Échec ajout du user dans le groupe $data");
             }
           } catch (e) {
-            NotificationService.showError(context,
+            NotificationService.showError(
                 "Erreur lors de la récupération des données du serveur. ${e.toString()}");
           }
           break;
         case 401:
           NotificationService.showError(
-              context, json.decode(response.body)['error']);
+              json.decode(response.body)['error']);
           break;
         default:
-          NotificationService.showError(context, json.decode(response.body));
+          NotificationService.showError( json.decode(response.body));
       }
     } catch (e) {
-      NotificationService.showError(context,
+      NotificationService.showError(
           "Erreur lors de la récupération des données du serveur. ${e.toString()}");
     }
   }
@@ -84,7 +84,7 @@ class _Step4WidgetState extends State<Step4Widget> {
     final translationService = context.read<TranslationService>();
     return genericSafeAreaTwoBlocks(
         middleChild: Column(children: [
-          ProgressBarWithCounter(currentStep: 4, totalSteps: 4),
+          const ProgressBarWithCounter(currentStep: 4, totalSteps: 4),
           const SizedBox(height: 30.0),
           Image.asset(
             'assets/join_group.png',
@@ -94,7 +94,7 @@ class _Step4WidgetState extends State<Step4Widget> {
           const SizedBox(height: 14.0),
           Text(
             translationService.translate('STEP4_DESCRIPTION'),
-            style: FigmaTextStyles().body14pt.copyWith(
+            style: const FigmaTextStyles().body14pt.copyWith(
                   color: FigmaColors.darkDark2,
                 ),
           ),

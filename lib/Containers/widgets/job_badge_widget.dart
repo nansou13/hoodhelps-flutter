@@ -7,10 +7,10 @@ import 'package:hoodhelps/services/translation_service.dart';
 import 'package:provider/provider.dart';
 
 class JobBadge extends StatelessWidget {
-  final String job_id;
+  final String jobId;
   final bool isPro;
 
-  JobBadge({required this.job_id, bool this.isPro = false});
+  const JobBadge({super.key, required this.jobId, this.isPro = false});
 
   String getJobNameById(BuildContext context, String id) {
     final jobsProvider = Provider.of<JobsProvider>(context, listen: false);
@@ -29,9 +29,9 @@ class JobBadge extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 8.0), // Espacement entre les badges
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
         decoration: BoxDecoration(
-          color: getColorByJobId(job_id), // Fond du badge
+          color: getColorByJobId(jobId), // Fond du badge
           borderRadius: BorderRadius.circular(100), // Bordure arrondie
         ),
         child: 
@@ -39,8 +39,8 @@ class JobBadge extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
           Text(
-            getJobNameById(context, job_id),
-            style: FigmaTextStyles().stylizedLead.copyWith(
+            getJobNameById(context, jobId),
+            style: const FigmaTextStyles().stylizedLead.copyWith(
                   color: FigmaColors.lightLight4,
                 ),
           ),
@@ -50,7 +50,7 @@ class JobBadge extends StatelessWidget {
             width: 20,
             height: 20,
             semanticsLabel: 'Pro',
-            colorFilter: ColorFilter.mode(
+            colorFilter: const ColorFilter.mode(
               FigmaColors.lightLight4,
               BlendMode.srcIn,
             ),

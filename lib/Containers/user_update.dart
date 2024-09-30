@@ -7,13 +7,13 @@ import 'package:hoodhelps/services/translation_service.dart';
 import 'package:provider/provider.dart';
 
 class EditPage extends StatefulWidget {
-  const EditPage({Key? key}) : super(key: key);
+  const EditPage({super.key});
 
   @override
-  _EditPageState createState() => _EditPageState();
+  EditPageState createState() => EditPageState();
 }
 
-class _EditPageState extends State<EditPage> {
+class EditPageState extends State<EditPage> {
   int _selectedTabIndex = 0;
 
   void _onNavBarTapped(int index) {
@@ -26,7 +26,7 @@ class _EditPageState extends State<EditPage> {
   Widget build(BuildContext context) {
     final translationService = context.read<TranslationService>();
     return Scaffold(
-      backgroundColor: Color(0xFF2CC394),
+      backgroundColor: const Color(0xFF2CC394),
       body: Stack(
         children: [
           Column(

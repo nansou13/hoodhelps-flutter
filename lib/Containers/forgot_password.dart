@@ -7,16 +7,17 @@ import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
+import 'package:hoodhelps/utils.dart';
 import 'package:provider/provider.dart';
 
 class ForgotPassword extends StatefulWidget {
-  const ForgotPassword({Key? key}) : super(key: key);
+  const ForgotPassword({super.key});
 
   @override
-  _ForgotPasswordState createState() => _ForgotPasswordState();
+  ForgotPasswordState createState() => ForgotPasswordState();
 }
 
-class _ForgotPasswordState extends State<ForgotPassword> {
+class ForgotPasswordState extends State<ForgotPassword> {
   final TextEditingController _mailController = TextEditingController();
 
   @override
@@ -30,7 +31,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
     if (userEmail.isEmpty) {
       NotificationService.showError(
-          context, translationService.translate("NOTIF_PLEASE_ENTER_EMAIL"));
+          translationService.translate("NOTIF_PLEASE_ENTER_EMAIL"));
       return;
     }
     try {
@@ -39,18 +40,18 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
       switch (response.statusCode) {
         case 200:
-          Navigator.of(context, rootNavigator: true)
+          Navigator.of(navigatorKey.currentContext!, rootNavigator: true)
               .pushNamed(RouteConstants.forgotPasswordResetCode);
           break;
         case 404:
-          NotificationService.showError(context, response.body);
+          NotificationService.showError( response.body);
           break;
         default:
           NotificationService.showError(
-              context, 'Erreur serveur. ${response.body}');
+              'Erreur serveur. ${response.body}');
       }
     } catch (e) {
-      NotificationService.showError(context, "Erreur serveur. ${e.toString()}");
+      NotificationService.showError( "Erreur serveur. ${e.toString()}");
     }
   }
 
@@ -63,7 +64,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           Text(
             translationService.translate('FORGOT_PASSWORD_DESCRIPTION'),
             // textAlign: TextAlign.center,
-            style: FigmaTextStyles().body16pt.copyWith(
+            style: const FigmaTextStyles().body16pt.copyWith(
                   color: FigmaColors.darkDark0,
                 ),
           ),

@@ -7,8 +7,8 @@ Column buildTextField(
     String labelText = '',
     required String key,
     TextInputType keyboardType = TextInputType.text,
-    void onTap()?,
-    void onChanged(String)?,
+    void Function()? onTap,
+    void Function(String)? onChanged,
     bool readOnly = false,
     bool enabled = true,
     int maxLine = 1,
@@ -19,16 +19,16 @@ Column buildTextField(
     children: [
       if (labelText.isNotEmpty)
         Padding(
-          padding: EdgeInsets.only(left: 13),
+          padding: const EdgeInsets.only(left: 13),
           child: Text(
             labelText, // Le label affiché au-dessus du champ de texte
-            style: FigmaTextStyles().body16pt.copyWith(
+            style: const FigmaTextStyles().body16pt.copyWith(
                   color: FigmaColors.darkDark0,
                 ),
           ),
         ),
 
-      SizedBox(height: 4.0), // Un espace entre le label et le TextField
+      const SizedBox(height: 4.0), // Un espace entre le label et le TextField
       TextField(
         key: Key(key),
         enabled: enabled,
@@ -39,24 +39,24 @@ Column buildTextField(
         onChanged: onChanged,
         controller: controller,
         keyboardType: keyboardType,
-        style: FigmaTextStyles().body16pt.copyWith(
+        style: const FigmaTextStyles().body16pt.copyWith(
                   color: FigmaColors.darkDark0,
                 ),
         decoration: InputDecoration(
             fillColor: FigmaColors.darkDark4,
             // filled: true,
             hintText: hintText,
-            hintStyle: FigmaTextStyles().body16pt.copyWith(
+            hintStyle: const FigmaTextStyles().body16pt.copyWith(
                   color: FigmaColors.darkDark3,
                 ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                   color: FigmaColors.darkDark4, width: 1.0), // Bordure inactive
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                   color: FigmaColors.darkDark0,
                   width: 1.0), // Bordure rouge en focus
             ),

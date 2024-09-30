@@ -14,13 +14,13 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserAccount extends StatefulWidget {
-  const UserAccount({Key? key}) : super(key: key);
+  const UserAccount({super.key});
 
   @override
-  _UserAccountState createState() => _UserAccountState();
+  UserAccountState createState() => UserAccountState();
 }
 
-class _UserAccountState extends State<UserAccount> {
+class UserAccountState extends State<UserAccount> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController firstNameController = TextEditingController();
@@ -42,12 +42,12 @@ class _UserAccountState extends State<UserAccount> {
       String? userToken = prefs.getString('user_token');
 
       if (userToken == null) {
-        Navigator.of(context)
+        Navigator.of(navigatorKey.currentContext!)
             .pushReplacementNamed(RouteConstants.registerLogin);
         return;
       }
 
-      final userService = Provider.of<UserService>(context, listen: false);
+      final userService = Provider.of<UserService>(navigatorKey.currentContext!, listen: false);
       var userData = userService.getUser();
 
       setState(() {
@@ -61,7 +61,7 @@ class _UserAccountState extends State<UserAccount> {
       return;
     } catch (e) {
       // En cas d'erreur lors de la requête
-      NotificationService.showError(context, "Erreur: ${e.toString()}");
+      NotificationService.showError( "Erreur: ${e.toString()}");
     }
   }
 
@@ -94,17 +94,17 @@ class _UserAccountState extends State<UserAccount> {
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('user_token', data['accessToken']);
-        final userService = Provider.of<UserService>(context, listen: false);
+        final userService = Provider.of<UserService>(navigatorKey.currentContext!, listen: false);
         userService.updateUser(data);
 
-        NotificationService.showInfo(context, 'Mis à jour avec succès');
+        NotificationService.showInfo( 'Mis à jour avec succès');
       } else {
         // En cas d'échec de la requête, afficher un message d'erreur
-        NotificationService.showError(context, 'Échec de la mise à jour $data');
+        NotificationService.showError( 'Échec de la mise à jour $data');
       }
     } catch (e) {
       // En cas d'erreur lors de la requête
-      NotificationService.showError(context, 'Erreur: $e');
+      NotificationService.showError( 'Erreur: $e');
     }
     setState(() {
       isMiniLoading = false;
@@ -122,8 +122,8 @@ class _UserAccountState extends State<UserAccount> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                EditAvatar(),
-                SizedBox(height: 20),
+                const EditAvatar(),
+                const SizedBox(height: 20),
                 _buildInfoSection(
                   [
                     _userValue(
@@ -137,7 +137,7 @@ class _UserAccountState extends State<UserAccount> {
                     _userValue(title: 'Nom', controller: lastNameController),
                   ],
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 _buildInfoSection(
                   [
                     _userValue(title: 'E-Mail', controller: emailController),
@@ -168,12 +168,12 @@ class _UserAccountState extends State<UserAccount> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(title,
-                  style: FigmaTextStyles()
+                  style: const FigmaTextStyles()
                       .body14pt
                       .copyWith(color: FigmaColors.darkDark3)),
               Text(
                 value,
-                style: FigmaTextStyles()
+                style: const FigmaTextStyles()
                     .body16pt
                     .copyWith(color: FigmaColors.darkDark0),
               ),
@@ -212,13 +212,13 @@ class _UserAccountState extends State<UserAccount> {
               children: [
                 Center(
                   child: Text('Modifier $title',
-                      style: FigmaTextStyles()
+                      style: const FigmaTextStyles()
                           .stylizedMedium
                           .copyWith(color: FigmaColors.darkDark0)),
                 ),
-                SizedBox(height: 16),
-                Divider(color: FigmaColors.lightLight0, thickness: 1),
-                SizedBox(height: 25),
+                const SizedBox(height: 16),
+                const Divider(color: FigmaColors.lightLight0, thickness: 1),
+                const SizedBox(height: 25),
                 Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -232,7 +232,7 @@ class _UserAccountState extends State<UserAccount> {
                       buildButton(
                         onPressed: () async {
                           await updateUser();
-                          Navigator.pop(context);
+                          Navigator.pop(navigatorKey.currentContext!);
                         },
                         text: 'Enregistrer',
                       ),
@@ -260,7 +260,7 @@ class _UserAccountState extends State<UserAccount> {
   }
 
   Widget _buildDivider() {
-    return Column(
+    return const Column(
       children: [
         SizedBox(height: 8),
         Divider(

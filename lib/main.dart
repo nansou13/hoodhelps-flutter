@@ -6,6 +6,7 @@ import 'package:hoodhelps/custom_colors.dart';
 import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/jobs_provider.dart';
 import 'package:hoodhelps/services/navigation_provider.dart';
+import 'package:hoodhelps/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -68,7 +69,7 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +82,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: RouteConstants.splash,
       routes: _buildAppRoutes(),
+      navigatorKey: navigatorKey,
     );
   }
 

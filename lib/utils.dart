@@ -3,6 +3,8 @@ import 'package:hoodhelps/services/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 
+// Déclare un GlobalKey pour le NavigatorState
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 // Constantes pour les clés SharedPreferences
 const String userTokenKey = 'user_token';
 
@@ -12,7 +14,7 @@ class FunctionUtils {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool success = await prefs.setString(userTokenKey, '');
     if (success) {
-      Navigator.of(context, rootNavigator: true).pushReplacementNamed(RouteConstants.registerLogin);
+      Navigator.of(navigatorKey.currentContext!, rootNavigator: true).pushReplacementNamed(RouteConstants.registerLogin);
     } else {
       // Gérez l'erreur comme vous le souhaitez, peut-être en affichant un message d'erreur
     }

@@ -1,6 +1,5 @@
-package com.example.hoodhelps
+package com.nans.hoodhelps
 
 import io.flutter.embedding.android.FlutterActivity
 
-class MainActivity: FlutterActivity() {
-}
+class MainActivity: FlutterActivity()

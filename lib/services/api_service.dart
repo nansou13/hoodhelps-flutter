@@ -1,8 +1,11 @@
+
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/constants.dart';
 import 'package:hoodhelps/route_constants.dart';
+import 'package:hoodhelps/utils.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,7 +14,7 @@ class ApiService {
 
   Future<http.Response> get(String endpoint,
       {Map<String, String>? headers,
-      BuildContext? context = null,
+      BuildContext? context,
       bool? useToken = false}) async {
     headers = headers ?? {};
     headers.putIfAbsent('Content-Type', () => 'application/json');
@@ -24,14 +27,14 @@ class ApiService {
     }
     final response =
         await http.get(Uri.parse('$_baseUrl$endpoint'), headers: headers);
-    _checkForErrors(response, context);
+    _checkForErrors(response);
     return response;
   }
 
   Future<http.Response> post(String endpoint,
       {Map<String, String>? headers,
       Object? body,
-      BuildContext? context = null,
+      BuildContext? context,
       bool useToken = false}) async {
     headers = headers ?? {};
     headers.putIfAbsent('Content-Type', () => 'application/json');
@@ -48,14 +51,14 @@ class ApiService {
       headers: headers,
       body: jsonEncode(body),
     );
-    _checkForErrors(response, context);
+    _checkForErrors(response);
     return response;
   }
 
   Future<http.Response> put(String endpoint,
       {Map<String, String>? headers,
       Object? body,
-      BuildContext? context = null,
+      BuildContext? context,
       bool useToken = false}) async {
     // if (useToken == true) {
     //   String? token = await getToken();
@@ -79,7 +82,7 @@ class ApiService {
       headers: headers,
       body: jsonEncode(body),
     );
-    _checkForErrors(response, context);
+    _checkForErrors(response);
     return response;
   }
 
@@ -100,12 +103,13 @@ class ApiService {
       Uri.parse('$_baseUrl$endpoint'),
       headers: headers,
     );
-    _checkForErrors(response, context);
+    _checkForErrors(response);
     return response;
   }
 
   Future<void> _checkForErrors(
-      http.Response response, BuildContext? context) async {
+      http.Response response) async {
+        final context = navigatorKey.currentContext;
     if (response.statusCode == 401) {
       if (context != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {

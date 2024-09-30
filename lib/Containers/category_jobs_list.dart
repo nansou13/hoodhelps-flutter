@@ -9,13 +9,13 @@ import 'package:hoodhelps/services/user_service.dart';
 import 'package:provider/provider.dart';
 
 class CategoryJobsMainListPage extends StatefulWidget {
-  const CategoryJobsMainListPage({Key? key}) : super(key: key);
+  const CategoryJobsMainListPage({super.key});
 
   @override
-  _CategoryJobsMainListPage createState() => _CategoryJobsMainListPage();
+  CategoryJobsMainListPageState createState() => CategoryJobsMainListPageState();
 }
 
-class _CategoryJobsMainListPage extends State<CategoryJobsMainListPage> {
+class CategoryJobsMainListPageState extends State<CategoryJobsMainListPage> {
   String? categoryId;
   List categoryData = [];
   List jobData = [];
@@ -76,7 +76,7 @@ class _CategoryJobsMainListPage extends State<CategoryJobsMainListPage> {
         isLoading = false;
       });
       NotificationService.showError(
-          context, "Erreur lors du chargement des données: $e");
+          "Erreur lors du chargement des données: $e");
     }
   }
 
@@ -93,7 +93,7 @@ class _CategoryJobsMainListPage extends State<CategoryJobsMainListPage> {
         backgroundColor:
             FigmaColors.lightLight4, // Fond noir pour toute la page
         body: isLoading
-            ? Center(child: CircularProgressIndicator())
+            ? const Center(child: CircularProgressIndicator())
             : (categoryId == null || categoryId!.isEmpty)
                 ? Scaffold(
                     backgroundColor: FigmaColors.lightLight4,
@@ -107,7 +107,7 @@ class _CategoryJobsMainListPage extends State<CategoryJobsMainListPage> {
                     child: SingleChildScrollView(
                         child: Container(
                             padding: const EdgeInsets.all(14.0),
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                                 color: FigmaColors.lightLight3,
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(12),
@@ -144,7 +144,7 @@ class _CategoryJobsMainListPage extends State<CategoryJobsMainListPage> {
           child: Text(
                                                 translationService.translate(value[
                                                     'profession_name']), // Affiche la valeur à gauche
-                                                style: FigmaTextStyles()
+                                                style: const FigmaTextStyles()
                                                     .body16pt
                                                     .copyWith(
                                                       color:
@@ -177,14 +177,14 @@ class _CategoryJobsMainListPage extends State<CategoryJobsMainListPage> {
                                       if (index !=
                                           jobData.length -
                                               1) // Ne pas ajouter la ligne après le dernier élément
-                                        Divider(
+                                        const Divider(
                                           color: FigmaColors
                                               .lightLight1, // Ligne noire entre les éléments
                                           thickness: 1,
                                         ),
                                     ],
                                   );
-                                }).toList(),
+                                }),
                               ],
                             )))));
   }

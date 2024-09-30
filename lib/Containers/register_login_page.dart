@@ -6,13 +6,13 @@ import 'package:hoodhelps/services/translation_service.dart';
 import 'package:provider/provider.dart';
 
 class RegisterLoginPage extends StatefulWidget {
-  const RegisterLoginPage({Key? key}) : super(key: key);
+  const RegisterLoginPage({super.key});
 
   @override
-  _RegisterLoginPageState createState() => _RegisterLoginPageState();
+  RegisterLoginPageState createState() => RegisterLoginPageState();
 }
 
-class _RegisterLoginPageState extends State<RegisterLoginPage> {
+class RegisterLoginPageState extends State<RegisterLoginPage> {
   @override
   void initState() {
     super.initState();
@@ -36,7 +36,7 @@ class _RegisterLoginPageState extends State<RegisterLoginPage> {
       width: double.infinity,
       height: MediaQuery.of(context).size.height -
           250, // Ajuste la hauteur selon le contexte
-      color: Color(0xFFF2F2F2),
+      color: const Color(0xFFF2F2F2),
       child: Column(
         mainAxisAlignment:
             MainAxisAlignment.spaceAround, // Espacement autour des images
@@ -59,14 +59,14 @@ class _RegisterLoginPageState extends State<RegisterLoginPage> {
   Widget appTitle(TranslationService translationService) {
     return Stack(children: [
       background(),
-      Container(
+      SizedBox(
         width: double.infinity,
         child: Column(
           children: [
             SizedBox(height: MediaQuery.of(context).size.height / 8),
             SizedBox(
               child: Image(
-                image: AssetImage('assets/icon.png'),
+                image: const AssetImage('assets/icon.png'),
                 width: MediaQuery.of(context).size.width * 0.3,
               ),
             ),
@@ -80,7 +80,7 @@ class _RegisterLoginPageState extends State<RegisterLoginPage> {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
@@ -95,7 +95,7 @@ class _RegisterLoginPageState extends State<RegisterLoginPage> {
           children: [
             Text(
               translationService.translate("APP_TITLE_DESC"),
-              style: FigmaTextStyles().headingsh2,
+              style: const FigmaTextStyles().headingsh2,
             ),
             const SizedBox(height: 24.0),
             buildRegisterButton(translationService),
@@ -136,7 +136,7 @@ class _RegisterLoginPageState extends State<RegisterLoginPage> {
         },
         child: Text(
           translationService.translate("FORM_FORGOT_ACCOUNT_LINK"),
-          style: FigmaTextStyles().stylizedMedium.copyWith(
+          style: const FigmaTextStyles().stylizedMedium.copyWith(
                 decoration: TextDecoration.underline, // Ajouter le soulignement
               ),
         ),

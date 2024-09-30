@@ -9,13 +9,13 @@ import 'package:hoodhelps/services/user_service.dart';
 import 'package:provider/provider.dart';
 
 class UserMenu extends StatefulWidget {
-  const UserMenu({Key? key}) : super(key: key);
+  const UserMenu({super.key});
 
   @override
-  _UserMenu createState() => _UserMenu();
+  UserMenuState createState() => UserMenuState();
 }
 
-class _UserMenu extends State<UserMenu> {
+class UserMenuState extends State<UserMenu> {
   @override
   void initState() {
     super.initState();
@@ -37,17 +37,17 @@ class _UserMenu extends State<UserMenu> {
           child: Column(
             children: [
               _buildUserProfile(context, user),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Expanded(
                   child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
+                  SizedBox(
                       width: double.infinity,
                       child: SingleChildScrollView(
                           child: Container(
                               padding: const EdgeInsets.all(14.0),
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                   color: FigmaColors.lightLight3,
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(12),
@@ -63,17 +63,17 @@ class _UserMenu extends State<UserMenu> {
                                                 rootNavigator: true)
                                             .pushNamed(RouteConstants.userAccountGroups);
                                       }),
-                                  SizedBox(height: 14),
-                                  Divider(
+                                  const SizedBox(height: 14),
+                                  const Divider(
                                     color: FigmaColors.lightLight1,
                                     thickness: 1,
                                   ),
-                                  SizedBox(height: 14),
+                                  const SizedBox(height: 14),
                                   _buildMenuOption(
                                       context: context,
                                       icon: Icons.card_travel,
                                       text: 'Mes métiers',
-                                      hasNotification: user.jobs.length == 0,
+                                      hasNotification: user.jobs.isEmpty,
                                       onTap: () {
                                         Navigator.of(context,
                                                 rootNavigator: true)
@@ -81,12 +81,12 @@ class _UserMenu extends State<UserMenu> {
                                       }),
                                 ],
                               )))),
-                  Container(
+                  SizedBox(
                       width: double.infinity,
                       child: SingleChildScrollView(
                           child: Container(
                               padding: const EdgeInsets.all(14.0),
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                   color: FigmaColors.lightLight3,
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(12),
@@ -133,13 +133,13 @@ class _UserMenu extends State<UserMenu> {
               children: [
                 Text(
                   FunctionUtils.getUserName(userService),
-                  style: FigmaTextStyles()
+                  style: const FigmaTextStyles()
                       .headingsh5
                       .copyWith(color: FigmaColors.lightLight4),
                 ),
                 Text(
                   'Voir le profil',
-                  style: FigmaTextStyles()
+                  style: const FigmaTextStyles()
                       .body16pt
                       .copyWith(color: FigmaColors.lightLight4),
                 ),
@@ -173,20 +173,20 @@ class _UserMenu extends State<UserMenu> {
                 color: iconColor ?? FigmaColors.darkDark4,
                 size: 25,
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Text(text,
-                  style: FigmaTextStyles()
+                  style: const FigmaTextStyles()
                       .body16pt
                       .copyWith(color: FigmaColors.darkDark0)),
 
               if(hasNotification)
               Row(
                   children: [
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                      Container(
                     width: 12, // Taille du cercle rouge
                     height: 12,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: FigmaColors.primaryPrimary0, // Couleur du cercle
                       shape: BoxShape.circle, // Forme du badge
                     ),
@@ -195,7 +195,7 @@ class _UserMenu extends State<UserMenu> {
                 )
             ],
           ),
-          Icon(
+          const Icon(
             Icons.arrow_forward_ios,
             color: FigmaColors.darkDark0,
             size: 15,

@@ -12,13 +12,13 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EditUserInfoPage extends StatefulWidget {
-  const EditUserInfoPage({Key? key}) : super(key: key);
+  const EditUserInfoPage({super.key});
 
   @override
-  _EditUserInfoPageState createState() => _EditUserInfoPageState();
+  EditUserInfoPageState createState() => EditUserInfoPageState();
 }
 
-class _EditUserInfoPageState extends State<EditUserInfoPage> {
+class EditUserInfoPageState extends State<EditUserInfoPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController firstNameController = TextEditingController();
@@ -46,12 +46,12 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
       String? userToken = prefs.getString('user_token');
 
       if (userToken == null) {
-        Navigator.of(context)
+        Navigator.of(navigatorKey.currentContext!)
             .pushReplacementNamed(RouteConstants.registerLogin);
         return;
       }
 
-      final userService = Provider.of<UserService>(context, listen: false);
+      final userService = Provider.of<UserService>(navigatorKey.currentContext!, listen: false);
       var userData = userService.getUser();
 
       setState(() {
@@ -66,7 +66,7 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
       return;
     } catch (e) {
       // En cas d'erreur lors de la requête
-      NotificationService.showError(context, "Erreur: ${e.toString()}");
+      NotificationService.showError( "Erreur: ${e.toString()}");
     }
   }
 
@@ -99,17 +99,17 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('user_token', data['accessToken']);
-        final userService = Provider.of<UserService>(context, listen: false);
+        final userService = Provider.of<UserService>(navigatorKey.currentContext!, listen: false);
         userService.updateUser(data);
 
-        NotificationService.showInfo(context, 'Mis à jour avec succès');
+        NotificationService.showInfo( 'Mis à jour avec succès');
       } else {
         // En cas d'échec de la requête, afficher un message d'erreur
-        NotificationService.showError(context, 'Échec de la mise à jour $data');
+        NotificationService.showError( 'Échec de la mise à jour $data');
       }
     } catch (e) {
       // En cas d'erreur lors de la requête
-      NotificationService.showError(context, 'Erreur: $e');
+      NotificationService.showError( 'Erreur: $e');
     }
     setState(() {
       isMiniLoading = false;
@@ -180,7 +180,7 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
                   updateUser();
                 }
               },
-              color: !isMiniLoading ? Color(0xFF102820) : Colors.grey,
+              color: !isMiniLoading ? const Color(0xFF102820) : Colors.grey,
               textColor: Colors.white,
               elevation: 0,
               shape: RoundedRectangleBorder(
@@ -202,6 +202,8 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
                       const SizedBox(width: 20.0),
                       isMiniLoading
                           ? const SizedBox(
+                              height: 20.0,
+                              width: 20.0,
                               child: Center(
                                 child: CircularProgressIndicator(
                                   valueColor: AlwaysStoppedAnimation<Color>(
@@ -209,8 +211,6 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
                                   strokeWidth: 3,
                                 ),
                               ),
-                              height: 20.0,
-                              width: 20.0,
                             )
                           : const SizedBox(),
                     ],

@@ -52,7 +52,7 @@ class CategoriesService {
 
   Future<List<dynamic>> getCacheCategoryDataList(String groupId) async {
     final prefs = await SharedPreferences.getInstance();
-    final cachedData = prefs.getString(groupId + '-list');
+    final cachedData = prefs.getString('$groupId-list');
     final cacheTime = prefs.getInt(cacheTimeKey);
 
     if (cachedData != null && cacheTime != null) {

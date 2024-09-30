@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class DebugBanner extends StatelessWidget {
   final String text;
 
-  DebugBanner(this.text);
+  const DebugBanner(this.text, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class DebugBanner extends StatelessWidget {
               color: Colors.black.withOpacity(0.5),
               spreadRadius: 0,
               blurRadius: 5,
-              offset: Offset(0, 0),
+              offset: const Offset(0, 0),
             ),
           ],
         ),
@@ -30,7 +30,7 @@ class DebugBanner extends StatelessWidget {
             child: Text(
               text,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,

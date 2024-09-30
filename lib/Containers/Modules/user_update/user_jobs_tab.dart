@@ -7,16 +7,17 @@ import 'package:hoodhelps/services/icons_service.dart';
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
+import 'package:hoodhelps/utils.dart';
 import 'package:provider/provider.dart';
 
 class EditUserJobsPage extends StatefulWidget {
-  const EditUserJobsPage({Key? key}) : super(key: key);
+  const EditUserJobsPage({super.key});
 
   @override
-  _EditUserJobsPageState createState() => _EditUserJobsPageState();
+  EditUserJobsPageState createState() => EditUserJobsPageState();
 }
 
-class _EditUserJobsPageState extends State<EditUserJobsPage> {
+class EditUserJobsPageState extends State<EditUserJobsPage> {
   List<dynamic> userJob = [];
   bool isLoading = true;
   bool isMiniLoading = false;
@@ -37,7 +38,7 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
       final userToken = await ApiService().getToken();
 
       if (userToken == null) {
-        Navigator.of(context)
+        Navigator.of(navigatorKey.currentContext!)
             .pushReplacementNamed(RouteConstants.registerLogin);
         return;
       }
@@ -55,22 +56,22 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
         });
         return;
       } else {
-        Navigator.of(context)
+        Navigator.of(navigatorKey.currentContext!)
             .pushReplacementNamed(RouteConstants.registerLogin);
         return;
       }
     } catch (e) {
       // En cas d'erreur lors de la requête
-      NotificationService.showError(context, "Erreur: ${e.toString()}");
+      NotificationService.showError( "Erreur: ${e.toString()}");
     }
   }
 
-  Future<void> updateJob(jobID, description, experience_years) async {
+  Future<void> updateJob(jobID, description, experienceYears) async {
     try {
       final response =
           await ApiService().put('/users/me/job/$jobID', useToken: true, body: {
         'description': description,
-        'experience_years': experience_years.toString(),
+        'experience_years': experienceYears.toString(),
       });
 
       final data = jsonDecode(response.body);
@@ -82,7 +83,7 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
                 ? {
                     ...job,
                     'description': description,
-                    'experience_years': experience_years
+                    'experience_years': experienceYears
                   }
                 : job)
             .toList();
@@ -92,14 +93,14 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
           userJob = newUserJobs;
         });
 
-        NotificationService.showInfo(context, 'Mis à jour avec succès');
+        NotificationService.showInfo( 'Mis à jour avec succès');
       } else {
         // En cas d'échec de la requête, afficher un message d'erreur
-        NotificationService.showError(context, 'Échec de la mise à jour $data');
+        NotificationService.showError( 'Échec de la mise à jour $data');
       }
     } catch (e) {
       // En cas d'erreur lors de la requête
-      NotificationService.showError(context, 'Erreur: $e');
+      NotificationService.showError( 'Erreur: $e');
     }
     setState(() {
       isMiniLoading = false;
@@ -113,15 +114,14 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
       if (response.statusCode == 204) {
         // Si la requête réussit (statut 200), analyser la réponse JSON
 
-        NotificationService.showInfo(
-            context, 'Suppression effectuée avec succès');
+        NotificationService.showInfo('Suppression effectuée avec succès');
       } else {
         // En cas d'échec de la requête, afficher un message d'erreur
-        NotificationService.showError(context, 'Échec de la suppression');
+        NotificationService.showError('Échec de la suppression');
       }
     } catch (e) {
       // En cas d'erreur lors de la requête
-      NotificationService.showError(context, 'Erreur: $e');
+      NotificationService.showError( 'Erreur: $e');
     }
     setState(() {
       isMiniLoading = false;
@@ -173,11 +173,11 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
                           background: Container(
                             color: Colors.red,
                             child: const Align(
+                              alignment: Alignment.centerRight,
                               child: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 20.0),
                                 child: Icon(Icons.delete, color: Colors.white),
                               ),
-                              alignment: Alignment.centerRight,
                             ),
                           ),
                           child: Card(
@@ -209,9 +209,7 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
                                           padding:
                                               const EdgeInsets.only(left: 34.0),
                                           child: Text(
-                                            '${translationService.translate("EXPERIENCE")} : ' +
-                                                experienceYears +
-                                                ' ${translationService.translate("YEARS")}',
+                                            '${translationService.translate("EXPERIENCE")} : $experienceYears ${translationService.translate("YEARS")}',
                                             style:
                                                 const TextStyle(fontSize: 12),
                                           )), // Affichage des années d'expérience
@@ -243,7 +241,7 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
   void _showEditDialog(Map job, index) {
     final translationService = context.read<TranslationService>();
     // Définir la variable de valeur initiale du slider
-    double _currentSliderValue = job['experience_years'] >= 10
+    double currentSliderValue = job['experience_years'] >= 10
         ? 10.0
         : double.parse(job['experience_years'].toString());
     TextEditingController jobNameController =
@@ -271,18 +269,18 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
                   ),
                   Row(children: <Widget>[
                     Text(
-                        '${translationService.translate("EXPERIENCE")}: ${_currentSliderValue >= 10 ? '10+' : _currentSliderValue.toInt().toString()} ${translationService.translate("YEARS")}'),
+                        '${translationService.translate("EXPERIENCE")}: ${currentSliderValue >= 10 ? '10+' : currentSliderValue.toInt().toString()} ${translationService.translate("YEARS")}'),
                     Expanded(
                       child: Slider(
-                        value: _currentSliderValue,
+                        value: currentSliderValue,
                         min: 0,
                         max: 10, // La valeur maximale
                         divisions: 10, // Le nombre de divisions
-                        label: _currentSliderValue.round().toString(),
+                        label: currentSliderValue.round().toString(),
                         onChanged: (double value) {
                           setState(() {
                             // Ce setState est celui fourni par StatefulBuilder
-                            _currentSliderValue = value;
+                            currentSliderValue = value;
                           });
                         },
                       ),
@@ -307,8 +305,8 @@ class _EditUserJobsPageState extends State<EditUserJobsPage> {
                   child: Text(translationService.translate("SAVE")),
                   onPressed: () async {
                     await updateJob(job['id'], descriptionController.text,
-                        _currentSliderValue.round());
-                    Navigator.of(context).pop(); // Ferme la boîte de dialogue
+                        currentSliderValue.round());
+                    Navigator.of(navigatorKey.currentContext!).pop(); // Ferme la boîte de dialogue
                   },
                 ),
               ],

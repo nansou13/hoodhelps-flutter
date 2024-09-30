@@ -11,13 +11,13 @@ import 'package:hoodhelps/services/user_service.dart';
 import 'package:provider/provider.dart';
 
 class LobbyPage extends StatefulWidget {
-  const LobbyPage({Key? key}) : super(key: key);
+  const LobbyPage({super.key});
 
   @override
-  _LobbyPage createState() => _LobbyPage();
+  LobbyPageState createState() => LobbyPageState();
 }
 
-class _LobbyPage extends State<LobbyPage> {
+class LobbyPageState extends State<LobbyPage> {
   @override
   void initState() {
     super.initState();
@@ -70,19 +70,19 @@ class _LobbyPage extends State<LobbyPage> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 30), // Espace en haut
+              const SizedBox(height: 30), // Espace en haut
               _buildLobbyTop(context, getUserName(user)),
 
               if (groupId != '') _buildGroupCarousel(groups),
-              if (groupId != '') SizedBox(height: 10),
+              if (groupId != '') const SizedBox(height: 10),
               if (groupId != '') _buildPagination(groups.length + 1),
 
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               Expanded(
                 child: Container(
                   padding: const EdgeInsets.all(15.0),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: FigmaColors.lightLight4,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(18.0),
@@ -112,7 +112,7 @@ class _LobbyPage extends State<LobbyPage> {
             Expanded(
               child: Text(
                 group.name,
-                style: FigmaTextStyles()
+                style: const FigmaTextStyles()
                     .stylizedMedium
                     .copyWith(color: FigmaColors.lightLight4),
                 maxLines: 1, // Limite à 2 lignes
@@ -124,29 +124,29 @@ class _LobbyPage extends State<LobbyPage> {
             // Icon(Icons.ac_unit, color: color, size: 40),
           ],
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         Row(
           children: [
             Expanded(
               child: AvatarStack(users: users),
             ),
             Text("${group.users.length} membres",
-                style: FigmaTextStyles()
+                style: const FigmaTextStyles()
                     .body14pt
                     .copyWith(color: FigmaColors.lightLight4)),
           ],
         ),
-        SizedBox(height: 30),
+        const SizedBox(height: 30),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(children: [
               Text('Code : ${group.code.toUpperCase()}',
-                  style: FigmaTextStyles()
+                  style: const FigmaTextStyles()
                       .body14pt
                       .copyWith(color: FigmaColors.lightLight4)),
-              SizedBox(width: 10),
-              Icon(
+              const SizedBox(width: 10),
+              const Icon(
                 Icons.share,
                 color: FigmaColors.lightLight4,
                 size: 18,
@@ -178,10 +178,10 @@ class _LobbyPage extends State<LobbyPage> {
                     size: 30.0,
                     color: FigmaColors.lightLight4,
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Text(
                     translationService.translate('JOIN_A_GROUP'),
-                    style: FigmaTextStyles()
+                    style: const FigmaTextStyles()
                         .stylizedMedium
                         .copyWith(color: FigmaColors.lightLight4),
                   ),
@@ -197,7 +197,7 @@ class _LobbyPage extends State<LobbyPage> {
   Widget _buildMainGroupBlock({required Widget child}) {
     return Container(
         // padding: EdgeInsets.all(16.0), // Respecte les marges entre les pages
-        margin: EdgeInsets.all(10.0), // Respecte les marges entre les pages
+        margin: const EdgeInsets.all(10.0), // Respecte les marges entre les pages
         decoration: BoxDecoration(
           color: FigmaColors.darkDark0
               .withOpacity(0.7), // Fond noir avec 70% d'opacité
@@ -208,7 +208,7 @@ class _LobbyPage extends State<LobbyPage> {
           ),
         ),
         child: Padding(
-          padding: EdgeInsets.all(15),
+          padding: const EdgeInsets.all(15),
           child: child,
         ));
   }
@@ -251,11 +251,11 @@ class _LobbyPage extends State<LobbyPage> {
         children: [
           Text(
             'Bonjour $userName',
-            style: FigmaTextStyles().headingsh1.copyWith(
+            style: const FigmaTextStyles().headingsh1.copyWith(
                   color: FigmaColors.lightLight4,
                 ),
           ),
-          _buildProfileIcon(context, hasNotification: jobs.length == 0),
+          _buildProfileIcon(context, hasNotification: jobs.isEmpty),
         ],
       ),
     );
@@ -277,7 +277,7 @@ class _LobbyPage extends State<LobbyPage> {
             color: FigmaColors.darkDark1,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Center(
+          child: const Center(
             child: Icon(
               Icons.person,
               color: Colors.white,
@@ -292,7 +292,7 @@ class _LobbyPage extends State<LobbyPage> {
             child: Container(
               width: 12, // Taille du cercle rouge
               height: 12,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: FigmaColors.primaryPrimary0, // Couleur du cercle
                 shape: BoxShape.circle, // Forme du badge
               ),
@@ -309,9 +309,9 @@ class _LobbyPage extends State<LobbyPage> {
       child: PageView(
         controller: _pageController,
         onPageChanged: _onGroupChanged,
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         children: [
-          ...groups.map((group) => _buildGroupBlock(group)).toList(),
+          ...groups.map((group) => _buildGroupBlock(group)),
           _buildNewBlock()
         ],
       ),
@@ -348,7 +348,7 @@ class _LobbyPage extends State<LobbyPage> {
           const SizedBox(height: 22.0),
           Text(
             translationService.translate('NOT_IN_A_GROUP_MESSAGE'),
-            style: FigmaTextStyles()
+            style: const FigmaTextStyles()
                 .body16pt
                 .copyWith(color: FigmaColors.darkDark2),
             textAlign: TextAlign.center,
@@ -376,12 +376,12 @@ class _LobbyPage extends State<LobbyPage> {
           padding: const EdgeInsets.symmetric(vertical: 9.0),
           child: Text(
             group.name,
-            style: FigmaTextStyles().stylizedMedium.copyWith(
+            style: const FigmaTextStyles().stylizedMedium.copyWith(
                   color: FigmaColors.darkDark0,
                 ),
           ),
         ),
-        SizedBox(height: 13),
+        const SizedBox(height: 13),
         buildButton(
           variant: "tertiary",
           text: translationService.translate('FIND_PRO'),
@@ -390,7 +390,7 @@ class _LobbyPage extends State<LobbyPage> {
                 .pushNamed(RouteConstants.categoriesMainList);
           },
         ),
-        SizedBox(height: 13),
+        const SizedBox(height: 13),
         Expanded(
           child: SingleChildScrollView(
             child: Column(

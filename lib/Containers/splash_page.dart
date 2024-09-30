@@ -5,18 +5,19 @@ import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/jobs_provider.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
+import 'package:hoodhelps/utils.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:hoodhelps/services/user_service.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  SplashScreenState createState() => SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
@@ -37,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
       await _fetchUserData();
     } catch (e) {
-      NotificationService.showError(context, "Une erreur s'est produite : $e");
+      NotificationService.showError("Une erreur s'est produite : $e");
       _navigateToLogin();
     }
   }
@@ -47,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
       final userResponse = await _getUserData();
       if (userResponse.statusCode == 200) {
         final userData = jsonDecode(userResponse.body);
-        final userService = Provider.of<UserService>(context, listen: false);
+        final userService = Provider.of<UserService>(navigatorKey.currentContext!, listen: false);
         userService.updateUser(userData);
 
         await _fetchUserGroups(userService);

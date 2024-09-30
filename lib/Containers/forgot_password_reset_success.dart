@@ -6,7 +6,7 @@ import 'package:hoodhelps/services/translation_service.dart';
 import 'package:provider/provider.dart';
 
 class ForgotPasswordResetSuccess extends StatelessWidget {
-  const ForgotPasswordResetSuccess({Key? key}) : super(key: key);
+  const ForgotPasswordResetSuccess({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,14 +15,14 @@ class ForgotPasswordResetSuccess extends StatelessWidget {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           centerTitle: false,
-          titleTextStyle: FigmaTextStyles().headingsh3.copyWith(
+          titleTextStyle: const FigmaTextStyles().headingsh3.copyWith(
               color: FigmaColors.darkDark0,
             ),
           leading: null,
           title: Text(translationService.translate("FORM_FORGOT_ACCOUNT_LINK")),
         ),
         body: 
-            Container(
+            SizedBox(
               width: double.infinity,
               height: double.infinity,
               child: Padding(
@@ -35,7 +35,7 @@ class ForgotPasswordResetSuccess extends StatelessWidget {
                         Text(
                           translationService
                               .translate('UPDATE_PASSWORD_SUCCESS'),
-                          style: FigmaTextStyles().body16pt.copyWith(
+                          style: const FigmaTextStyles().body16pt.copyWith(
                       color: FigmaColors.darkDark0,
                     ),
                         ),

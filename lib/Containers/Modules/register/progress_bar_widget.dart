@@ -6,10 +6,10 @@ class ProgressBarWithCounter extends StatelessWidget {
   final int totalSteps;  // Le nombre total d'étapes
 
   const ProgressBarWithCounter({
-    Key? key,
+    super.key,
     required this.currentStep,
     required this.totalSteps,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class ProgressBarWithCounter extends StatelessWidget {
           // Affichage de la progression sous forme de fraction
           Text(
             '$currentStep/$totalSteps',
-            style: FigmaTextStyles().stylizedSmall.copyWith(
+            style: const FigmaTextStyles().stylizedSmall.copyWith(
               color: FigmaColors.darkDark2,
             ),
           ),

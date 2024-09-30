@@ -9,16 +9,17 @@ import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
+import 'package:hoodhelps/utils.dart';
 import 'package:provider/provider.dart';
 
 class JoinGroup extends StatefulWidget {
-  const JoinGroup({Key? key}) : super(key: key);
+  const JoinGroup({super.key});
 
   @override
-  _JoinGroupState createState() => _JoinGroupState();
+  JoinGroupState createState() => JoinGroupState();
 }
 
-class _JoinGroupState extends State<JoinGroup> {
+class JoinGroupState extends State<JoinGroup> {
   final TextEditingController _codeController = CodeInputController();
 
   @override
@@ -34,7 +35,7 @@ class _JoinGroupState extends State<JoinGroup> {
 
     final groupeCode = _codeController.text.toLowerCase();
     if (groupeCode.isEmpty) {
-      NotificationService.showError(context,
+      NotificationService.showError(
           translationService.translate("NOTIF_PLEASE_ENTER_GROUP_CODE"));
       return;
     }
@@ -47,43 +48,42 @@ class _JoinGroupState extends State<JoinGroup> {
             final addUserInGroup = await ApiService().post(
                 '/groups/$codeID/user',
                 body: {"user_id": userData['id'].toString()},
-                context: context);
+                context: navigatorKey.currentContext!);
 
             final data = jsonDecode(response.body);
 
             if (addUserInGroup.statusCode == 201) {
               // Si la requête réussit (statut 200), analyser la réponse JSON
 
-              Navigator.of(context).pushReplacementNamed(RouteConstants.splash);
+              Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(RouteConstants.splash);
             } else {
               // En cas d'échec de la requête, afficher un message d'erreur
               NotificationService.showError(
-                  context, "Échec ajout du user dans le groupe $data");
+                  "Échec ajout du user dans le groupe $data");
             }
           } catch (e) {
-            NotificationService.showError(context,
-                "Erreur lors de la récupération des données du serveur. ${e}");
+            NotificationService.showError(
+                "Erreur lors de la récupération des données du serveur. $e");
           }
           break;
         case 404:
           // Récupérer le message d'erreur à partir du body JSON
           final Map<String, dynamic> responseBody = json.decode(response.body);
-          NotificationService.showError(context, responseBody['error']);
+          NotificationService.showError( responseBody['error']);
           break;
         case 401:
           final responseBody = json.decode(response.body);
-          NotificationService.showError(context, responseBody['error']);
+          NotificationService.showError( responseBody['error']);
           break;
 
         default:
           final responseBody = json.decode(response.body);
           NotificationService.showError(
-              context, responseBody['error'] ?? 'Erreur inattendue');
+              responseBody['error'] ?? 'Erreur inattendue');
       }
     } catch (e) {
-      print(e);
       NotificationService.showError(
-          context, "Erreur lors de la récupération des données du serveur.");
+          "Erreur lors de la récupération des données du serveur.");
     }
   }
 
@@ -104,7 +104,7 @@ class _JoinGroupState extends State<JoinGroup> {
           const SizedBox(height: 14.0),
           Text(
             translationService.translate('STEP4_DESCRIPTION'),
-            style: FigmaTextStyles().body14pt.copyWith(
+            style: const FigmaTextStyles().body14pt.copyWith(
                   color: FigmaColors.darkDark2,
                 ),
           ),
@@ -120,7 +120,7 @@ class _JoinGroupState extends State<JoinGroup> {
           onPressed: () {
             fetchGroupeInfo();
           },
-          color: Color(0xFF102820),
+          color: const Color(0xFF102820),
           textColor: Colors.white,
           elevation: 0,
           shape: RoundedRectangleBorder(

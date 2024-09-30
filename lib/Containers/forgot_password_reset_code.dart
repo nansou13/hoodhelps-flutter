@@ -9,17 +9,18 @@ import 'package:hoodhelps/route_constants.dart';
 import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
+import 'package:hoodhelps/utils.dart';
 import 'package:provider/provider.dart';
 
 class ForgotPasswordResetCode extends StatefulWidget {
-  const ForgotPasswordResetCode({Key? key}) : super(key: key);
+  const ForgotPasswordResetCode({super.key});
 
   @override
-  _ForgotPasswordResetCodeState createState() =>
-      _ForgotPasswordResetCodeState();
+  ForgotPasswordResetCodeState createState() =>
+      ForgotPasswordResetCodeState();
 }
 
-class _ForgotPasswordResetCodeState extends State<ForgotPasswordResetCode> {
+class ForgotPasswordResetCodeState extends State<ForgotPasswordResetCode> {
   final TextEditingController _codeController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
 
@@ -32,12 +33,12 @@ class _ForgotPasswordResetCodeState extends State<ForgotPasswordResetCode> {
     final translationService = context.read<TranslationService>();
     if (_codeController.text.isEmpty) {
       NotificationService.showError(
-          context, translationService.translate("NOTIF_PLEASE_ENTER_CODE"));
+          translationService.translate("NOTIF_PLEASE_ENTER_CODE"));
       return;
     }
     if (_newPasswordController.text.isEmpty) {
       NotificationService.showError(
-          context, translationService.translate("NOTIF_PLEASE_ENTER_PASSWORD"));
+          translationService.translate("NOTIF_PLEASE_ENTER_PASSWORD"));
       return;
     }
 
@@ -50,15 +51,15 @@ class _ForgotPasswordResetCodeState extends State<ForgotPasswordResetCode> {
 
       switch (response.statusCode) {
         case 200:
-          Navigator.of(context)
+          Navigator.of(navigatorKey.currentContext!)
               .pushReplacementNamed(RouteConstants.forgotPasswordResetSuccess);
           break;
         default:
           var result = json.decode(response.body);
-          NotificationService.showError(context, result['error']);
+          NotificationService.showError( result['error']);
       }
     } catch (e) {
-      NotificationService.showError(context, "Erreur serveur. ${e.toString()}");
+      NotificationService.showError( "Erreur serveur. ${e.toString()}");
     }
   }
 
@@ -70,7 +71,7 @@ class _ForgotPasswordResetCodeState extends State<ForgotPasswordResetCode> {
       middleChild: Column(children: [
         Text(
           translationService.translate('RESET_CODE_DESCRIPTION'),
-          style: FigmaTextStyles().body16pt.copyWith(
+          style: const FigmaTextStyles().body16pt.copyWith(
                 color: FigmaColors.darkDark0,
               ),
         ),

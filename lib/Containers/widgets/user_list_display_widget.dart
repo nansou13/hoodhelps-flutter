@@ -7,7 +7,7 @@ import 'package:hoodhelps/utils.dart';
 class UserListDisplay extends StatelessWidget {
   final Map<String, dynamic> user; // Liste des utilisateurs (image URL et nom)
 
-  UserListDisplay({required this.user});
+  const UserListDisplay({super.key, required this.user});
 
   // Fonction pour obtenir les initiales d'un utilisateur
   String getInitials(String name) {
@@ -42,7 +42,7 @@ class UserListDisplay extends StatelessWidget {
       child:
     Container(
       padding: const EdgeInsets.all(12.0),
-      margin: EdgeInsets.only(bottom: 12.0),
+      margin: const EdgeInsets.only(bottom: 12.0),
       alignment: Alignment.topLeft,
       width: double.infinity,
       decoration: BoxDecoration(
@@ -68,24 +68,24 @@ class UserListDisplay extends StatelessWidget {
                 child: user['image_url']?.isEmpty == true
                     ? Text(
                         getInitials(getUserName()), // Initiales si pas d'image
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                         ),
                       )
                     : null, // Pas de texte si une image est disponible
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 getUserName(),
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
                   fontSize: 16,
                 ),
               ),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           //badges
           Flexible(
             fit: FlexFit.loose,
@@ -94,7 +94,7 @@ class UserListDisplay extends StatelessWidget {
               child: Row(
                 children: [
                   ...(user['jobs'] ?? []).map((job) {
-                    return JobBadge(job_id: job['profession_id'], isPro: job['pro']);
+                    return JobBadge(jobId: job['profession_id'], isPro: job['pro']);
                   }).toList(),
                 ],
               ),

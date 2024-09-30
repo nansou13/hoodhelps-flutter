@@ -9,13 +9,13 @@ import 'Modules/register/step3_widget.dart';
 import 'Modules/register/step4_widget.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+  const RegisterPage({super.key});
 
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  RegisterPageState createState() => RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class RegisterPageState extends State<RegisterPage> {
   int _currentStep = 1; // Étape actuelle du registre
   String appBarTitle = 'Création de compte';
   void _nextStep() {

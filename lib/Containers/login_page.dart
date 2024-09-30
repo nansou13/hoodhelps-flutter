@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/Containers/Widgets/button_widget.dart';
 import 'package:hoodhelps/Containers/Widgets/template_two_blocks.dart';
@@ -9,17 +10,18 @@ import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/firebase_messaging_service.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
+import 'package:hoodhelps/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  LoginPageState createState() => LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -32,7 +34,14 @@ class _LoginPageState extends State<LoginPage> {
     try {
       // Initialisez le service FCM
       var firebaseMessagingService = FirebaseMessagingService();
-      String? fcmToken = await firebaseMessagingService.getToken();
+      // String? fcmToken = await firebaseMessagingService.getToken();
+      String fcmToken = '11111111';
+      try {
+        fcmToken = (await firebaseMessagingService.getToken())!;
+      } catch (e) {
+        print('Erreur lors de la récupération du token FCM: $e');
+      }
+      // String? fcmToken = '11111111';
 
       final response = await ApiService().post('/users/login', body: {
         'username': _usernameController.text,
@@ -44,12 +53,12 @@ class _LoginPageState extends State<LoginPage> {
         final data = jsonDecode(response.body);
         final prefs = await SharedPreferences.getInstance();
         prefs.setString('user_token', data['accessToken']);
-        Navigator.of(context).pushReplacementNamed(RouteConstants.splash);
+          Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(RouteConstants.splash);
       } else {
-        NotificationService.showError(context, "Échec de la connexion");
+          NotificationService.showError( "Échec de la connexion");
       }
     } catch (e) {
-      NotificationService.showError(context, "Erreur: $e");
+        NotificationService.showError( "Erreur: $e");
     }
   }
 
@@ -104,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
           alignment: Alignment.centerLeft, // Aligne le texte à gauche
           child: Text(
             translationService.translate("FORM_FORGOT_ACCOUNT_LINK"),
-            style: FigmaTextStyles().stylizedSmall.copyWith(
+            style: const FigmaTextStyles().stylizedSmall.copyWith(
                   color: FigmaColors.primaryPrimary1,
                   decoration:
                       TextDecoration.underline, // Ajouter le soulignement

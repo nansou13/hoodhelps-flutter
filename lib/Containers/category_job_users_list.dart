@@ -16,14 +16,14 @@ import 'package:hoodhelps/utils.dart';
 import 'package:provider/provider.dart';
 
 class CategoryJobUsersMainListPage extends StatefulWidget {
-  const CategoryJobUsersMainListPage({Key? key}) : super(key: key);
+  const CategoryJobUsersMainListPage({super.key});
 
   @override
-  _CategoryJobUsersMainListPage createState() =>
-      _CategoryJobUsersMainListPage();
+  CategoryJobUsersMainListPageState createState() =>
+      CategoryJobUsersMainListPageState();
 }
 
-class _CategoryJobUsersMainListPage
+class CategoryJobUsersMainListPageState
     extends State<CategoryJobUsersMainListPage> {
   String? categoryId;
   String? jobId;
@@ -86,7 +86,7 @@ class _CategoryJobUsersMainListPage
     setState(() {
       isLoading = false;
     });
-    NotificationService.showError(context, message);
+    NotificationService.showError( message);
   }
 
   @override
@@ -169,13 +169,13 @@ class _CategoryJobUsersMainListPage
           children: [
             Text(
               FunctionUtils.getUserName(user),
-              style: FigmaTextStyles()
+              style: const FigmaTextStyles()
                   .body16pt
                   .copyWith(color: FigmaColors.darkDark0),
             ),
             Text(
               '${user['experience_years']} année${user['experience_years'] > 1 ? 's' : ''} d\'expérience',
-              style: FigmaTextStyles()
+              style: const FigmaTextStyles()
                   .body14pt
                   .copyWith(color: FigmaColors.darkDark2),
             ),
@@ -187,7 +187,7 @@ class _CategoryJobUsersMainListPage
                   width: 15,
                   height: 15,
                   semanticsLabel: 'Pro',
-                  colorFilter: ColorFilter.mode(
+                  colorFilter: const ColorFilter.mode(
                     FigmaColors.darkDark2,
                     BlendMode.srcIn,
                   ),
@@ -195,7 +195,7 @@ class _CategoryJobUsersMainListPage
                 const SizedBox(width: 4),
               Text(
                 '${user['company_name']}',
-                style: FigmaTextStyles()
+                style: const FigmaTextStyles()
                     .body14pt
                     .copyWith(color: FigmaColors.darkDark2),
               ),
@@ -212,7 +212,7 @@ class _CategoryJobUsersMainListPage
     scrollDirection: Axis.horizontal,
     child: Row(
       children: jobs.map((job) => JobBadge(
-        job_id: job['profession_id'], // Accéder à l'ID de la profession
+        jobId: job['profession_id'], // Accéder à l'ID de la profession
         isPro: job['pro'], // Accéder à la valeur pro
       )).toList(),
     ),
@@ -222,7 +222,7 @@ class _CategoryJobUsersMainListPage
   Widget _buildUserDescription(Map<String, dynamic> user) {
     return Text(
       user['description'] ?? '',
-      style: FigmaTextStyles().body16pt.copyWith(color: FigmaColors.darkDark0),
+      style: const FigmaTextStyles().body16pt.copyWith(color: FigmaColors.darkDark0),
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
     );

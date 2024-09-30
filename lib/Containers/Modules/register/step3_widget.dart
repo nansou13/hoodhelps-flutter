@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/Containers/Modules/register/progress_bar_widget.dart';
 import 'package:hoodhelps/Containers/Widgets/button_widget.dart';
@@ -17,14 +19,13 @@ import 'package:hoodhelps/services/icons_service.dart';
 class Step3Widget extends StatefulWidget {
   final Function nextStepCallback;
 
-  const Step3Widget({Key? key, required this.nextStepCallback})
-      : super(key: key);
+  const Step3Widget({super.key, required this.nextStepCallback});
 
   @override
-  _Step3WidgetState createState() => _Step3WidgetState();
+  Step3WidgetState createState() => Step3WidgetState();
 }
 
-class _Step3WidgetState extends State<Step3Widget> {
+class Step3WidgetState extends State<Step3Widget> {
   String? selectedCategoryId;
   Job? selectedJob;
   String? selectedJobId;
@@ -93,11 +94,11 @@ class _Step3WidgetState extends State<Step3Widget> {
         widget.nextStepCallback();
       } else {
         // En cas d'échec de la requête, afficher un message d'erreur
-        NotificationService.showError(context, "Échec ajout du job $data");
+        NotificationService.showError( "Échec ajout du job $data");
       }
     } catch (e) {
       // En cas d'erreur lors de la requête
-      NotificationService.showError(context, "Erreur: $e");
+      NotificationService.showError( "Erreur: $e");
     }
   }
 
@@ -107,7 +108,7 @@ class _Step3WidgetState extends State<Step3Widget> {
     return genericSafeAreaTwoBlocks(
         middleChild: Column(
           children: [
-            ProgressBarWithCounter(currentStep: 3, totalSteps: 4),
+            const ProgressBarWithCounter(currentStep: 3, totalSteps: 4),
             const SizedBox(height: 30.0),
             buildTextField(
               enabled: !isLoading,
@@ -158,10 +159,10 @@ class _Step3WidgetState extends State<Step3Widget> {
                   Row(
                     children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.only(left: 10),
+                        padding: const EdgeInsets.only(left: 10),
                         child: Text(
                           '${translationService.translate("EXPERIENCE")}: ${experienceYears == 10 ? '10+' : experienceYears.toString()} ${translationService.translate("YEARS")}',
-                          style: FigmaTextStyles()
+                          style: const FigmaTextStyles()
                               .body16pt
                               .copyWith(color: FigmaColors.darkDark0),
                         ),
@@ -187,15 +188,15 @@ class _Step3WidgetState extends State<Step3Widget> {
                   Row(
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(left: 15),
+                        padding: const EdgeInsets.only(left: 15),
                         child: Text(
                           'Je suis à mon compte :',
-                          style: FigmaTextStyles()
+                          style: const FigmaTextStyles()
                               .body16pt
                               .copyWith(color: FigmaColors.darkDark0),
                         ),
                       ),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       Switch(
                         value: isPro,
                         onChanged: (value) {
@@ -292,7 +293,7 @@ class _Step3WidgetState extends State<Step3Widget> {
                               child: Text(
                                 translationService
                                     .translate(categories[index].name),
-                                style: FigmaTextStyles()
+                                style: const FigmaTextStyles()
                                     .body16pt
                                     .copyWith(color: FigmaColors.darkDark0),
                                 softWrap:
@@ -377,7 +378,7 @@ class _Step3WidgetState extends State<Step3Widget> {
                             Expanded(
                               child: Text(
                                 translationService.translate(jobs[index].name),
-                                style: FigmaTextStyles()
+                                style: const FigmaTextStyles()
                                     .body16pt
                                     .copyWith(color: FigmaColors.darkDark0),
                                 softWrap:

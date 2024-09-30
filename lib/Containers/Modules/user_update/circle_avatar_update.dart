@@ -5,6 +5,7 @@ import 'package:hoodhelps/custom_colors.dart';
 import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
+import 'package:hoodhelps/utils.dart';
 import 'package:image/image.dart' as img;
 import 'package:firebase_storage/firebase_storage.dart'; // Importez cette bibliothèque
 import 'package:image_picker/image_picker.dart'; // Importez cette bibliothèque
@@ -14,13 +15,13 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EditAvatar extends StatefulWidget {
-  const EditAvatar({Key? key}) : super(key: key);
+  const EditAvatar({super.key});
 
   @override
-  _EditAvatarState createState() => _EditAvatarState();
+  EditAvatarState createState() => EditAvatarState();
 }
 
-class _EditAvatarState extends State<EditAvatar> {
+class EditAvatarState extends State<EditAvatar> {
   bool isMiniLoading = false;
   String imageUrl = '';
   File? _image;
@@ -49,17 +50,17 @@ class _EditAvatarState extends State<EditAvatar> {
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('user_token', data['accessToken']);
-        final userService = Provider.of<UserService>(context, listen: false);
+        final userService = Provider.of<UserService>(navigatorKey.currentContext!, listen: false);
         userService.updateUser(data);
 
-        NotificationService.showInfo(context, 'Mis à jour avec succès');
+        NotificationService.showInfo( 'Mis à jour avec succès');
       } else {
         // En cas d'échec de la requête, afficher un message d'erreur
-        NotificationService.showError(context, 'Échec de la mise à jour $data');
+        NotificationService.showError( 'Échec de la mise à jour $data');
       }
     } catch (e) {
       // En cas d'erreur lors de la requête
-      NotificationService.showError(context, 'Erreur: $e');
+      NotificationService.showError( 'Erreur: $e');
     }
     setState(() {
       isMiniLoading = false;
@@ -81,7 +82,7 @@ class _EditAvatarState extends State<EditAvatar> {
                         translateService.translate('PICTURE_FROM_GALLERY')),
                     onTap: () async {
                       await _getImage(ImageSource.gallery);
-                      Navigator.of(context).pop();
+                      Navigator.of(navigatorKey.currentContext!).pop();
                     }),
                 ListTile(
                   leading: const Icon(Icons.photo_camera),
@@ -89,7 +90,7 @@ class _EditAvatarState extends State<EditAvatar> {
                       Text(translateService.translate('PICTURE_FROM_CAMERA')),
                   onTap: () async {
                     await _getImage(ImageSource.camera);
-                    Navigator.of(context).pop();
+                    Navigator.of(navigatorKey.currentContext!).pop();
                   },
                 ),
               ],
@@ -137,7 +138,7 @@ class _EditAvatarState extends State<EditAvatar> {
     FirebaseStorage storage =
         FirebaseStorage.instanceFor(bucket: 'gs://hoodhelps.appspot.com');
 
-    final fileName = 'profile_image_${userID}.jpg';
+    final fileName = 'profile_image_$userID.jpg';
 
     final profileImageRef = storage.ref().child('users').child(fileName);
     final uploadTask = profileImageRef.putFile(resizedFile);
@@ -155,14 +156,14 @@ class _EditAvatarState extends State<EditAvatar> {
     var userUrl = userService.imageUrl ?? '';
     var firstName = userService.firstName ?? '';
     var lastname = userService.lastName ?? '';
-    return Container(
+    return SizedBox(
       height: 100,
       width: double.infinity,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
               ),
               child: Stack(children: <Widget>[
@@ -191,12 +192,12 @@ class _EditAvatarState extends State<EditAvatar> {
                   child: Container(
                     width: 30,
                     height: 30,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: FigmaColors.primaryPrimary0,
                       shape: BoxShape.circle,
                     ),
                     child: IconButton(
-                      icon: Icon(Icons.edit,
+                      icon: const Icon(Icons.edit,
                           size: 15, color: FigmaColors.lightLight4),
                       onPressed: () async {
                         await _pickImage();

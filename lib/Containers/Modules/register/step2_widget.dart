@@ -1,3 +1,5 @@
+
+
 import 'dart:io';
 import 'package:hoodhelps/Containers/Modules/register/progress_bar_widget.dart';
 import 'package:hoodhelps/Containers/Widgets/button_widget.dart';
@@ -19,14 +21,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Step2Widget extends StatefulWidget {
   final Function nextStepCallback; // Ajoutez ce paramètre
 
-  const Step2Widget({Key? key, required this.nextStepCallback})
-      : super(key: key);
+  const Step2Widget({super.key, required this.nextStepCallback});
 
   @override
-  _Step2WidgetState createState() => _Step2WidgetState();
+  Step2WidgetState createState() => Step2WidgetState();
 }
 
-class _Step2WidgetState extends State<Step2Widget> {
+class Step2WidgetState extends State<Step2Widget> {
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
@@ -87,12 +88,12 @@ class _Step2WidgetState extends State<Step2Widget> {
     final translationService = context.read<TranslationService>();
     return genericSafeAreaTwoBlocks(
       middleChild: Column(children: [
-        ProgressBarWithCounter(currentStep: 2, totalSteps: 4),
+        const ProgressBarWithCounter(currentStep: 2, totalSteps: 4),
         const SizedBox(height: 30.0),
         Stack(
           children: <Widget>[
             CircleAvatar(
-              backgroundColor: Color.fromARGB(99, 44, 195, 147),
+              backgroundColor: const Color.fromARGB(99, 44, 195, 147),
               radius: 50,
               backgroundImage: _image != null ? FileImage(_image!) : null,
               child: _image == null
@@ -105,12 +106,12 @@ class _Step2WidgetState extends State<Step2Widget> {
               child: Container(
                 width: 30,
                 height: 30,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Color(0xFF102820),
                   shape: BoxShape.circle,
                 ),
                 child: IconButton(
-                  icon: Icon(Icons.camera_alt_rounded,
+                  icon: const Icon(Icons.camera_alt_rounded,
                       size: 15, color: Colors.white),
                   onPressed: () async {
                     await _pickImage();
@@ -192,11 +193,11 @@ class _Step2WidgetState extends State<Step2Widget> {
         widget.nextStepCallback();
       } else {
         // En cas d'échec de la requête, afficher un message d'erreur
-        NotificationService.showError(context, 'Échec de la mise à jour $data');
+        NotificationService.showError( 'Échec de la mise à jour $data');
       }
     } catch (e) {
       // En cas d'erreur lors de la requête
-      NotificationService.showError(context, 'Erreur: $e');
+      NotificationService.showError( 'Erreur: $e');
     }
   }
 }

@@ -15,16 +15,17 @@ import 'package:hoodhelps/services/jobs_provider.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
+import 'package:hoodhelps/utils.dart';
 import 'package:provider/provider.dart';
 
 class UserAccountJobs extends StatefulWidget {
-  const UserAccountJobs({Key? key}) : super(key: key);
+  const UserAccountJobs({super.key});
 
   @override
-  _UserAccountJobsState createState() => _UserAccountJobsState();
+  UserAccountJobsState createState() => UserAccountJobsState();
 }
 
-class _UserAccountJobsState extends State<UserAccountJobs> {
+class UserAccountJobsState extends State<UserAccountJobs> {
   bool isLoading = true;
   bool isMiniLoading = false;
 
@@ -43,8 +44,8 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
               children: [
                 ...userJob
                     .map((job) => _buildGroupBlock(context, job))
-                    .toList(),
-                SizedBox(height: 20),
+                    ,
+                const SizedBox(height: 20),
                 buildButton(
                   onPressed: () {
                     _showAddJobModal(context);
@@ -60,7 +61,7 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
   Widget _buildGroupBlock(BuildContext context, Job job) {
     return Container(
       padding: const EdgeInsets.all(12.0),
-      margin: EdgeInsets.only(bottom: 12.0),
+      margin: const EdgeInsets.only(bottom: 12.0),
       alignment: Alignment.topLeft,
       width: double.infinity,
       decoration: BoxDecoration(
@@ -81,7 +82,7 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
                 fit: FlexFit.loose,
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  child: JobBadge(job_id: job.id, isPro: job.isPro),
+                  child: JobBadge(jobId: job.id, isPro: job.isPro),
                 ),
               ),
               IconButton(
@@ -89,13 +90,13 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
                     _showEditModal(context, job);
                     // await deleteGroup(group.id);
                   },
-                  icon: Icon(Icons.edit_note,
+                  icon: const Icon(Icons.edit_note,
                       color: FigmaColors.darkDark0, size: 20))
             ],
           ),
           Text(
-            '${job.experience_years} année${job.experience_years > 1 ? 's' : ''} d\'expérience',
-            style: FigmaTextStyles()
+            '${job.experienceYears} année${job.experienceYears > 1 ? 's' : ''} d\'expérience',
+            style: const FigmaTextStyles()
                 .body14pt
                 .copyWith(color: FigmaColors.darkDark2),
           ),
@@ -107,24 +108,24 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
                   width: 15,
                   height: 15,
                   semanticsLabel: 'Pro',
-                  colorFilter: ColorFilter.mode(
+                  colorFilter: const ColorFilter.mode(
                     FigmaColors.darkDark2,
                     BlendMode.srcIn,
                   ),
                 ),
                 const SizedBox(width: 4),
               Text(
-                '${job.company_name}',
-                style: FigmaTextStyles()
+                job.companyName,
+                style: const FigmaTextStyles()
                     .body14pt
                     .copyWith(color: FigmaColors.darkDark2),
               ),
               ],
             ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           Text(
             job.description,
-            style: FigmaTextStyles()
+            style: const FigmaTextStyles()
                 .body16pt
                 .copyWith(color: FigmaColors.darkDark0),
             maxLines: 2,
@@ -162,14 +163,14 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
                     Center(
                       child: Text(
                         title,
-                        style: FigmaTextStyles()
+                        style: const FigmaTextStyles()
                             .stylizedMedium
                             .copyWith(color: FigmaColors.darkDark0),
                       ),
                     ),
-                    SizedBox(height: 16),
-                    Divider(color: FigmaColors.lightLight0, thickness: 1),
-                    SizedBox(height: 25),
+                    const SizedBox(height: 16),
+                    const Divider(color: FigmaColors.lightLight0, thickness: 1),
+                    const SizedBox(height: 25),
                     Expanded(
                       child: builder(setModalState), // Contenu spécifique
                     ),
@@ -236,7 +237,7 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
                   onTap: () async {
                     await loadCategories();
                     final selectedCategory =
-                        await _showCategoryPicker(context, categories);
+                        await _showCategoryPicker(navigatorKey.currentContext!, categories);
                     if (selectedCategory != null) {
                       setModalState(() {
                         selectedCategoryId = selectedCategory.id;
@@ -300,10 +301,10 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
                   Row(
                     children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.only(left: 10),
+                        padding: const EdgeInsets.only(left: 10),
                         child: Text(
                           '${translationService.translate("EXPERIENCE")}: ${experienceYears == 10 ? '10+' : experienceYears.toString()} ${translationService.translate("YEARS")}',
-                          style: FigmaTextStyles()
+                          style: const FigmaTextStyles()
                               .body16pt
                               .copyWith(color: FigmaColors.darkDark0),
                         ),
@@ -327,15 +328,15 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
                   Row(
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(left: 15),
+                        padding: const EdgeInsets.only(left: 15),
                         child: Text(
                           'Je suis à mon compte :',
-                          style: FigmaTextStyles()
+                          style: const FigmaTextStyles()
                               .body16pt
                               .copyWith(color: FigmaColors.darkDark0),
                         ),
                       ),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       Switch(
                         value: isPro,
                         onChanged: (value) {
@@ -382,7 +383,7 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
                       ? () async {
                           await saveUserJobData(selectedJobId,
                               descriptionController.text, experienceYears, isPro, companyNameController.text);
-                          Navigator.pop(context);
+                          Navigator.pop(navigatorKey.currentContext!);
                         }
                       : null,
                   text: 'Ajouter',
@@ -397,7 +398,7 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
   }
 
   Future<void> saveUserJobData(
-      String? selectedJobId, String description, int experienceYears, isPro, company_name) async {
+      String? selectedJobId, String description, int experienceYears, isPro, companyName) async {
     final jobsProvider = Provider.of<JobsProvider>(context, listen: false);
 
     final user = Provider.of<UserService>(context, listen: false);
@@ -410,7 +411,7 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
             "description": description,
             "experience_years": experienceYears.toString(),
             "pro": isPro,
-            "company_name": company_name,
+            "company_name": companyName,
           },
           context: context);
 
@@ -424,18 +425,18 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
 
         if (selectedJobId != null) {
           user.addNewJob(
-              selectedJobId, jobName['name'], description, experienceYears, isPro, company_name);
+              selectedJobId, jobName['name'], description, experienceYears, isPro, companyName);
         }
         setState(() {});
 
-        NotificationService.showInfo(context, 'Mis à jour avec succès');
+        NotificationService.showInfo('Mis à jour avec succès');
       } else {
         // En cas d'échec de la requête, afficher un message d'erreur
-        NotificationService.showError(context, 'Échec de l\'enrigistrement');
+        NotificationService.showError('Échec de l\'enrigistrement');
       }
     } catch (e) {
       // En cas d'erreur lors de la requête
-      NotificationService.showError(context, 'Erreur: $e');
+      NotificationService.showError('Erreur: $e');
     }
   }
 
@@ -488,7 +489,7 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
                               child: Text(
                                 translationService
                                     .translate(categories[index].name),
-                                style: FigmaTextStyles()
+                                style: const FigmaTextStyles()
                                     .body16pt
                                     .copyWith(color: FigmaColors.darkDark0),
                                 softWrap:
@@ -558,7 +559,7 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
                             Expanded(
                               child: Text(
                                 translationService.translate(jobs[index].name),
-                                style: FigmaTextStyles()
+                                style: const FigmaTextStyles()
                                     .body16pt
                                     .copyWith(color: FigmaColors.darkDark0),
                                 softWrap:
@@ -584,13 +585,13 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
   final translationService = context.read<TranslationService>();
 
   // Variables locales
-  int experienceYears = job.experience_years;
+  int experienceYears = job.experienceYears;
   TextEditingController jobNameController =
       TextEditingController(text: translationService.translate(job.name));
   TextEditingController descriptionController =
       TextEditingController(text: job.description);
   TextEditingController companyNameController =
-      TextEditingController(text: job.company_name);
+      TextEditingController(text: job.companyName);
   bool isPro = job.isPro;
 
   _mainModalBottomSheet(
@@ -612,15 +613,15 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
                     labelText: 'Votre métier',
                     key: 'jobNameField',
                   ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.only(left: 15),
+                        padding: const EdgeInsets.only(left: 15),
                         child: Text(
                           '${translationService.translate("EXPERIENCE")}: ${experienceYears == 10 ? '10+' : experienceYears.toString()} ${translationService.translate("YEARS")}',
-                          style: FigmaTextStyles()
+                          style: const FigmaTextStyles()
                               .body16pt
                               .copyWith(color: FigmaColors.darkDark0),
                         ),
@@ -641,15 +642,15 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
                   Row(
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(left: 15),
+                        padding: const EdgeInsets.only(left: 15),
                         child: Text(
                           'Je suis à mon compte :',
-                          style: FigmaTextStyles()
+                          style: const FigmaTextStyles()
                               .body16pt
                               .copyWith(color: FigmaColors.darkDark0),
                         ),
                       ),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       Switch(
                         value: isPro,
                         onChanged: (value) {
@@ -667,7 +668,7 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
                       labelText: 'Nom de l\'entreprise',
                       key: 'companyNameField',
                     ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   buildTextField(
                     controller: descriptionController,
                     maxLine: 5,
@@ -694,16 +695,16 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
                     isPro,
                     companyNameController.text,
                   );
-                  Navigator.pop(context);
+                  Navigator.pop(navigatorKey.currentContext!);
                 },
                 text: 'Modifier',
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               buildButton(
                 variant: 'delete',
                 onPressed: () async {
                   await deleteJob(job.id);
-                  Navigator.pop(context);
+                  Navigator.pop(navigatorKey.currentContext!);
                 },
                 text: 'Supprimer',
               ),
@@ -715,7 +716,7 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
   );
 }
 
-  Future<void> updateJob(jobID, description, experience_years, isPro, company_name) async {
+  Future<void> updateJob(jobID, description, experienceYears, isPro, companyName) async {
     final user = Provider.of<UserService>(context, listen: false);
 
     try {
@@ -724,9 +725,9 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
         useToken: true,
         body: {
           'description': description,
-          'experience_years': experience_years.toString(),
+          'experience_years': experienceYears.toString(),
           'pro': isPro,
-          'company_name': company_name,
+          'company_name': companyName,
         },
         context: context,
       );
@@ -734,18 +735,18 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
       final data = jsonDecode(response.body);
       if (response.statusCode == 200) {
         if (jobID != null) {
-          user.updateUserJob(jobID, description, experience_years, isPro,
-              company_name);
+          user.updateUserJob(jobID, description, experienceYears, isPro,
+              companyName);
         }
 
-        NotificationService.showInfo(context, 'Mis à jour avec succès');
+        NotificationService.showInfo('Mis à jour avec succès');
       } else {
         // En cas d'échec de la requête, afficher un message d'erreur
-        NotificationService.showError(context, 'Échec de la mise à jour $data');
+        NotificationService.showError('Échec de la mise à jour $data');
       }
     } catch (e) {
       // En cas d'erreur lors de la requête
-      NotificationService.showError(context, 'Erreur: $e');
+      NotificationService.showError( 'Erreur: $e');
     }
     setState(() {
       isMiniLoading = false;
@@ -763,14 +764,14 @@ class _UserAccountJobsState extends State<UserAccountJobs> {
         // Si la requête réussit (statut 200), analyser la réponse JSON
         user.removeUserJobs(jobID);
         NotificationService.showInfo(
-            context, 'Suppression effectuée avec succès');
+            'Suppression effectuée avec succès');
       } else {
         // En cas d'échec de la requête, afficher un message d'erreur
-        NotificationService.showError(context, 'Échec de la suppression');
+        NotificationService.showError( 'Échec de la suppression');
       }
     } catch (e) {
       // En cas d'erreur lors de la requête
-      NotificationService.showError(context, 'Erreur: $e');
+      NotificationService.showError( 'Erreur: $e');
     }
     setState(() {
       isMiniLoading = false;

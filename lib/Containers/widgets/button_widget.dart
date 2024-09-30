@@ -63,7 +63,7 @@ MaterialButton buildButton({
       alignment: Alignment.center,
       child: Text(
         text,
-        style: FigmaTextStyles().stylizedMedium,
+        style: const FigmaTextStyles().stylizedMedium,
       ),
     ),
   );

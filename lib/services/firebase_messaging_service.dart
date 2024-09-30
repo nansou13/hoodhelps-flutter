@@ -1,4 +1,6 @@
 // firebase_messaging_service.dart
+// ignore_for_file: avoid_print
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class FirebaseMessagingService {
@@ -28,7 +30,13 @@ class FirebaseMessagingService {
   }
 
   Future<String?> getToken() async {
-    return await _messaging.getToken();
+    try {
+      String? token = await _messaging.getToken();
+      return token;
+    } catch (e) {
+      print('Erreur lors de la récupération du token FCM: $e');
+      return null;
+    }
   }
 }
 

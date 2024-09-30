@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
@@ -9,14 +11,13 @@ import 'package:hoodhelps/services/icons_service.dart';
 class AddJobWidget extends StatefulWidget {
   final Function saveJobCallback;
 
-  const AddJobWidget({Key? key, required this.saveJobCallback})
-      : super(key: key);
+  const AddJobWidget({super.key, required this.saveJobCallback});
 
   @override
-  _AddJobWidgetState createState() => _AddJobWidgetState();
+  AddJobWidgetState createState() => AddJobWidgetState();
 }
 
-class _AddJobWidgetState extends State<AddJobWidget> {
+class AddJobWidgetState extends State<AddJobWidget> {
   String? selectedCategoryId;
   Job? selectedJob;
   String? selectedJobId;
@@ -83,11 +84,11 @@ class _AddJobWidgetState extends State<AddJobWidget> {
         });
       } else {
         // En cas d'échec de la requête, afficher un message d'erreur
-        NotificationService.showError(context, "Échec ajout du job $data");
+        NotificationService.showError( "Échec ajout du job $data");
       }
     } catch (e) {
       // En cas d'erreur lors de la requête
-      NotificationService.showError(context, "Erreur: $e");
+      NotificationService.showError( "Erreur: $e");
     }
   }
 
@@ -181,7 +182,7 @@ class _AddJobWidgetState extends State<AddJobWidget> {
                 saveUserJobData();
               }
             },
-            color: selectedJobId != null ? Color(0xFF102820) : Colors.grey,
+            color: selectedJobId != null ? const Color(0xFF102820) : Colors.grey,
             textColor: Colors.white,
             elevation: 0,
             shape: RoundedRectangleBorder(

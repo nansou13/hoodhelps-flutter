@@ -31,6 +31,7 @@ class JobsProvider extends ChangeNotifier {
         }
       }
     } catch (e) {
+      // ignore: avoid_print
       print('Erreur lors de la récupération des jobs: $e');
     }
   }

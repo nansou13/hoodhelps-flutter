@@ -6,7 +6,7 @@ import 'package:hoodhelps/utils.dart';
 class UserAvatarBox extends StatelessWidget {
   final dynamic user;
   final double? size;
-  UserAvatarBox({required this.user, double this.size = 50});
+  const UserAvatarBox({super.key, required this.user, double this.size = 50});
   // Fonction pour obtenir les initiales d'un utilisateur
   String getInitials() {
     String name = '';
@@ -54,7 +54,7 @@ class UserAvatarBox extends StatelessWidget {
           ? Center(
               child: Text(
                 getInitials(),
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),

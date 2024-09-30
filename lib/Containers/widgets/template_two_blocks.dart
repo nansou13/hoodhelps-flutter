@@ -8,12 +8,12 @@ class TemplateTwoBlocks extends StatelessWidget {
   final String appTitle;
 
   const TemplateTwoBlocks({
-    Key? key,
+    super.key,
     required this.middleChild,
     required this.bottomChild,
     this.showLeading = true,
     this.appTitle = '...',
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ AppBar genericAppBar({
     automaticallyImplyLeading: false,
     backgroundColor: FigmaColors.lightLight4,
     centerTitle: false,
-    titleTextStyle: FigmaTextStyles().headingsh3.copyWith(
+    titleTextStyle: const FigmaTextStyles().headingsh3.copyWith(
           color: FigmaColors.darkDark0,
         ),
     leading: showLeading && (leadingAction != null || Navigator.canPop(context))
@@ -53,7 +53,7 @@ AppBar genericAppBar({
         : null,
     title: Text(
       appTitle,
-      style: FigmaTextStyles().headingsh3.copyWith(
+      style: const FigmaTextStyles().headingsh3.copyWith(
             color: FigmaColors.darkDark0,
           ),
       maxLines: 1, // Limite à 2 lignes

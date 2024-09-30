@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/Containers/Modules/register/progress_bar_widget.dart';
 import 'package:hoodhelps/Containers/Widgets/button_widget.dart';
@@ -14,14 +16,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Step1Widget extends StatefulWidget {
   final Function nextStepCallback; // Ajoutez ce paramètre
 
-  const Step1Widget({Key? key, required this.nextStepCallback})
-      : super(key: key);
+  const Step1Widget({super.key, required this.nextStepCallback});
 
   @override
-  _Step1WidgetState createState() => _Step1WidgetState();
+  Step1WidgetState createState() => Step1WidgetState();
 }
 
-class _Step1WidgetState extends State<Step1Widget> {
+class Step1WidgetState extends State<Step1Widget> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -62,7 +63,7 @@ class _Step1WidgetState extends State<Step1Widget> {
     final translationService = context.read<TranslationService>();
     return genericSafeAreaTwoBlocks(
         middleChild: Column(children: [
-          ProgressBarWithCounter(currentStep: 1, totalSteps: 4),
+          const ProgressBarWithCounter(currentStep: 1, totalSteps: 4),
           const SizedBox(height: 30.0),
           buildTextField(
             controller: _usernameController,
@@ -103,7 +104,7 @@ class _Step1WidgetState extends State<Step1Widget> {
     final email = _emailController.text;
 
     if (!isEmailValid(email)) {
-      NotificationService.showError(context, 'Adresse e-mail invalide');
+      NotificationService.showError( 'Adresse e-mail invalide');
       return;
     }
 
@@ -125,11 +126,11 @@ class _Step1WidgetState extends State<Step1Widget> {
         final errorData = jsonDecode(response.body);
 
         NotificationService.showError(
-            context, "Échec de la création: ${errorData['error']}");
+            "Échec de la création: ${errorData['error']}");
       }
     } catch (e) {
       setState(() {
-        NotificationService.showError(context, "Erreur: $e");
+        NotificationService.showError( "Erreur: $e");
       });
     }
   }

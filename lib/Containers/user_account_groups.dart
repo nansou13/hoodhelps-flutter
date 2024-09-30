@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/Containers/Widgets/avatar_stack.dart';
 import 'package:hoodhelps/Containers/Widgets/button_widget.dart';
@@ -12,13 +14,13 @@ import 'package:hoodhelps/utils.dart';
 import 'package:provider/provider.dart';
 
 class UserAccountGroups extends StatefulWidget {
-  const UserAccountGroups({Key? key}) : super(key: key);
+  const UserAccountGroups({super.key});
 
   @override
-  _UserAccountGroupsState createState() => _UserAccountGroupsState();
+  UserAccountGroupsState createState() => UserAccountGroupsState();
 }
 
-class _UserAccountGroupsState extends State<UserAccountGroups> {
+class UserAccountGroupsState extends State<UserAccountGroups> {
   bool isMiniLoading = false;
 
   @override
@@ -37,8 +39,8 @@ class _UserAccountGroupsState extends State<UserAccountGroups> {
               children: [
                 ...groups
                     .map((group) => _buildGroupBlock(context, group))
-                    .toList(),
-                SizedBox(height: 25),
+                    ,
+                const SizedBox(height: 25),
                 buildButton(
                     text: translationService.translate('JOIN_A_GROUP'),
                     onPressed: () {
@@ -54,7 +56,7 @@ class _UserAccountGroupsState extends State<UserAccountGroups> {
   Widget _buildGroupBlock(BuildContext context, Group group) {
     return Container(
       padding: const EdgeInsets.all(12.0),
-      margin: EdgeInsets.only(bottom: 12.0),
+      margin: const EdgeInsets.only(bottom: 12.0),
       alignment: Alignment.topLeft,
       width: double.infinity,
       decoration: BoxDecoration(
@@ -73,7 +75,7 @@ class _UserAccountGroupsState extends State<UserAccountGroups> {
               Expanded(
                 child: Text(
                   group.name,
-                  style: FigmaTextStyles()
+                  style: const FigmaTextStyles()
                       .stylizedMedium
                       .copyWith(color: FigmaColors.darkDark0),
                   maxLines: 1, // Limite à 2 lignes
@@ -81,26 +83,26 @@ class _UserAccountGroupsState extends State<UserAccountGroups> {
                       .ellipsis, // Affiche "..." si le texte dépasse
                 ),
               ),
-              SizedBox(width: 50),
+              const SizedBox(width: 50),
               IconButton(
                   onPressed: () async {
                     await deleteGroup(group.id);
                   },
-                  icon: Icon(Icons.delete,
+                  icon: const Icon(Icons.delete,
                       color: FigmaColors.darkDark0, size: 20))
             ],
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           Row(
             children: [
               Expanded(
                 child: AvatarStack(
                   users: buildUserAvatarList(group.users),
-                  TextColor: FigmaColors.darkDark2,
+                  textColor: FigmaColors.darkDark2,
                 ),
               ),
               Text("${group.users.length} membres",
-                  style: FigmaTextStyles()
+                  style: const FigmaTextStyles()
                       .body14pt
                       .copyWith(color: FigmaColors.darkDark0)),
             ],
@@ -137,17 +139,16 @@ class _UserAccountGroupsState extends State<UserAccountGroups> {
       if (response.statusCode == 204) {
         // Si la requête réussit (statut 200), analyser la réponse JSON
 
-        NotificationService.showInfo(
-            context, 'Suppression effectuée avec succès');
+        NotificationService.showInfo('Suppression effectuée avec succès');
 
         user.removeUserGroup(groupID);
       } else {
         // En cas d'échec de la requête, afficher un message d'erreur
-        NotificationService.showError(context, 'Échec de la suppression');
+        NotificationService.showError('Échec de la suppression');
       }
     } catch (e) {
       // En cas d'erreur lors de la requête
-      NotificationService.showError(context, 'Erreur: $e');
+      NotificationService.showError('Erreur: $e');
     }
     setState(() {
       isMiniLoading = false;

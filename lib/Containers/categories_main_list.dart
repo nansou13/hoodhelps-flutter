@@ -8,16 +8,17 @@ import 'package:hoodhelps/services/icons_service.dart';
 import 'package:hoodhelps/services/notifications_service.dart';
 import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
+import 'package:hoodhelps/utils.dart';
 import 'package:provider/provider.dart';
 
 class CategoriesMainListPage extends StatefulWidget {
-  const CategoriesMainListPage({Key? key}) : super(key: key);
+  const CategoriesMainListPage({super.key});
 
   @override
-  _CategoriesMainListPage createState() => _CategoriesMainListPage();
+  CategoriesMainListPageState createState() => CategoriesMainListPageState();
 }
 
-class _CategoriesMainListPage extends State<CategoriesMainListPage> {
+class CategoriesMainListPageState extends State<CategoriesMainListPage> {
   List categoryData = [];
   bool isLoading = false;
 
@@ -32,13 +33,13 @@ class _CategoriesMainListPage extends State<CategoriesMainListPage> {
     try {
       final CategoriesService categoriesService = CategoriesService();
 
-      final user = Provider.of<UserService>(context, listen: false);
+      final user = Provider.of<UserService>(navigatorKey.currentContext!, listen: false);
       final groupId = user.currentGroupId;
 
       final data = await categoriesService.getCacheCategoryData(groupId);
 
       setState(() {
-        categoryData = this.reorderCategoriesByUserCount([...data]);
+        categoryData = reorderCategoriesByUserCount([...data]);
         isLoading = false;
       });
     } catch (e) {
@@ -46,7 +47,7 @@ class _CategoriesMainListPage extends State<CategoriesMainListPage> {
         isLoading = false;
       });
       NotificationService.showError(
-          context, "Erreur lors du chargement des données: $e");
+          "Erreur lors du chargement des données: $e");
     }
   }
 
@@ -62,7 +63,7 @@ class _CategoriesMainListPage extends State<CategoriesMainListPage> {
         backgroundColor:
             FigmaColors.lightLight4, // Fond noir pour toute la page
         body: isLoading
-            ? Center(child: CircularProgressIndicator())
+            ? const Center(child: CircularProgressIndicator())
             : Container(
                 padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                 width: double.infinity,
@@ -124,11 +125,11 @@ class _CategoriesMainListPage extends State<CategoriesMainListPage> {
                                   children: [
                                     _buildCategoryIcon(categoryName, categoryID,
                                         categoryUsers),
-                                    SizedBox(height: 10.0),
+                                    const SizedBox(height: 10.0),
                                     Text(
                                       translationService
                                           .translate(categoryName),
-                                      style: FigmaTextStyles()
+                                      style: const FigmaTextStyles()
                                           .stylizedBlockquote
                                           .copyWith(
                                             color: categoryUsers > 0
@@ -138,8 +139,8 @@ class _CategoriesMainListPage extends State<CategoriesMainListPage> {
                                     ),
                                   ]),
                               Text(
-                                '${categoryUsers} voisin${categoryUsers > 1 ? 's' : ''}',
-                                style: FigmaTextStyles().body14pt.copyWith(
+                                '$categoryUsers voisin${categoryUsers > 1 ? 's' : ''}',
+                                style: const FigmaTextStyles().body14pt.copyWith(
                                       color: categoryUsers > 0
                                           ? FigmaColors.darkDark2
                                           : FigmaColors.darkDark3,

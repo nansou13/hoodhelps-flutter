@@ -141,13 +141,19 @@ class ProfilePageState extends State<ProfilePage> {
         const SizedBox(height: 15.0),
         _buildContactActionRow(Icons.email, userInfo['email'] ?? '',
             () => _launchUri(Uri(scheme: 'mailto', path: userInfo['email']))),
+
+        if (userInfo['phone_number'] != null)
         const SizedBox(height: 7.0),
+
+        if (userInfo['phone_number'] != null)
         _buildContactActionRow(
             Icons.phone,
             FunctionUtils.formatPhoneNumber(userInfo['phone_number'] ?? ''),
             () =>
                 _launchUri(Uri(scheme: 'tel', path: userInfo['phone_number']))),
+        if (userInfo['phone_number'] != null)
         const SizedBox(height: 7.0),
+        if (userInfo['phone_number'] != null)
         _buildContactActionRow(
             Icons.sms,
             "Envoyer un SMS",
@@ -159,6 +165,14 @@ class ProfilePageState extends State<ProfilePage> {
 
   // Job list with details
   Widget _buildJobList(List<dynamic> jobs) {
+    if (jobs.isEmpty) {
+    return Center(
+        child: Text(
+          'Aucun métier',
+          style: const FigmaTextStyles().body16pt.copyWith(color: FigmaColors.darkDark2),
+        ),
+      );
+    }
     return Expanded(
       child: SingleChildScrollView(
         child: Column(

@@ -3,6 +3,7 @@ import 'package:hoodhelps/Containers/Widgets/avatar_stack.dart';
 import 'package:hoodhelps/Containers/Widgets/button_widget.dart';
 import 'package:hoodhelps/Containers/Widgets/user_list_display_widget.dart';
 import 'package:hoodhelps/utils.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:hoodhelps/custom_colors.dart';
 import 'package:hoodhelps/route_constants.dart';
@@ -140,7 +141,11 @@ class LobbyPageState extends State<LobbyPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(children: [
+            InkWell(
+        onTap: () {
+          _showQRCodeDialog(context, group.code.toUpperCase()); // Afficher le QR code et copier
+        },
+        child: Row(children: [
               Text('Code : ${group.code.toUpperCase()}',
                   style: const FigmaTextStyles()
                       .body14pt
@@ -152,6 +157,7 @@ class LobbyPageState extends State<LobbyPage> {
                 size: 18,
               ),
             ]),
+            ),
           ],
         ),
       ],
@@ -403,4 +409,53 @@ class LobbyPageState extends State<LobbyPage> {
       ],
     );
   }
+
+
+void _showQRCodeDialog(BuildContext context, String groupCode) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Center(child: Text("Code du groupe", style: const FigmaTextStyles().headingsh3.copyWith(
+          color: FigmaColors.darkDark0,
+        ),),) ,
+        
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Générer le QR code à partir du code de groupe
+            SizedBox(
+              height: 200.0,
+              width: 200.0,
+              child: QrImageView(
+                data: "https://gigan.fr/joingroup?code=$groupCode",
+                version: QrVersions.auto,
+                size: 200.0,
+              ),
+            ),
+            
+           
+            const SizedBox(height: 20),
+            Text(
+              "Code : $groupCode",
+              style: const FigmaTextStyles().body16pt.copyWith(
+                color: FigmaColors.darkDark0,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Center(child:Text(
+              "Code copié dans le presse-papier",
+              style: const FigmaTextStyles().body14pt.copyWith(
+                color: FigmaColors.darkDark2,
+                
+              ),
+            )),
+          ],
+        ),
+        
+      );
+    },
+  );
+}
+ 
 }

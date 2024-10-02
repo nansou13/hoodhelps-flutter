@@ -50,6 +50,8 @@ dependencies:
   smooth_page_indicator: ^1.2.0+3
   url_launcher: ^6.3.0
   flutter_launcher_icons: ^0.14.1
+  qr_flutter: ^4.1.0
+  app_links: ^6.3.2
 
 dev_dependencies:
   flutter_test:

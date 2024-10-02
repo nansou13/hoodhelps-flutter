@@ -1,9 +1,11 @@
+import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:hoodhelps/Containers/user_account.dart';
 import 'package:hoodhelps/Containers/user_account_groups.dart';
 import 'package:hoodhelps/Containers/user_account_jobs.dart';
 import 'package:hoodhelps/custom_colors.dart';
 import 'package:hoodhelps/route_constants.dart';
+import 'package:hoodhelps/services/api_service.dart';
 import 'package:hoodhelps/services/jobs_provider.dart';
 import 'package:hoodhelps/services/navigation_provider.dart';
 import 'package:hoodhelps/utils.dart';
@@ -68,8 +70,54 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  MyAppState createState() => MyAppState();
+}
+
+class MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    _handleIncomingLinks();
+  }
+
+  Future<void> _handleIncomingLinks() async {
+    final userToken = await ApiService().getToken();
+    // Pour gérer les liens universels (iOS) et les App Links (Android)
+    try {
+      final appLinks = AppLinks();
+      appLinks.uriLinkStream.listen((Uri? uri) {
+        if (uri != null) {
+          if (uri.pathSegments.contains('joingroup')) {
+            final code = uri.queryParameters['code'];
+            // check if user is logged
+            if (code != null) {
+            if(userToken != null && userToken.isNotEmpty) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Navigator.of(navigatorKey.currentContext!).pushNamed(
+                  RouteConstants.joinGroup,
+                  arguments: {'code': code},
+                );
+              });
+            }else {
+              // if user is not logged, save the code in shared preferences
+              SharedPreferences.getInstance().then((prefs) {
+                prefs.setString('joinGroupCode', code);
+              });
+            }
+            }
+          }
+        }
+      });
+    } catch (e) {
+      // ignore: avoid_print
+      print('Erreur lors de la gestion des liens entrants: $e');
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {

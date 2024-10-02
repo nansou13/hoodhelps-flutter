@@ -13,6 +13,7 @@ Column buildTextField(
     bool enabled = true,
     int maxLine = 1,
     int minLine = 1,
+    void Function()? onCameraTap,
     bool obscureText = false}) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start, // Aligne le label à gauche
@@ -53,6 +54,15 @@ Column buildTextField(
               borderRadius: BorderRadius.circular(10.0),
               borderSide: const BorderSide(
                   color: FigmaColors.darkDark4, width: 1.0), // Bordure inactive
+            ),
+
+            suffixIcon: 
+                onCameraTap == null
+                    ? null
+                    :
+            IconButton(
+              icon: const Icon(Icons.camera_alt), // L'icône de la caméra
+              onPressed: onCameraTap, // Appeler la fonction de scan
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),

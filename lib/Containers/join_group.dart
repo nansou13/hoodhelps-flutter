@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
+// import 'package:hoodhelps/Containers/Widgets/qr_code_scanner.dart';
 import 'package:hoodhelps/Containers/Widgets/template_two_blocks.dart';
 import 'package:hoodhelps/Containers/Widgets/textfield_widget.dart';
 import 'package:hoodhelps/custom_colors.dart';
@@ -11,6 +13,7 @@ import 'package:hoodhelps/services/translation_service.dart';
 import 'package:hoodhelps/services/user_service.dart';
 import 'package:hoodhelps/utils.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class JoinGroup extends StatefulWidget {
   const JoinGroup({super.key});
@@ -25,7 +28,47 @@ class JoinGroupState extends State<JoinGroup> {
   @override
   void initState() {
     super.initState();
+
+    // Récupérer et utiliser le code depuis les SharedPreferences
+    SharedPreferences.getInstance().then((prefs) {
+      final joinGroupCode = prefs.getString('joinGroupCode');
+      if (joinGroupCode != null && joinGroupCode.isNotEmpty) {
+        setState(() {
+          _codeController.text = joinGroupCode;
+        });
+        // Effacer le code après l'avoir utilisé
+        prefs.remove('joinGroupCode');
+      }
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    if (args != null && args.containsKey('code')) {
+      final code = args['code'] as String;
+      // Met à jour le contrôleur avec le code
+      _codeController.text = code;
+    }
+  });
   }
+
+  // Future<void> _scanQRCode(BuildContext context) async {
+  //   // Ouvrir le scanner de QR code
+  //   final scannedCode = await Navigator.push(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => const QRCodeScanner()),
+  //   );
+
+  //   if (scannedCode != null) {
+  //     // Mettre à jour le TextField avec le code scanné
+  //     setState(() {
+  //       _codeController.text = extractCodeFromUrl(scannedCode);
+  //     });
+
+  //     // Copier le code dans le presse-papiers
+  //     Clipboard.setData(ClipboardData(text: scannedCode));
+  //   }
+    
+  // }
 
   Future<void> fetchGroupeInfo() async {
     final userService = Provider.of<UserService>(context, listen: false);
@@ -113,6 +156,7 @@ class JoinGroupState extends State<JoinGroup> {
             controller: _codeController,
             hintText: translationService.translate('HINT_TEXT_ENTER_CODE'),
             labelText: translationService.translate('HINT_TEXT_ENTER_CODE'),
+            // onCameraTap: () => _scanQRCode(context),
             key: 'codeField',
           ),
         ]),
@@ -178,3 +222,13 @@ class CodeInputController extends TextEditingController {
     }
   }
 }
+
+  String extractCodeFromUrl(String url) {
+      // Parse l'URL avec la classe Uri
+      final uri = Uri.parse(url);
+      
+      // Récupérer la valeur du paramètre 'code'
+      final code = uri.queryParameters['code'];
+
+      return code ?? ''; // Retourne le code ou une chaîne vide si aucun code n'est trouvé
+    }

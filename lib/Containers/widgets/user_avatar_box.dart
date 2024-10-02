@@ -20,8 +20,7 @@ class UserAvatarBox extends StatelessWidget {
     if (nameParts.length > 1) {
       return nameParts[0][0] + nameParts[1][0]; // Initiales des prénoms et noms
     } else {
-      return nameParts[0]
-          [0]; // Si le nom est un seul mot, on prend juste la première lettre
+      return nameParts[0][0].toUpperCase() + nameParts[0][1].toUpperCase(); // Si le nom est un seul mot, on prend juste la première lettre
     }
   }
 
@@ -37,6 +36,7 @@ class UserAvatarBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var userUrl = getUserUrlImage();
+    
     return Container(
       width: size, // Largeur du carré
       height: size, // Hauteur du carré
@@ -54,10 +54,10 @@ class UserAvatarBox extends StatelessWidget {
           ? Center(
               child: Text(
                 getInitials(),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: const FigmaTextStyles().headingsh1.copyWith(
+                      color: FigmaColors.lightLight4,
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
             )
           : null,

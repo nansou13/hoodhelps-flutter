@@ -38,7 +38,7 @@ class UserService {
     firstName = userData['first_name'];
     lastName = userData['last_name'];
     dateOfBirth = userData['date_of_birth'];
-    imageUrl = userData['image_url'];
+    imageUrl = userData['image_url'] ?? '';
     isActive = userData['is_active'];
     role = userData['role'];
     phoneNumber = userData['phone_number'];

@@ -28,6 +28,18 @@ class Step4WidgetState extends State<Step4Widget> {
   @override
   void initState() {
     super.initState();
+
+    // Récupérer et utiliser le code depuis les SharedPreferences
+    SharedPreferences.getInstance().then((prefs) {
+      final joinGroupCode = prefs.getString('joinGroupCode');
+      if (joinGroupCode != null && joinGroupCode.isNotEmpty) {
+        setState(() {
+          _codeController.text = joinGroupCode;
+        });
+        // Effacer le code après l'avoir utilisé
+        prefs.remove('joinGroupCode');
+      }
+    });
   }
 
   Future<void> fetchGroupeInfo() async {
@@ -109,7 +121,9 @@ class Step4WidgetState extends State<Step4Widget> {
         bottomChild: Column(
           children: [
             buildButton(
-              onPressed: _codeController.text.isEmpty ? null : fetchGroupeInfo,
+              onPressed: () {
+                fetchGroupeInfo();
+              },
               text: translationService.translate('JOIN_THE_GROUP'),
             ),
             const SizedBox(height: 20.0),

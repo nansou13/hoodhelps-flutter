@@ -15,14 +15,13 @@ class UserListDisplay extends StatelessWidget {
     if (nameParts.length > 1) {
       return nameParts[0][0] + nameParts[1][0]; // Initiales des prénoms et noms
     } else {
-      return nameParts[0]
-          [0]; // Si le nom est un seul mot, on prend juste la première lettre
+      return nameParts[0][0] + nameParts[0][1].toUpperCase(); // Si le nom est un seul mot, on prend juste la première lettre
     }
   }
 
   String getUserName() {
     //if user has firstname so display firstname and lastname
-    if (user['first_name'].isNotEmpty) {
+    if (user['first_name'] != null && user['first_name'].isNotEmpty) {
       return '${FunctionUtils.capitalizeFirstLetter(user['first_name'])} ${FunctionUtils.capitalizeFirstLetter(user['last_name'])}';
     } else {
       return FunctionUtils.capitalizeFirstLetter(user['username']);
@@ -62,10 +61,10 @@ class UserListDisplay extends StatelessWidget {
               CircleAvatar(
                 radius: 15,
                 backgroundColor: Colors.grey.shade300,
-                backgroundImage: user['image_url'].isNotEmpty
+                backgroundImage: (user['image_url'] != null && user['image_url'].isNotEmpty)
                     ? NetworkImage(user['image_url'])
                     : null,
-                child: user['image_url']?.isEmpty == true
+                child: (user['image_url'] == null || user['image_url']?.isEmpty == true)
                     ? Text(
                         getInitials(getUserName()), // Initiales si pas d'image
                         style: const TextStyle(
